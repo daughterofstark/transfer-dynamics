@@ -1,0 +1,11 @@
+data/*
+!data/README.md
+out/
+_verify_scratch/
+verify_report.md
+merged_for_fit.csv
+*.png
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
