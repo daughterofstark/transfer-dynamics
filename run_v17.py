@@ -265,7 +265,8 @@ def sec_cv(P, D, Y, w, x_hat, k=5, seed=0):
     tab.to_csv(os.path.join(OUT, "cv_deciles.csv"))
     say("  decile      n    predicted   observed (95% CI)")
     for d, r in tab.iterrows():
-        say(f"  {d:6d} {r.n:7,.0f}   {r.pred:8.2f}   {r.obs:6.2f} ({r.obs - 1.96 * r.sem:.2f}-{r.obs + 1.96 * r.sem:.2f})")
+        n, p, o, s = r["n"], r["pred"], r["obs"], r["sem"]
+        say(f"  {int(d):6d} {n:7,.0f}   {p:8.2f}   {o:6.2f} ({o - 1.96 * s:.2f}-{o + 1.96 * s:.2f})")
     say(f"  max |observed - predicted| across deciles: {np.abs(tab.obs - tab.pred).max():.2f} points")
     say("  fold k_Ft: " + ", ".join(f"{v:.3g}" for v in kft))
 
