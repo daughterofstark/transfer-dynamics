@@ -2,9 +2,6 @@
 
 Analysis code for a dual-process dynamic model of change on an untrained cognitive
 assessment among users of a commercial cognitive training program.
-
-Manuscript: [`manuscript/manuscript_v7.md`](manuscript/manuscript_v7.md)
-
 ---
 
 ## Run it
