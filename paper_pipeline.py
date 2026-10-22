@@ -71,6 +71,12 @@ def build_merged(data, nicole, min_valid_subtests, uid_prefix, out_csv):
     chains, _ = mnr.build_chains(run)
     newsub = mnr._clean_cols(pd.read_csv(data))
     newsub = mnr.enforce_same_battery(newsub, "original")
+    # participants in both extracts: the same sittings scored two ways. Keep the Grand Index copy.
+    gi_ids = set(newsub["user_id"].astype(str))
+    in_both = chains["user_id"].astype(str).isin(gi_ids)
+    n_both = chains.loc[in_both, "user_id"].nunique()
+    print(f"  composite participants also in the Grand Index file, dropped: {n_both:,}")
+    chains = chains[~in_both].copy()
     nic = mnr.to_newsubset_schema(chains, list(newsub.columns), uid_prefix)
     newsub_s = newsub.copy(); newsub_s["user_id"] = newsub_s["user_id"].astype(str)
     merged = pd.concat([newsub_s, nic], ignore_index=True)

@@ -135,9 +135,13 @@ def build_nicole_composite(nicole_path, min_valid_subtests=3):
     c_age    = _pick(raw, ["age_at_signup", "age"], required=False)
     c_edu    = _pick(raw, ["education_level", "education"], required=False)
     c_signup = _pick(raw, ["signup_date"], required=False)
+    c_tres   = _pick(raw, ["tresult_created_at"], what="tresult_created_at")
 
     for col in [c_index, c_days, c_plays, c_nth]:
         raw[col] = pd.to_numeric(raw[col], errors="coerce")
+    # when each sitting was taken: its first subtest result (the anchor the Grand Index intervals use)
+    raw["_t_first"] = pd.to_datetime(raw[c_tres], errors="coerce")
+    t_first_run = raw.groupby(c_run)["_t_first"].min()
 
     # ── sanity on the raw per-subtest index scores (before dropping zeros) ──
     idx = raw[c_index]
@@ -165,6 +169,14 @@ def build_nicole_composite(nicole_path, min_valid_subtests=3):
         if missing:
             print(f"    NOTE: expected-un-normed ids not seen as zero: {missing}")
     raw = raw[~zero_mask].copy()
+    # one result per subtest per run: exact repeats, plus one in-run retake (first attempt kept)
+    if c_sub is not None:
+        c_time = _pick(raw, ["tresult_created_at"], required=False)
+        if c_time is not None:
+            raw = raw.sort_values(c_time, kind="stable")
+        n_before = len(raw)
+        raw = raw.drop_duplicates([c_run, c_sub], keep="first")
+        print(f"  duplicate (run, subtest) rows dropped : {n_before - len(raw):,}  (first attempt kept)")
     print(f"  dropped zero-index rows        : {before-len(raw):,}  (kept {len(raw):,})")
 
     # ── collapse to run grain: MEAN of valid indices, count, per-run scalars ──
@@ -173,8 +185,8 @@ def build_nicole_composite(nicole_path, min_valid_subtests=3):
         "user_id":   g[c_user].first(),
         "battery":   g[c_batt].first(),
         "nth_run":   g[c_nth].first(),
-        "days_btw":  g[c_days].first(),
-        "plays_btw": g[c_plays].first(),
+        "days_btw":  g[c_days].max(),      # reference only; intervals use t_first
+        "plays_btw": g[c_plays].max(),     # one non-zero value per sitting
         "composite": g[c_index].mean(),      # <-- MEAN of per-subtest census-normed indices
         "n_valid":   g[c_index].size(),
     }).reset_index().rename(columns={c_run: "test_run_id"})
@@ -182,6 +194,7 @@ def build_nicole_composite(nicole_path, min_valid_subtests=3):
                       (c_edu, "education_level"), (c_signup, "signup_date")]:
         run[name] = g[opt].first().values if opt is not None else np.nan
 
+    run["t_first"] = run["test_run_id"].map(t_first_run).values
     n_runs_all = len(run)
     run = run[run["n_valid"] >= min_valid_subtests].copy()
     print(f"  runs total / with >= {min_valid_subtests} subtests : {n_runs_all:,} / {len(run):,}")
@@ -223,9 +236,12 @@ def build_chains(run):
         print(f"  run1 & run2 SAME battery      : {int(share.sum()):,}  "
               f"({100*share.mean():.1f}%)")
 
-    chains = []
+    chains = []; n_late = 0
     for u, sub in run.groupby("user_id", sort=False):
         sub = sub.sort_values("nth_run")
+        if sub["nth_run"].iloc[0] != 1:
+            n_late += 1          # first NCPT dropped (<min valid subtests): baseline would be a retest
+            continue
         b0 = sub["battery"].iloc[0]
         nth = sub["nth_run"].values
         keep_rows, prev = [], None
@@ -239,6 +255,7 @@ def build_chains(run):
         c["nth_test"] = np.arange(1, len(c) + 1)
         chains.append(c)
     chains = pd.concat(chains, ignore_index=True)
+    print(f"  users excluded, first run not their first NCPT : {n_late:,}")
 
     lengths = chains.groupby("user_id").size()
     print(f"\n  chain-length distribution (same-battery, consecutive):")
@@ -262,7 +279,10 @@ def to_newsubset_schema(chains, newsubset_cols, uid_prefix="NIC_"):
     is_first = ch["nth_test"] == 1
     dbtw = ch["days_btw"].fillna(0.0).where(~is_first, 0.0)
     pbtw = ch["plays_btw"].fillna(0.0).where(~is_first, 0.0)
-    ch["days_since_signup"] = dbtw.groupby(ch["user_id"]).cumsum()
+    t0 = ch["t_first"].dt.normalize()
+    ch["days_since_signup"] = (t0 - t0.groupby(ch["user_id"]).transform("first")).dt.days.astype(float)
+    n_back = int((ch.groupby("user_id")["days_since_signup"].diff() < 0).sum())
+    print(f"  intervals from first-result dates; sittings taken before the previous one: {n_back:,}")
     ch["num_plays_before"]  = pbtw.groupby(ch["user_id"]).cumsum()
 
     out = pd.DataFrame({c: np.nan for c in newsubset_cols}, index=range(len(ch)))

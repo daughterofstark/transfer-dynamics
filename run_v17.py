@@ -35,9 +35,9 @@ REPORT: list[str] = []
 # ---------------------------------------------------------------- starting values
 # Osman et al. (2023) PLoS One 18:e0281095, Eq. 1:  dY = a + (b - a)(1 - exp(-c N))
 OSMAN_A, OSMAN_B, OSMAN_C = 1.403, 4.513, 0.0058
-HL_START_DAYS = 365.0        # near the geometric centre of observed intervals (70-2,222 d)
+HL_START_DAYS = 730.0        # practice-effect decline with retest interval (Calamia et al. 2012)
 KLD_START = 0.5              # first repeat administration acquires half the retest ceiling
-MEAN_FIRST_INTERVAL = 108.0  # sample mean first interval (days)
+OSMAN_INTERVAL = 70.0        # Osman's T2 invitation interval; the interval his intercept refers to
 
 
 def osman_start():
@@ -47,7 +47,7 @@ def osman_start():
             KLD_START,                                              # k_Ld
             kF,                                                     # k_Fd
             OSMAN_B - OSMAN_A,                                      # A_t
-            OSMAN_A / (KLD_START * (1 - kF) ** MEAN_FIRST_INTERVAL)]  # A_d
+            OSMAN_A / (KLD_START * (1 - kF) ** OSMAN_INTERVAL)]  # A_d
 
 
 BOUNDS = [(1e-6, 0.99)] * 4 + [(0.0, 30.0), (0.0, 30.0)]
@@ -192,9 +192,9 @@ def sec_results_numbers(x):
         tr = 100 * figs._sim_transfer(s, p, 547) / A_t
         extra = ""
         if lab == "load":
-            extra = f"   day 60 {tr[59]:.0f}%"
+            extra = f"   day 60 {tr[60]:.0f}%"
         if lab == "boost":
-            extra = f"   day 240 {tr[239]:.0f}%   max in second booster {tr[420:468].max():.0f}%"
+            extra = f"   day 240 {tr[240]:.0f}%   max in second booster {tr[421:469].max():.0f}%"
         say(f"  {NAMES[lab]:28s} endpoint {tr[-1]:.0f}%   average {tr.mean():.0f}%{extra}")
 
 
@@ -249,6 +249,19 @@ def sec_data_checks(df, uids, x, uid_prefix):
         f"total {sd.sum(axis=1).mean():.2f}")
 
 
+def fig_calibration(tab, path):
+    lo, hi = tab.obs - 1.96 * tab["sem"], tab.obs + 1.96 * tab["sem"]
+    fig, ax = plt.subplots(figsize=(6.5, 6))
+    lim = [min(tab.pred.min(), lo.min()) - .3, max(tab.pred.max(), hi.max()) + .3]
+    ax.plot(lim, lim, "k--", lw=1.2, label="Predicted = observed")
+    ax.errorbar(tab.pred, tab.obs, yerr=[tab.obs - lo, hi - tab.obs], fmt="o",
+                color=figs.CORAL, capsize=4, ms=7, label="Held-out decile mean (95% CI)")
+    ax.set_xlim(lim); ax.set_ylim(lim); ax.grid(alpha=.3); ax.legend(loc="upper left")
+    ax.set_xlabel("Predicted change at second administration (points)")
+    ax.set_ylabel("Observed change (points)")
+    fig.tight_layout(); fig.savefig(path, dpi=ff.CONFIG["dpi"], bbox_inches="tight"); plt.close(fig)
+
+
 def sec_cv(P, D, Y, w, x_hat, k=5, seed=0):
     header("5-FOLD CROSS-VALIDATION (held-out group means, second administration)")
     rng = np.random.default_rng(seed); fold = rng.integers(0, k, P.shape[0])
@@ -269,6 +282,10 @@ def sec_cv(P, D, Y, w, x_hat, k=5, seed=0):
         say(f"  {int(d):6d} {n:7,.0f}   {p:8.2f}   {o:6.2f} ({o - 1.96 * s:.2f}-{o + 1.96 * s:.2f})")
     say(f"  max |observed - predicted| across deciles: {np.abs(tab.obs - tab.pred).max():.2f} points")
     say("  fold k_Ft: " + ", ".join(f"{v:.3g}" for v in kft))
+    os.makedirs(os.path.join(OUT, "fig_supp"), exist_ok=True)
+    fig_calibration(tab, os.path.join(OUT, "fig_supp", "figS_calibration.png"))
+    say("  calibration figure: fig_supp/figS_calibration.png (from these deciles)")
+    return tab
 
 
 def fig_maintenance_joint(draws, x, path):
@@ -328,7 +345,7 @@ def make_figures(df, x, P, D, Y, w, draws, tab, nboot):
         say(f"  {status[:40]:40s} {name}")
     say("  fig_main/fig_maintenance.png overwritten with the joint-bootstrap band (Fig. 7)")
     say("  fig_supp/figS4_uncertainty.png written (Supplementary Fig. 4)")
-    say("  not used in v17: S loss landscape, S k_Ft profile (viz9)")
+    say("  removed in v17: loss landscape, k_Ft profile, engine calibration (replaced by figS_calibration)")
 
 
 # ---------------------------------------------------------------- main

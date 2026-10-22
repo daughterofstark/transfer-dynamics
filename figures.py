@@ -582,10 +582,7 @@ def make_all(df, params, P, D, Y, w, main_dir, supp_dir, nboot=200, seed=7, max_
     _try(man, "S CDFs",                    lambda: fig_cdf(df, f"{sd}/figS_cdf.png"))
     _try(man, "S two-channel",             lambda: fig_two_channel(df, params, f"{sd}/figS_two_channel.png", max_test))
     _try(man, "S dose curve",              lambda: ff.plot_dose_response(params))
-    _try(man, "S loss landscape",          lambda: ff.plot_loss_landscape_heatmap(params, P, D, Y, w))
-    _try(man, "S k_Ft profile",            lambda: ff.plot_kFt_profile(P, D, Y, w, params))
     _try(man, "S residuals",               lambda: ff.plot_residuals_distribution(P, D, Y, params))
-    _try(man, "S calibration",             lambda: ff.plot_kfold_calibration(P, D, Y, w, params, k=ff.CONFIG["n_folds"]))
     _try(man, "S regression-to-mean",      lambda: ff.plot_regression_to_mean(df))
     if draws_orig is not None:
         _try(man, "S A_d identification",  lambda: fig_Ad_identification(draws_orig, draws, f"{sd}/figS_Ad_identification.png"))
