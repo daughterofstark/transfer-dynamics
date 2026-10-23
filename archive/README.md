@@ -1,12 +1,13 @@
-# Superseded
+# archive
 
-Kept for provenance. Not part of the reproduction path.
+Superseded code, kept for provenance. None of it is part of the reproduction workflow. Scripts may need to be run from the repository root with `PYTHONPATH=.`, and some may not run against the current modules.
 
-- **refix_figures.py** — redrew figures without a bootstrap. Called `fig_dose_9panel`
-  and `fig_dose_row` without `draws=`, silently replacing banded figures with
-  unbanded ones, and carried a hardcoded `kft_ci=(6.1e-4, 8.1e-3)` that goes stale
-  whenever the fit changes. Use `./run_paper.sh --quick` instead.
-- **figure_revisions.py** — bootstrap with rejection sampling of bound-hitting draws.
-  Not a valid confidence interval.
-- **finetune_v4.py** — short-interval upweighting above the engine's weight cap.
-  Abandoned; the same-day weighting cell solved the underlying problem.
+| File | What it was |
+|---|---|
+| `finish_open_items.py`, `propagate_uncertainty.py` | Produced the v16 manuscript numbers (tag `v16-numbers`) |
+| `paper_additions.py` | Static cumulative-dose comparator, removed in v17 |
+| `intercept_check.py` | v16 model-free intercept check, replaced by the retest check in `run_v17.py` |
+| `finetune_v4.py`, `figure_revisions.py`, `refix_figures.py` | Earlier development scripts |
+| `diagnostics/` | Read-only checks of the input extracts used during v17 (see `DECISIONS.md`) |
+
+Diagnostics run from the repository root, for example `PYTHONPATH=. python archive/diagnostics/check_timestamps.py`. The timing section of `check_overlap.py` parses Grand Index dates month-first and is not valid. `check_v16_error.py` needs the v16 merged file `out/merged_for_fit.csv`.

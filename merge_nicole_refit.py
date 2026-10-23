@@ -551,8 +551,8 @@ def main():
     ap.add_argument("--max-test", type=int, default=3)
     ap.add_argument("--min-valid-subtests", type=int, default=3)
     ap.add_argument("--uid-prefix", default="NIC_")
-    ap.add_argument("--save-nicole", default="nicole_model_ready.csv")
-    ap.add_argument("--save-merged", default="merged_for_fit.csv")
+    ap.add_argument("--save-nicole", default="out/nicole_model_ready.csv")
+    ap.add_argument("--save-merged", default="out/merged_for_fit.csv")
     ap.add_argument("--nboot", type=int, default=200)
     ap.add_argument("--boot-kft-floor", type=float, default=None,
                     help="k_Ft lower bound in the bootstrap (default engine TC floor 0.001; "

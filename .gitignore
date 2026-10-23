@@ -1,14 +1,20 @@
+# Inputs and generated outputs. Participant-level data must never be committed.
 data/*
 !data/README.md
 out/
 _verify_scratch/
-verify_report.md
-merged_for_fit.csv
-*.png
+*.csv
+*.tsv
+*.npy
+*.npz
+*.parquet
+*.xlsx
+*.pkl
+# Environment
+.venv/
 __pycache__/
 *.pyc
 .DS_Store
-.venv/
-
-*.csv
-*.npy
+# Legacy scripts write reports and figures to the repository root
+/verify_report.md
+/*.png

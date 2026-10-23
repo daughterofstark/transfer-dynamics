@@ -1,32 +1,29 @@
 #!/usr/bin/env bash
-# Full reproduction.  ./run_paper.sh [--quick]
-set -euo pipefail
+# Reproduce every number, table and figure reported for v17.
+#   ./run_paper.sh           full run: 200 bootstrap samples and figures (~50 min)
+#   ./run_paper.sh --quick   20 bootstrap samples, no figures (~6 min)
+# Both modes write to out/v17/ and rebuild the merged data from the raw inputs.
+set -eo pipefail
+cd "$(dirname "$0")"
+
+PY="${PYTHON:-.venv/bin/python}"
 DATA="${DATA:-data/newsubset.csv}"
-NICOLE="${NICOLE:-data/short_intervals.csv}"
-NBOOT=200; [[ "${1:-}" == "--quick" ]] && NBOOT=20
+COMPOSITE="${COMPOSITE:-data/short_intervals.csv}"
 
-for f in "$DATA" "$NICOLE"; do
-  [[ -f "$f" ]] || { echo "missing input: $f  (see data/README.md)"; exit 1; }
-done
-mkdir -p out/fig_main out/fig_supp out/logs
-LOG="out/logs/pipeline_$(date +%Y%m%d_%H%M%S).log"
-
-echo "==> pipeline (nboot=$NBOOT)"
-python paper_pipeline.py --data "$DATA" --nicole "$NICOLE" --nboot "$NBOOT" \
-    --main-dir out/fig_main --supp-dir out/fig_supp \
-    --merged-csv out/merged_for_fit.csv 2>&1 | tee "$LOG"
-
-echo "==> verification numbers"
-python verify_numbers.py --data "$DATA" --nicole "$NICOLE" \
-    --only exposure sweep rescale unweighted 2>&1 | tee out/logs/verify.log
-
-echo "==> intercept check"
-python intercept_check.py --data "$DATA" --nicole "$NICOLE" 2>&1 | tee out/logs/intercept.log
-
-echo; echo "==> manifest check"
-if grep -q "FAIL" "$LOG"; then
-  echo "!! FAILURES — do not trust the output:"; grep "FAIL" "$LOG"; exit 1
+if ! "$PY" -c "import numpy, scipy, pandas, matplotlib, seaborn" 2>/dev/null; then
+  echo "Python environment not found or incomplete: $PY"
+  echo "Set it up with: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt"
+  exit 1
 fi
-echo "   clean."
-echo; echo "figures: out/fig_main/ out/fig_supp/   logs: out/logs/"
-echo "canonical numbers: end of $LOG"
+for f in "$DATA" "$COMPOSITE"; do
+  if [ ! -f "$f" ]; then echo "Missing input: $f (see data/README.md)"; exit 1; fi
+done
+
+NBOOT=200
+SKIP=""
+if [ "${1:-}" = "--quick" ]; then NBOOT=20; SKIP="--skip-figures"; fi
+
+"$PY" run_v17.py --data "$DATA" --nicole "$COMPOSITE" --nboot "$NBOOT" --rebuild $SKIP
+"$PY" descriptives_v17.py --data "$DATA" --nicole "$COMPOSITE"
+
+echo "Done. Reports: out/v17/report.md and out/v17/descriptives.md"

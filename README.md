@@ -1,121 +1,115 @@
 # Acquisition and forgetting dynamics of cognitive training transfer
 
-Analysis code for a dual-process dynamic model of change on an untrained cognitive
-assessment among users of a commercial cognitive training program.
----
+Analysis code for the manuscript *Modeling the durability and maintenance of cognitive training transfer* (in preparation).
 
-## Run it
+The analysis fits a six-parameter dynamic model to longitudinal records from Lumosity, a digital cognitive training program. Change in the overall composite score of the NeuroCognitive Performance Test (NCPT), a battery of cognitive tests separate from the training tasks, is modeled as the sum of transfer from cognitive training and a retest effect from repeated NCPT testing. The fitted dynamics are used to estimate the daily training that maintains transfer and to compare training schedules with equal total training.
 
-```bash
-pip install -r requirements.txt
-# place inputs in data/ — see data/README.md
-./run_paper.sh --quick     # ~10 min, 20 bootstrap resamples — checks the wiring
-./run_paper.sh             # ~4 h, 200 resamples — the reported numbers
+**Current version: v17.** Every reported number comes from `run_v17.py` and `descriptives_v17.py`; `CANONICAL_NUMBERS.md` lists them with their sources.
+
+## Model
+
+Two latent states, both zero at a participant's first NCPT administration:
+
+- **Retest effect** `S_D`. Each administration adds `k_Ld * (A_d - S_D)`. The state decays by a daily proportion `k_Fd`.
+- **Transfer** `S_T`. With `g = 1 - (1 - k_Lt)^p` for `p` gameplays per day, each day updates `S_T <- S_T * (1 - g - k_Ft) + g * A_t`. On days without training, `S_T` decays by `k_Ft`.
+
+Predicted change from baseline is `S_D + S_T`. Training within an interval is spread evenly, and intervals are floored at one day. A half-life is `log(0.5) / log(1 - k)`. Under constant daily training, transfer approaches the steady state `S_T* / A_t = g / (g + k_Ft)`, which defines the maintenance dose.
+
+## Data
+
+Participant-level data are not included. The analysis needs two extracts from Lumos Labs, placed in `data/`; `data/README.md` describes the required files and columns. Data access: to be added.
+
+## Setup
+
+```
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
 ```
 
-Output lands in `out/`. The canonical number block is echoed at the end of
-`out/logs/pipeline_*.log` and mirrored in [`CANONICAL_NUMBERS.md`](CANONICAL_NUMBERS.md).
+Tested with Python 3.13.5 on macOS.
 
-`run_paper.sh` greps the run manifest for `FAIL` and exits non-zero if it finds
-any, so a skipped analysis step cannot pass silently.
+## Reproduce
 
----
+```
+./run_paper.sh            # full analysis: 200 bootstrap samples and figures (~50 min)
+./run_paper.sh --quick    # 20 bootstrap samples, no figures (~6 min)
+```
 
-## The model
+`run_paper.sh` rebuilds the merged dataset from the raw inputs, runs `run_v17.py`, then runs `descriptives_v17.py`. Both modes write to `out/v17/`, so copy that folder first if you want to keep an earlier run. Input paths and the interpreter can be overridden: `DATA=... COMPOSITE=... PYTHON=... ./run_paper.sh`.
 
-Change from each participant's first assessment is the sum of two latent states.
+Equivalent manual commands:
 
-**Practice effect** `S_D`, dosed at every administration toward a ceiling `A_d` with
-learning rate `k_Ld`, decaying over elapsed days at `k_Fd`. Independent of gameplay.
+```
+.venv/bin/python run_v17.py --data data/newsubset.csv --nicole data/short_intervals.csv --rebuild
+.venv/bin/python descriptives_v17.py
+```
 
-**Transfer** `S_T`, accruing with gameplay toward a ceiling `A_t` with learning rate
-`k_Lt`, decaying at `k_Ft`.
+## Outputs (`out/v17/`)
 
-Six parameters, fitted by weighted least squares with frequency reweighting across
-strata of gameplay and elapsed days.
+| File | Contents |
+|---|---|
+| `report.md` | Main fit, Table 1 intervals, derived quantities and schedule rankings, data checks, cross-validation, Grand Index-only fit |
+| `descriptives.md` | Sample, exposure, weighting cells, demographics, dates, Results-text numbers, residuals, bootstrap convergence |
+| `draws.npy`, `bootstrap_info.csv` | Bootstrap parameter draws and per-draw convergence |
+| `derived_per_draw.csv` | Maintenance and schedule outcomes for each draw |
+| `cv_deciles.csv` | Held-out observed and predicted means by decile |
+| `supp_table1_weights.csv` | Weighting cells |
+| `fig_main/`, `fig_supp/` | Figures |
 
----
+| Manuscript | File |
+|---|---|
+| Fig. 1 | `fig_main/fig_exposure.png` |
+| Fig. 2 | `fig_main/fig_param_bootstrap.png` |
+| Fig. 3 | `fig_main/fig_dose_9panel.png` |
+| Fig. 4 | `fig_main/fig_dose_partition.png` |
+| Fig. 5 | `fig_main/fig_time_window.png` (written at 440 gameplays by `descriptives_v17.py`) |
+| Fig. 6 | `fig_main/fig_maintenance_concept.png` |
+| Fig. 7 | `fig_main/fig_maintenance.png` |
+| Fig. 8 | `fig_main/fig_schedules.png` |
+| Supplementary Figs. 1-8 | `fig_supp/figS_cdf.png`, `fig_supp/viz5_dose_response.png`, `fig_main/fig_dose_time_heatmap.png`, `fig_supp/figS4_uncertainty.png`, `fig_supp/viz7_residuals.png`, `fig_supp/figS_calibration.png`, `fig_supp/viz12_regression_to_mean.png`, `fig_supp/figS_two_channel.png` |
 
-## Locked specification
-
-Every reported number comes from one fit. These are fixed:
+## Analysis specification (v17)
 
 | | |
 |---|---|
-| Sample | merged records, ≥2 administrations, first 5 (T1–T5) |
-| Exclusions | none — all three available screens are non-binding |
-| Weighting | inverse cell frequency, cap 5, gameplays (≤50 / 51–400 / 400+) × days (`-1, 0.5, 90, 150, 9999`) |
-| Objective | weighted MSE, averaged within participant then across |
-| Optimizer | L-BFGS-B, considered start + ±20% restarts, best reported |
-| Uncertainty | 200 participant-level bootstrap resamples |
+| Sample | Both extracts merged; at least two NCPT administrations; first five per participant; no exclusions on interval length or gameplays |
+| Outcome | Change from the first administration in the NCPT overall composite: the Grand Index, or the mean of valid subtest index scores (see `data/README.md`) |
+| Intervals | Calendar days between the dates the tests were taken |
+| Weighting | Inverse cell frequency over 3 gameplay bands (<=50, 51-400, >400) x 3 interval bands (0-90 including same-day, 91-150, >=151 days); capped at 5; computed once and reused in the bootstrap and cross-validation |
+| Objective | Weighted mean squared error, averaged within participant and then across participants |
+| Starting values | Derived from Osman et al. (2023): k_Lt 0.0057832, k_Ft 0.00094907, k_Ld 0.5, k_Fd 0.00094907, A_t 3.11, A_d 2.9988 |
+| Bounds | Rates [1e-6, 0.99]; ceilings [0, 30]; the same in every fit |
+| Optimizer | L-BFGS-B, maxiter 10,000, ftol 1e-13, gtol 1e-9, single start |
+| Uncertainty | 200 participant-level bootstrap samples (seed 7), each refitted from the point estimate with the same settings; failed fits are excluded and reported |
+| Cross-validation | Five folds over participants (seed 0) |
 
-**The engine defaults do not reproduce this.** `transfer_model.py` ships with the
-drop regime (winsorize off, caps 1000/730/20), no T1–T5 truncation, and 90/180 day
-bins. Always go through `paper_pipeline.py`, which pins all of the above internally.
+## Reproducibility checks
 
-**Do not modify `transfer_model.py`.** It is validated to machine precision against
-a scalar reference implementation. Every other module imports it unchanged as `ff`.
+- `descriptives_v17.py` refits the point estimate and warns if it differs from the reported v17 estimate by more than 0.1%.
+- The merged dataset is cached in `_verify_scratch/`, and the cache is not keyed to the inputs. Always pass `--rebuild` after changing inputs or data-building code; `run_paper.sh` always rebuilds.
 
----
-
-## Layout
+## Repository layout
 
 ```
-transfer_model.py       the engine — do not modify
-merge_nicole_refit.py   builds the merged dataset from both sources
-paper_pipeline.py       canonical pipeline: fits → numbers → figures
-figures.py              all figure builders
-paper_additions.py      static cumulative-dose baseline
-
-verify_numbers.py       distributions, sensitivities, bootstrap diagnostics
-intercept_check.py      model-free check on the practice-effect intercept
-
-run_paper.sh            one command, full reproduction
-CANONICAL_NUMBERS.md    every reported number, with provenance
+run_paper.sh            one command: rebuild data, fit, bootstrap, figures, descriptives
+run_v17.py              analysis entry point
+descriptives_v17.py     descriptive numbers; writes Fig. 5 at 440 gameplays
+transfer_model.py       model engine, imported unchanged (settings are applied in memory)
+merge_nicole_refit.py   builds composite records from the short-interval extract
+paper_pipeline.py       merges the two extracts and defines the weighting bands
+figures.py              figure builders
+verify_numbers.py       supplies the cached data build used above; its other sections are legacy
+requirements.txt        pinned dependencies
+CANONICAL_NUMBERS.md    every reported number and its source
 DECISIONS.md            analysis decisions and their rationale
-data/                   inputs (gitignored)
-out/                    generated output (gitignored)
-manuscript/
-archive/                superseded scripts — see archive/README.md
+data/README.md          input data dictionary
+archive/                superseded scripts and v17 data diagnostics; not part of the reproduction
 ```
 
----
+## Earlier versions
 
-## Entry points
+Tag `v16-numbers` marks the code behind the v16 manuscript numbers. v16 read the short-interval extract differently (see `DECISIONS.md`), and its numbers are superseded.
 
-| Command | Runtime |
-|---|---|
-| `./run_paper.sh` | ~4 h |
-| `./run_paper.sh --quick` | ~10 min |
-| `python verify_numbers.py --only exposure` | ~1 min |
-| `python verify_numbers.py --only sweep` | ~10 min |
-| `python verify_numbers.py --only rescale unweighted` | ~5 min |
-| `python verify_numbers.py --only halflife` | ~4 h |
-| `python intercept_check.py` | ~1 min |
+## Citation and license
 
-`verify_numbers.py` caches the merged dataset in `_verify_scratch/`; only the first
-call pays the build cost. `--rebuild` forces a refresh.
-
----
-
-## Known issues
-
-**Optional imports fail quietly.** `paper_pipeline.py` wraps `paper_additions` and
-`reanalysis_v3` in `try/except`. A missing module skips an analysis step. The
-`reanalysis_v3` case now prints a NOTE, and `run_paper.sh` fails the build on any
-manifest `FAIL`, but check the manifest before trusting a run.
-
-**`reanalysis_v3.py` is absent.** The exclusion sweep it provided is covered by
-`verify_numbers.py --only sweep`, which reports the same four regimes.
-
-**A second optimum exists.** A restart at a fast transfer-forgetting rate converges
-to WMSE 53.659 against 53.641, with `k_Lt ≈ 0.23` — implying 80% of the transfer
-ceiling after roughly six gameplays. Rejected as inconsistent with the observed
-dose-response, which saturates over several hundred. It appears in the Phase 3 probe
-output of every run; see `DECISIONS.md`.
-
----
-
-## Citation
-
-[To complete on acceptance.]
+To be added.
