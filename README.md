@@ -1,4 +1,4 @@
-# Acquisition and forgetting dynamics of cognitive training transfer
+# Acquisition and forgetting dynamics of cognitive training transfer (not updated)
 
 Analysis code for a dual-process dynamic model of change on an untrained cognitive
 assessment among users of a commercial cognitive training program.
