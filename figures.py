@@ -1,24 +1,16 @@
 """
-figures.py — figure set for the dynamic two-state transfer model (merged fit).
-=============================================================================
-All figures are driven from one point fit: pass (df, params, P, D, Y, w). Dynamics
-use the engine's advance_interval; captions are number-driven from `params`.
+figures.py - figures for the two-state model (retest effect and transfer).
 
-MAIN builders:
-  fig_schematic            conceptual 6-parameter diagram (no data)
-  fig_param_bootstrap      bootstrap distributions of the six parameters
-  fig_dose_9panel          3x3 empirical match: T1->T2 dose x T2->T3 dose, shown to T3
-  fig_dose_partition       stacked dose-response (direct intercept + transfer), Osman-style
-  fig_time_window          fixed dose, varying T1->T2 interval (1..365 d); direct+transfer decay
-  fig_dose_time_heatmap    predicted T2 change over games x days
-  fig_maintenance_concept  transfer over T1->T2->T3: what a maintenance dose means
-  fig_maintenance          steady-state transfer held vs daily dose (3 min/game)
-  fig_schedules            fixed-budget regimen comparison (even / front-load / boosters)
-SUPPLEMENT builders:
-  fig_exposure, fig_cdf, fig_two_channel, fig_Ad_identification,
-  + engine primitives (dose curve, loss, k_Ft profile, residuals, calibration, RTM).
+Each builder takes the fitted parameters, plus the prepared data or bootstrap draws where
+needed. Dynamics use transfer_model.advance_interval.
 
-Maintenance steady state (D=1):  f(d) = g/(g+k_Ft),  g = 1-(1-k_Lt)^d.
+Main text: fig_exposure, fig_param_bootstrap, fig_dose_9panel, fig_dose_partition,
+fig_time_window, fig_maintenance_concept, fig_maintenance, fig_schedules.
+Also built: fig_schematic, fig_dose_row, fig_dose_time_heatmap, fig_cdf, fig_two_channel,
+fig_dose_curve. fig_Ad_identification is legacy (needs a second set of draws).
+
+Steady state under a constant d gameplays per day: f(d) = g/(g + k_Ft), g = 1 - (1 - k_Lt)^d.
+Minutes are shown at 3 minutes per gameplay.
 """
 from __future__ import annotations
 import os, tempfile
@@ -34,7 +26,7 @@ PO = ff.PARAM_ORDER
 TEAL, CORAL, INK, PURPLE, SAND, SKY = "#2a9d8f", "#e76f51", "#264653", "#6a4c93", "#f2cc8f", "#8ecae6"
 MINUTES_PER_GAME = 3.0          # maintenance dose expressed at ~3 min per game
 DOSE_BINS  = [(-1, 50), (50, 400), (400, np.inf)]
-DOSE_LBLS  = ["<=50 games", "51-400 games", "400+ games"]
+DOSE_LBLS  = ["≤50 gameplays", "51–400 gameplays", ">400 gameplays"]
 
 
 # ───────────────────────── shared dynamics helpers ─────────────────────────
@@ -87,8 +79,8 @@ def fig_schematic(params, out):
     p = params
     t = np.linspace(0, 6, 400); stop = 3.0
     fig, axes = plt.subplots(1, 2, figsize=(13, 4.9))
-    specs = [("Transfer  S_T   (gameplay -> NCPT)", p["A_t"], p["k_Lt"], p["k_Ft"], TEAL, ("k_Lt", "A_t", "k_Ft")),
-             ("Direct  S_D   (repeated testing)",   p["A_d"], p["k_Ld"], p["k_Fd"], CORAL, ("k_Ld", "A_d", "k_Fd"))]
+    specs = [("Transfer  S_T   (training)", p["A_t"], p["k_Lt"], p["k_Ft"], TEAL, ("k_Lt", "A_t", "k_Ft")),
+             ("Retest effect  S_D   (repeated testing)",   p["A_d"], p["k_Ld"], p["k_Fd"], CORAL, ("k_Ld", "A_d", "k_Fd"))]
     for ax, (nm, A, kL, kF, col, (nL, nA, nF)) in zip(axes, specs):
         rise = A * (1 - np.exp(-kL * t * 3)); curve = rise.copy()
         peak = A * (1 - np.exp(-kL * stop * 3)); m = t > stop
@@ -103,8 +95,8 @@ def fig_schematic(params, out):
         ax.axvline(stop, color="0.7", ls="--", lw=1); ax.text(stop, 0, " training stops", fontsize=8, color="0.4")
         ax.set_title(nm, fontweight="bold"); ax.set_xlabel("time"); ax.set_ylabel("accrued benefit")
         ax.set_xticks([]); ax.set_ylim(0, A * 1.15); ax.grid(alpha=.25)
-    fig.text(0.5, 0.02, "Observed change in NCPT  =  S_T + S_D    "
-             "(channels modelled as independent; each has a learning rate, a ceiling, and a forgetting rate)",
+    fig.text(0.5, 0.02, "Observed composite-score change  =  S_T + S_D    "
+             "(the two processes are modeled as independent; each has a learning rate, a ceiling, and a forgetting rate)",
              ha="center", fontsize=9.5, style="italic")
     fig.suptitle("Model structure: two independent processes, three parameters each",
                  fontweight="bold", fontsize=12)
@@ -120,17 +112,18 @@ def fig_exposure(df, out, day_cuts=(90, 150), play_cuts=(50, 400)):
     fig = plt.figure(figsize=(11, 8))
     gs = fig.add_gridspec(2, 2, width_ratios=[4, 1], height_ratios=[1, 4], hspace=.05, wspace=.05)
     ax = fig.add_subplot(gs[1, 0]); axx = fig.add_subplot(gs[0, 0], sharex=ax); axy = fig.add_subplot(gs[1, 1], sharey=ax)
-    hb = ax.hexbin(np.clip(d, 0, dclip), np.clip(p, 0, pclip), gridsize=40, cmap="Blues", bins="log", mincnt=1)
+    kp = (d <= dclip) & (p <= pclip)
+    hb = ax.hexbin(d[kp], p[kp], gridsize=40, cmap="Blues", bins="log", mincnt=1)
     for c in day_cuts:  ax.axvline(c, color="0.45", ls=":", lw=1)
     for c in play_cuts: ax.axhline(c, color="0.45", ls=":", lw=1)
-    ax.set_xlabel("T1->T2 interval (days)"); ax.set_ylabel("T1->T2 games played")
+    ax.set_xlabel("First interval (days)"); ax.set_ylabel("First interval (gameplays)")
     fig.colorbar(hb, ax=axy, fraction=.5, pad=.05).set_label("participants (log)")
     ecdf = lambda a: (np.sort(a), np.arange(1, len(a) + 1) / len(a))
     xd, yd = ecdf(d); axx.plot(xd, yd, color=INK, lw=1.8); axx.set_xlim(0, dclip)
     xp, yp = ecdf(p); axy.plot(yp, xp, color=INK, lw=1.8); axy.set_ylim(0, pclip)
     axx.set_ylabel("CDF", fontsize=8); axx.tick_params(labelbottom=False); axx.grid(alpha=.3)
     axy.set_xlabel("CDF", fontsize=8); axy.tick_params(labelleft=False); axy.grid(alpha=.3)
-    fig.suptitle("Joint T1->T2 exposure — dotted = propensity-weight grid (90/150 d, 50/400 games)",
+    fig.suptitle("Exposure in the first interval (dotted lines: weighting grid at 90/150 days and 50/400 gameplays)\nvalues above the 99th percentile of either axis not shown",
                  fontweight="bold", fontsize=11)
     fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
 
@@ -142,9 +135,9 @@ def fig_cdf(df, out):
     ecdf = lambda a: (np.sort(a), np.arange(1, len(a) + 1) / len(a))
     fig, ax = plt.subplots(1, 3, figsize=(16, 4.6))
     for a, arr, title, xlab, marks, clip in [
-        (ax[0], days, "T1->T2 interval (days)", "Days between T1 and T2", [90, 150], .99),
-        (ax[1], plays, "T1->T2 interval (games)", "Games played T1->T2", [50, 200, 500], .99),
-        (ax[2], ntests, "NCPT administrations per participant", "Tests per participant", [3, 5], 1.0)]:
+        (ax[0], days, "First interval (days)", "Days between first and second administration", [90, 150], .99),
+        (ax[1], plays, "First interval (gameplays)", "Gameplays between first and second administration", [50, 200, 500], .99),
+        (ax[2], ntests, "NCPT administrations per participant", "Administrations per participant", [3, 5], 1.0)]:
         x, y = ecdf(arr); a.plot(x, y, color=INK, lw=2)
         for m in marks: a.axvline(m, color="firebrick", ls="--", lw=1, alpha=.7)
         for q in (.5, .9, .95):
@@ -153,7 +146,7 @@ def fig_cdf(df, out):
         a.set_title(title, fontweight="bold"); a.set_xlabel(xlab)
         a.set_ylabel("Cumulative fraction"); a.grid(alpha=.3); a.set_ylim(0, 1.02)
         if clip < 1.0 and len(arr): a.set_xlim(0, np.quantile(arr, clip))
-    fig.suptitle("Exposure and assessment distributions — empirical CDFs", fontweight="bold")
+    ax[2].set_xticks(range(int(ntests.min()), int(ntests.max()) + 1)); fig.suptitle("Exposure and administration distributions", fontweight="bold")
     fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
 
 
@@ -180,12 +173,12 @@ def fig_param_bootstrap(draws, params, out):
     for nm, ax in zip(names, axes):
         col = draws[:, PO.index(nm)]; col = col[~np.isnan(col)]
         lo, hi = _ci(col)
-        ax.hist(col, bins=32, color="#6b8ea3", alpha=.85, edgecolor="white")
-        ax.axvline(params[nm], color="black", lw=2)
+        ax.hist(col, bins=np.geomspace(col.min(), col.max(), 33) if nm.startswith("k_") else 32, color="#6b8ea3", alpha=.85, edgecolor="white")
+        ax.axvline(params[nm], color="black", lw=2); ax.set_xscale("log" if nm.startswith("k_") else "linear")
         ax.axvline(lo, color="firebrick", ls="--", lw=1.2); ax.axvline(hi, color="firebrick", ls="--", lw=1.2)
         hl = ""
         if nm in ("k_Ft", "k_Fd"):
-            hl = f"  (HL {np.log(2)/(-np.log(1-params[nm]))/365:.2f} yr)"
+            hl = f"  (half-life {np.log(0.5)/np.log(1-params[nm]):.0f} d)"
         ax.set_title(f"{nm} = {params[nm]:.4g}{hl}\n95% CI [{lo:.3g}, {hi:.3g}]", fontsize=10, fontweight="bold")
         ax.grid(alpha=.3)
     fig.suptitle("Bootstrap parameter distributions (participants resampled with replacement)",
@@ -239,16 +232,16 @@ def fig_dose_row(df, params, out, draws=None, fix_row=1):
         ax.errorbar([1, 2, 3], [0, m2, m3], yerr=[0, c2, c3], fmt="o-", color=CORAL, capsize=3, ms=6,
                     label="observed" if j == 0 else None)
         ax.plot([1, 2, 3], [0, mp2, mp3], "s--", color=INK, ms=5,
-                label="model" if j == 0 else None)
-        ax.text(.03, .95, f"n={n:,}\nmean {D2.mean():.0f} d to T2", transform=ax.transAxes,
+                label="predicted" if j == 0 else None)
+        ax.text(.03, .95, f"n={n:,}\nmean first interval {D2.mean():.0f} d", transform=ax.transAxes,
                 fontsize=9, color="0.4", va="top")
         ymax = max(ymax, m3 + c3, mp3 if not np.isnan(mp3) else 0)
-        ax.set_title(f"T2->T3 gameplay: {DOSE_LBLS[j]}", fontsize=11)
-        ax.set_xlabel("assessment"); ax.set_xticks([1, 2, 3]); ax.grid(alpha=.3)
-    axes[0].set_ylabel(f"GI change from T1\n(T1->T2 fixed at {DOSE_LBLS[fix_row]})")
+        ax.set_title(f"Second interval: {DOSE_LBLS[j]}", fontsize=11)
+        ax.set_xlabel("Administration"); ax.set_xticks([1, 2, 3]); ax.grid(alpha=.3)
+    axes[0].set_ylabel(f"Composite-score change (points)\nfirst interval: {DOSE_LBLS[fix_row]}")
     axes[0].legend(fontsize=9, loc="lower right")
     for a in axes: a.set_ylim(-0.5, ymax * 1.12 if ymax else 8)
-    fig.suptitle("Model reproduces the T2->T3 dose effect (T1->T2 dose held fixed)",
+    fig.suptitle("Observed and predicted change by second-interval gameplays (first interval held fixed)",
                  fontsize=13, fontweight="bold")
     fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
 
@@ -306,18 +299,18 @@ def fig_dose_9panel(df, params, out, draws=None):
             ax.errorbar([1, 2, 3], [0, m2, m3], yerr=[0, c2, c3], fmt="o-", color=CORAL, capsize=3, ms=5,
                         label="observed" if (i == 0 and j == 0) else None)
             ax.plot([1, 2, 3], [0, mp2, mp3], "s--", color=INK, ms=4,
-                    label="model (each participant's own intervals)" if (i == 0 and j == 0) else None)
-            note = f"n={n:,}\nmean {D2.mean():.0f} d to T2"
+                    label="predicted (each participant's own intervals)" if (i == 0 and j == 0) else None)
+            note = f"n={n:,}\nmean first interval {D2.mean():.0f} d"
             ax.text(.03, .97, note, transform=ax.transAxes, fontsize=8, color="0.4", va="top")
             ymax = max(ymax, m3 + c3, mp3 if not np.isnan(mp3) else 0)
-            if i == 0: ax.set_title(f"T2->T3: {DOSE_LBLS[j]}", fontsize=10)
-            if j == 0: ax.set_ylabel(f"T1->T2: {DOSE_LBLS[i]}\nGI change from T1", fontsize=9)
-            if i == 2: ax.set_xlabel("assessment")
+            if i == 0: ax.set_title(f"Second interval: {DOSE_LBLS[j]}", fontsize=10)
+            if j == 0: ax.set_ylabel(f"First interval: {DOSE_LBLS[i]}\nComposite-score change (points)", fontsize=9)
+            if i == 2: ax.set_xlabel("Administration")
             ax.set_xticks([1, 2, 3]); ax.grid(alpha=.3)
     axes[0, 0].legend(fontsize=8, loc="lower right")
     for a in axes.flat: a.set_ylim(-0.5, ymax * 1.12 if ymax else 8)
-    fig.suptitle("Observed vs model NCPT change by T1->T2 and T2->T3 gameplay dose (to T3)\n"
-                 f"model uses each participant's own intervals; n={total:,} participants with >=3 assessments",
+    fig.suptitle("Observed and predicted composite-score change by gameplays in the first and second intervals\n"
+                 f"predictions use each participant's own intervals; n={total:,} participants with three or more administrations",
                  fontsize=12, fontweight="bold")
     fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
 
@@ -340,24 +333,24 @@ def fig_dose_partition(df, params, out, days=None, gmax=1800):
     d80 = _games_for_transfer_frac(p, 0.80, days)
     st80 = _T2_states(p, d80, days)[1]
     fig, ax = plt.subplots(figsize=(9.5, 6))
-    ax.fill_between(g, 0, SD, color=SKY, alpha=.55, label="Direct practice (repeated testing)")
-    ax.fill_between(g, SD, total, color=SAND, alpha=.75, label="Transfer of learning (games -> NCPT)")
+    ax.fill_between(g, 0, SD, color=SKY, alpha=.55, label="Retest effect (repeated testing)")
+    ax.fill_between(g, SD, total, color=SAND, alpha=.75, label="Transfer (training)")
     ax.plot(g, total, color=CORAL, lw=2.4)
-    ax.axhline(I, color="0.5", ls="--", lw=1); ax.text(gmax, I, "  intercept I", va="center", fontsize=9, color="0.4")
-    ax.axhline(I + p["A_t"], color="0.5", ls="--", lw=1); ax.text(gmax, I + p["A_t"], "  asymptote A", va="center", fontsize=9, color="0.4")
+    ax.axhline(I, color="0.5", ls="--", lw=1); ax.text(gmax, I, f"  no training ({I:.2f})", va="center", fontsize=9, color="0.4")
+    ax.axhline(I + p["A_t"], color="0.5", ls="--", lw=1); ax.text(gmax, I + p["A_t"], f"  extensive training ({I + p['A_t']:.2f})", va="center", fontsize=9, color="0.4")
     ax.plot(d80, I + st80, "o", color=INK, ms=7)
-    ax.annotate(f"80% of transfer ceiling\n~{d80:.0f} games (at {days:.0f} d;\ndepends on the interval)",
+    ax.annotate(f"80% of transfer ceiling\n~{d80:.0f} gameplays (at {days:.0f} d;\ndepends on the interval)",
                 (d80, I + st80), (d80 + 250, I + st80 - 1.2), fontsize=9,
                 arrowprops=dict(arrowstyle="->", color=INK))
-    ax.set_xlabel("Games between T1 and T2"); ax.set_ylabel("Change in GI (T2 - T1)")
+    ax.set_xlabel("Gameplays in the first interval"); ax.set_ylabel("Composite-score change (points)")
     ax.set_xlim(0, gmax); ax.set_ylim(0, (I + p["A_t"]) * 1.12); ax.legend(loc="center right"); ax.grid(alpha=.3)
-    ax.set_title("Dose-response partition: direct practice + transfer\n(reproduces Osman et al. decomposition)",
+    ax.set_title("Predicted change at the second administration: retest effect and transfer",
                  fontweight="bold")
     fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
 
 
 # ═══════════════════════ fixed dose, varying time window ═══════════════════════
-def fig_time_window(df, params, out, fixed_games=None, day_max=365):
+def fig_time_window(df, params, out, fixed_games=440, day_max=365):
     p = params
     if fixed_games is None:
         med_d = float(df[df["nth_test"] == 2]["days_interval"].median())
@@ -367,13 +360,13 @@ def fig_time_window(df, params, out, fixed_games=None, day_max=365):
     ST = np.array([_T2_states(p, fixed_games, dd)[1] for dd in days])
     fig, ax = plt.subplots(figsize=(9.5, 6))
     # direct on the bottom, transfer stacked on top — same order as fig_dose_partition
-    ax.fill_between(days, 0, SD, color=SKY, alpha=.55, label="Direct practice (decays at k_Fd)")
-    ax.fill_between(days, SD, SD + ST, color=SAND, alpha=.75, label="Transfer (decays at k_Ft)")
+    ax.fill_between(days, 0, SD, color=SKY, alpha=.55, label="Retest effect (forgetting rate k_Fd)")
+    ax.fill_between(days, SD, SD + ST, color=SAND, alpha=.75, label="Transfer (forgetting rate k_Ft)")
     ax.plot(days, SD + ST, color=CORAL, lw=2.2)
-    ax.set_xlabel("Days between T1 and T2 (single retest)"); ax.set_ylabel("Predicted change in GI at T2")
+    ax.set_xlabel("Days between first and second administration"); ax.set_ylabel("Predicted composite-score change (points)")
     ax.set_xlim(1, day_max); ax.set_ylim(0, None); ax.legend(loc="upper right"); ax.grid(alpha=.3)
-    ax.set_title(f"Same gameplay dose ({fixed_games:.0f} games), different T1->T2 windows\n"
-                 "the retained benefit — and its split — depends on time", fontweight="bold")
+    ax.set_title(f"{fixed_games:.0f} gameplays over first intervals of different lengths",
+                 fontweight="bold")
     fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
 
 
@@ -390,11 +383,30 @@ def fig_dose_time_heatmap(params, out, gmax=1000, day_max=365):
     im = ax.pcolormesh(G, Dd, Z, cmap="viridis", shading="auto", rasterized=True)
     cs = ax.contour(G, Dd, Z, levels=6, colors="white", linewidths=.6, alpha=.85)
     ax.clabel(cs, inline=True, fontsize=8, fmt="%.1f")
-    cbar = fig.colorbar(im, ax=ax); cbar.set_label("Predicted change in GI at T2", fontsize=9)
+    cbar = fig.colorbar(im, ax=ax); cbar.set_label("Predicted composite-score change (points)", fontsize=9)
     cbar.ax.tick_params(labelsize=8)
-    ax.set_xlabel("Games between T1 and T2", fontsize=9); ax.set_ylabel("Days between T1 and T2", fontsize=9)
+    ax.set_xlabel("Gameplays in the first interval", fontsize=9); ax.set_ylabel("Days in the first interval", fontsize=9)
     ax.tick_params(labelsize=8)
-    ax.set_title("Predicted NCPT change as a joint function of dose and time", fontsize=11, fontweight="bold")
+    ax.set_title("Predicted change by gameplays and interval length", fontsize=11, fontweight="bold")
+    fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
+
+
+def fig_dose_curve(params, out, days=90.0, gmax=1000):
+    """Transfer accrued over one interval of `days` days, by gameplays (retest effect excluded)."""
+    p = params; g = np.linspace(0, gmax, 2001)
+    st = np.array([_T2_states(p, gi, days)[1] for gi in g])
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot(g, st, color=TEAL, lw=3)
+    ax.axhline(p["A_t"], color="0.5", ls="--", lw=1, label=f"ceiling A_t = {p['A_t']:.2f} points")
+    tgt = 0.8 * p["A_t"]; i = int(np.argmax(st >= tgt))
+    if i > 0 and st[i] >= tgt:
+        ax.plot(g[i], st[i], "o", color=CORAL, ms=7, zorder=5)
+        ax.annotate(f"80% of ceiling: about {g[i]:.0f} gameplays ({g[i]*MINUTES_PER_GAME/60:.0f} h)",
+                    (g[i], st[i]), textcoords="offset points", xytext=(12, -24), fontsize=9,
+                    arrowprops=dict(arrowstyle="->", color=INK))
+    ax.set_xlabel(f"Gameplays over {days:.0f} days"); ax.set_ylabel("Predicted transfer (points)")
+    ax.set_title(f"Transfer by gameplays over a {days:.0f}-day interval", fontweight="bold")
+    ax.set_xlim(0, gmax); ax.set_ylim(0, p["A_t"] * 1.1); ax.grid(alpha=.3); ax.legend(loc="lower right")
     fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
 
 
@@ -420,13 +432,12 @@ def fig_maintenance_concept(df, params, out, maint_doses=(1.0, 5.0), seg_days=90
             ax.plot(x2, 100 * np.array(maint) / At, color=col, lw=2.2, ls="--",
                     label=f"loaded to {frac*100:.0f}%  →  {arrow} {maint[-1]/At*100:.0f}%")
         gg = 1.0 - (1.0 - p["k_Lt"]) ** gpd; ss = gg / (gg + p["k_Ft"])
-        ax.axhline(ss * 100, color="0.35", ls="-.", lw=1.6)
-        ax.text(2 * seg_days, ss * 100, f"  steady state {ss*100:.0f}%", va="center",
-                fontsize=8, color="0.35", fontweight="bold")
-        ax.axvline(seg_days, color="0.8", lw=1); ax.text(seg_days, 1, " maintenance begins", fontsize=8, color="0.4")
-        ax.set_xlabel("Day of trial"); ax.set_title(f"maintenance dose = {gpd:g} game/day", fontweight="bold")
+        ax.axhline(ss * 100, color="0.35", ls="-.", lw=1.6, label=f"steady state {ss*100:.0f}%")
+        
+        ax.axvline(seg_days, color="0.8", lw=1); ax.text(seg_days, 99, " maintenance begins", fontsize=8, color="0.4", va="top")
+        ax.set_xlabel("Day"); ax.set_title(f"Maintenance: {gpd*MINUTES_PER_GAME:.0f} min per day ({gpd:g} gameplay{'s' if gpd != 1 else ''})", fontweight="bold")
         ax.legend(loc="lower right", fontsize=8); ax.grid(alpha=.3); ax.set_ylim(0, 100)
-    axes[0].set_ylabel("Transfer benefit (% of asymptote A_t)")
+    axes[0].set_ylabel("Transfer (% of ceiling)")
     fig.suptitle("A maintenance dose defines a steady state (90-day loading, then a constant dose)\n"
                  "higher levels decay toward it; lower levels rise to it", fontweight="bold")
     fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
@@ -440,22 +451,22 @@ def fig_maintenance(params, out, kft_ci=None, minutes_per_game=MINUTES_PER_GAME)
     fig, ax = plt.subplots(figsize=(9, 5.6))
     if kft_ci is not None:
         lo, hi = kft_ci
-        ax.fill_between(d, frac(hi), frac(lo), color=TEAL, alpha=.18, label=f"k_Ft 95% CI [{lo:.1e}, {hi:.1e}]")
+        ax.fill_between(d, frac(hi), frac(lo), color=TEAL, alpha=.18, label="k_Ft varied over its 95% interval, other parameters fixed")
     ax.plot(d, frac(kFt), color=INK, lw=2.5,
-            label=f"fitted k_Ft = {kFt:.2e}  (HL ≈ {np.log(2)/(-np.log(1-kFt))/365:.2f} yr)")
+            label=f"point estimate (k_Ft = {kFt:.2e}, half-life {np.log(0.5)/np.log(1-kFt):.0f} d)")
     ax.axhline(90, color="0.5", ls=":", lw=1.2); ax.text(0.05, 90.5, "90% of ceiling", fontsize=8, color="0.4")
     for dose in (0.5, 1.0, 1.3, 2.0, 5.0):
         gg = 1.0 - (1.0 - kLt) ** dose; f = 100 * gg / (gg + kFt)
         ax.plot(dose, f, "o", color=CORAL, ms=6)
-        tag = " (prescribed)" if dose == 5.0 else ""
-        ax.annotate(f"{dose:g} g/day (≈{dose*minutes_per_game:.0f} min) → {f:.0f}%{tag}",
+        tag = ""
+        ax.annotate(f"{dose:g} per day (≈{dose*minutes_per_game:.0f} min) → {f:.0f}%{tag}",
                     (dose, f), textcoords="offset points", xytext=(6, -12), fontsize=8, color=CORAL)
-    ax.set_xlabel("Maintenance dose (games per day)"); ax.set_ylabel("Steady-state transfer held (% of A_t)")
+    ax.set_xlabel("Gameplays per day"); ax.set_ylabel("Steady-state transfer (% of ceiling)")
     sec = ax.secondary_xaxis("top", functions=(lambda x: x * minutes_per_game, lambda x: x / minutes_per_game))
-    sec.set_xlabel(f"≈ minutes per day (at {minutes_per_game:.0f} min/game)")
+    sec.set_xlabel(f"≈ minutes per day (at {minutes_per_game:.0f} min per gameplay)")
     ax.set_ylim(0, 102); ax.set_xlim(0, 6); ax.grid(alpha=.3)
-    ax.set_title("Maintenance dose-response — steady-state transfer held by a constant daily dose\n"
-                 "(at the fitted forgetting rate; band = k_Ft bootstrap CI)", fontweight="bold")
+    ax.set_title("Steady-state transfer under a constant daily dose",
+                 fontweight="bold")
     ax.legend(loc="lower right"); fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
 
 
@@ -487,9 +498,9 @@ def fig_schedules(params, out, horizon=547, budget=1094, load_days=60, load_rate
         bo[load_days:] = seg * (rem / seg.sum())
 
     schedules = {
-        f"Even spread ({budget/horizon:.2f}/day)": (even, TEAL),
-        f"Load 60 d @{load_rate:g}/day, then maintain {maint_fl:.2f}/day": (fl, PURPLE),
-        f"Load 60 d @{load_rate:g}/day, then 2 boosters (~{boost_days} d, 6-mo apart), zero between": (bo, CORAL),
+        f"Even training ({budget/horizon:.1f} gameplays/day)": (even, TEAL),
+        f"Front-load plus maintenance ({load_days} d at {load_rate:g}/day, then {maint_fl:.2f}/day)": (fl, PURPLE),
+        f"Front-load plus boosters ({load_days} d at {load_rate:g}/day, then two {boost_days}-d blocks)": (bo, CORAL),
     }
     for lab, (sch, _) in schedules.items():
         assert abs(sch.sum() - budget) < 1.0, f"{lab} spends {sch.sum():.0f}, not {budget}"
@@ -498,15 +509,13 @@ def fig_schedules(params, out, horizon=547, budget=1094, load_days=60, load_rate
     for lab, (sch, col) in schedules.items():
         tr = _sim_transfer(sch, p, horizon)
         a0.plot(np.arange(horizon + 1), 100 * tr / At, color=col, lw=2,
-                label=f"{lab}\n   end {100*tr[-1]/At:.0f}% · mean {100*np.mean(tr)/At:.0f}%")
+                label=f"{lab}\n   endpoint {100*tr[-1]/At:.0f}% · average {100*np.mean(tr)/At:.0f}%")
         a1.plot(np.arange(horizon), sch, color=col, lw=1.2)
-    a0.axhline(100, color="0.6", ls=":", lw=1); a0.text(horizon, 100, "  A_t", va="center", color="0.4")
-    a0.set_ylabel("Transfer benefit (% of asymptote A_t)"); a0.legend(loc="lower right", fontsize=8.5)
+    a0.set_ylabel("Transfer (% of ceiling)"); a0.legend(loc="lower right", fontsize=8.5)
     a0.grid(alpha=.3); a0.set_ylim(0, 100)
-    a0.set_title(f"Training-schedule comparison at a fixed budget ({budget:.0f} games over {horizon} d)\n"
-                 "same cumulative volume, three paths — even spread, steady maintenance, or boosters",
+    a0.set_title(f"Three schedules with the same total ({budget:,.0f} gameplays over {horizon} days)",
                  fontweight="bold")
-    a1.set_ylabel("games/day"); a1.set_xlabel("Day of trial"); a1.grid(alpha=.3)
+    a1.set_ylabel("Gameplays per day"); a1.set_xlabel("Day"); a1.grid(alpha=.3)
     fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
 
 
@@ -522,17 +531,17 @@ def fig_two_channel(df, params, out, max_test=5):
         SD, ST = _adv(p, SD, ST, Di, Pi); sd_tr.append(SD); st_tr.append(ST)
     tests = np.arange(1, len(sd_tr) + 1)
     fig, (a0, a1) = plt.subplots(1, 2, figsize=(12.5, 5), gridspec_kw={"width_ratios": [1.4, 1]})
-    a0.plot(tests, st_tr, "o-", color=TEAL, lw=2.2, ms=7, label="Transfer S_T (gameplay)")
-    a0.plot(tests, sd_tr, "s-", color=CORAL, lw=2.2, ms=7, label="Familiarity S_D (direct)")
+    a0.plot(tests, st_tr, "o-", color=TEAL, lw=2.2, ms=7, label="Transfer S_T (training)")
+    a0.plot(tests, sd_tr, "s-", color=CORAL, lw=2.2, ms=7, label="Retest effect S_D")
     a0.axhline(p["A_t"], color=TEAL, ls=":", lw=1.2); a0.axhline(p["A_d"], color=CORAL, ls=":", lw=1.2)
-    a0.set_xlabel("Assessment"); a0.set_ylabel("Accrued component (GI points)")
-    a0.set_title("Both channels accrue over the observation window\n(median exposure)", fontweight="bold")
+    a0.set_xlabel("Administration"); a0.set_ylabel("Predicted component (points)")
+    a0.set_title("Both processes over five administrations\n(median intervals)", fontweight="bold")
     a0.legend(); a0.grid(alpha=.3); a0.set_xticks(tests)
     At, Ad = p["A_t"], p["A_d"]; share = Ad / (At + Ad)
-    a1.bar(["Transfer\nA_t", "Direct\nA_d"], [At, Ad], color=[TEAL, CORAL])
+    a1.bar(["Transfer\nA_t", "Retest effect\nA_d"], [At, Ad], color=[TEAL, CORAL])
     for i, v in enumerate([At, Ad]): a1.text(i, v, f"{v:.2f}", ha="center", va="bottom", fontweight="bold")
-    a1.set_ylabel("Asymptotic ceiling (GI points)")
-    a1.set_title(f"Asymptotic ceilings\ndirect share = {share*100:.1f}%", fontweight="bold"); a1.grid(alpha=.3, axis="y")
+    a1.set_ylabel("Ceiling (points)")
+    a1.set_title(f"Ceilings\nretest-effect share = {share*100:.1f}%", fontweight="bold"); a1.grid(alpha=.3, axis="y")
     fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
 
 
@@ -543,8 +552,8 @@ def fig_Ad_identification(draws_orig, draws_merged, out):
     ax.hist(ao, bins=bins, color="#9aa0a6", alpha=.6, density=True, label=f"T1-T3 records ({np.mean(ao>=.95*ceil)*100:.0f}% at bound)")
     ax.hist(am, bins=bins, color=TEAL, alpha=.6, density=True, label=f"augmented ({np.mean(am>=.95*ceil)*100:.0f}% at bound)")
     ax.set_xlim(0, min(ceil, max(np.percentile(ao, 98), np.percentile(am, 98)) * 1.1))
-    ax.set_xlabel("A_d bootstrap draws (direct-practice ceiling)"); ax.set_ylabel("density"); ax.legend()
-    ax.set_title("Short-interval retakes pin the direct-practice ceiling", fontweight="bold"); ax.grid(alpha=.3)
+    ax.set_xlabel("A_d bootstrap draws (retest-effect ceiling)"); ax.set_ylabel("density"); ax.legend()
+    ax.set_title("Retest-effect ceiling: bootstrap draws", fontweight="bold"); ax.grid(alpha=.3)
     fig.tight_layout(); fig.savefig(out, dpi=DPI, bbox_inches="tight"); plt.close(fig)
 
 
@@ -581,7 +590,7 @@ def make_all(df, params, P, D, Y, w, main_dir, supp_dir, nboot=200, seed=7, max_
     print(f"\n  SUPPLEMENT figures -> {sd}/")
     _try(man, "S CDFs",                    lambda: fig_cdf(df, f"{sd}/figS_cdf.png"))
     _try(man, "S two-channel",             lambda: fig_two_channel(df, params, f"{sd}/figS_two_channel.png", max_test))
-    _try(man, "S dose curve",              lambda: ff.plot_dose_response(params))
+    _try(man, "S dose curve",              lambda: fig_dose_curve(params, f"{sd}/viz5_dose_response.png"))
     _try(man, "S residuals",               lambda: ff.plot_residuals_distribution(P, D, Y, params))
     _try(man, "S regression-to-mean",      lambda: ff.plot_regression_to_mean(df))
     if draws_orig is not None:

@@ -14,6 +14,7 @@ transfer_model.py and figures.py are imported unchanged; CONFIG overrides are in
 Run:
   python run_v17.py --data data/newsubset.csv --composite data/short_intervals.csv --nboot 20 --skip-figures
   caffeinate -i python run_v17.py --data data/newsubset.csv --composite data/short_intervals.csv
+  python run_v17.py --figures-only     (redraw all figures from out/v17/draws.npy; report.md untouched)
 Output: out/v17/report.md, draws.npy, bootstrap_info.csv, cv_deciles.csv, fig_main/, fig_supp/
 """
 from __future__ import annotations
@@ -31,6 +32,7 @@ import data_build as db
 PO = ff.PARAM_ORDER                      # [k_Lt, k_Ft, k_Ld, k_Fd, A_t, A_d]
 OUT = os.path.join("out", "v17")
 REPORT: list[str] = []
+REPORT_PATH = os.path.join(OUT, "report.md")
 
 # ---------------------------------------------------------------- starting values
 # Osman et al. (2023) PLoS One 18:e0281095, Eq. 1:  dY = a + (b - a)(1 - exp(-c N))
@@ -61,7 +63,7 @@ NAMES = {"even": "Even training", "load": "Front-load plus maintenance",
 # ---------------------------------------------------------------- helpers
 def say(s=""):
     print(s); REPORT.append(s)
-    with open(os.path.join(OUT, "report.md"), "w") as fh:
+    with open(REPORT_PATH, "w") as fh:
         fh.write("\n".join(REPORT) + "\n")
 
 
@@ -171,6 +173,13 @@ def sec_table1(x, draws):
     say(f"  draws at a bound (any parameter): "
         f"{int(sum(any(d[i] - lo < 1e-8 or hi - d[i] < 1e-8 for i, (lo, hi) in enumerate(BOUNDS)) for d in ok))}")
     say(f"  draws with k_Ft > {FAST_KFT}: {int((ok[:, 1] > FAST_KFT).sum())}")
+    fast = ok[ok[:, 1] > 0.05]
+    say(f"  draws with k_Ft > 0.05 (transfer half-life under 14 d): {len(fast)}" +
+        "".join(f"\n    k_Ft {d[1]:.4g} (half-life {hl(d[1]):.0f} d), k_Lt {d[0]:.4g}" for d in fast))
+    if len(fast):
+        rest = ok[ok[:, 1] <= 0.05]
+        say("  intervals without them: " + "  ".join(
+            f"{k} {np.percentile(rest[:, i], 2.5):.4g}-{np.percentile(rest[:, i], 97.5):.4g}" for i, k in enumerate(PO)))
 
 
 def sec_results_numbers(x, df):
@@ -297,6 +306,11 @@ def fig_maintenance_joint(draws, x, path):
     fig, ax = plt.subplots(figsize=(7, 5))
     ax.fill_between(mins, lo, hi, color=figs.TEAL, alpha=.30, label="95% interval (bootstrap)")
     ax.plot(mins, steady(mins, x[0], x[1]), color=figs.INK, lw=2.4, label="Estimate")
+    for m in MINUTES:
+        val = float(steady(m, x[0], x[1]))
+        ax.plot(m, val, "o", color=figs.CORAL, ms=6, zorder=5)
+        ax.annotate(f"{m} min: {val:.0f}%", (m, val), textcoords="offset points", xytext=(6, -14),
+                    fontsize=8, color=figs.CORAL)
     ax.set_xlabel("Daily cognitive training (minutes)")
     ax.set_ylabel("Steady-state transfer (% of ceiling)")
     ax.set_xlim(0, 18); ax.set_ylim(0, 102); ax.grid(alpha=.3); ax.legend(loc="lower right")
@@ -361,8 +375,13 @@ def main():
     ap.add_argument("--rebuild", action="store_true")
     ap.add_argument("--skip-figures", action="store_true")
     ap.add_argument("--force", action="store_true", help="continue even if k_Ft > 0.1")
+    ap.add_argument("--figures-only", action="store_true",
+                    help="redraw figures from out/v17/draws.npy; no bootstrap; report.md untouched")
     args = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
+    global REPORT_PATH
+    if args.figures_only:
+        REPORT_PATH = os.path.join(OUT, "figures_only.md")
     t_start = time.time()
 
     # in-memory overrides: one start, one bound set, everywhere
@@ -398,6 +417,16 @@ def main():
         say(f"\n  !! k_Ft = {x[1]:.3g} > {FAST_KFT}: the Osman-anchored start reached the fast basin.")
         say("     Stopping before the bootstrap; rerun with --force to continue.")
         sys.exit(2)
+
+    if args.figures_only:
+        draws = np.load(os.path.join(OUT, "draws.npy"))
+        ok = draws[~np.isnan(draws).any(axis=1)]
+        tp = os.path.join(OUT, "derived_per_draw.csv")
+        tab = pd.read_csv(tp) if os.path.exists(tp) else pd.DataFrame([derived(d) for d in ok])
+        say(f"\n  figures only: {len(ok)} draws from {OUT}/draws.npy; report.md left unchanged")
+        make_figures(df, x, P, D, Y, w, draws, tab, len(draws))
+        say(f"\n  done in {(time.time() - t_start) / 60:.1f} min.  log: {REPORT_PATH}")
+        return
 
     sec_results_numbers(x, df)
     sec_data_checks(df, uids, x, args.uid_prefix)
