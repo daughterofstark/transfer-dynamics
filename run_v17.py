@@ -1,5 +1,5 @@
 """
-run_v17.py - v17 refit with Osman-anchored starting values (Bob's v16 feedback).
+run_v17.py - v17 refit with Osman-anchored starting values (single start, one bound set, joint bootstrap).
 
   * one start, derived from Osman et al. 2023 (no restarts, no k_Ft probe, no fallback bound)
   * one bound set for every fit: rates [1e-6, 0.99], ceilings [0, 30]
@@ -7,13 +7,13 @@ run_v17.py - v17 refit with Osman-anchored starting values (Bob's v16 feedback).
     as the primary fit (maxiter 10,000), same draw sequence as figures._bootstrap (seed 7)
   * joint-bootstrap band only (no k_Ft-only sweep); no static comparator; no profile
   * Grand Index-only fit (Supplementary Table 3) and cross-validation with the same settings
-  * the new numbers Bob asked for: Hedges' g, 1-69-day intervals, held-out decile agreement
+  * data checks: Hedges' g, 1-69-day intervals, held-out decile agreement
 
 transfer_model.py and figures.py are imported unchanged; CONFIG overrides are in memory.
 
 Run:
-  python run_v17.py --data data/newsubset.csv --nicole data/short_intervals.csv --nboot 20 --skip-figures
-  caffeinate -i python run_v17.py --data data/newsubset.csv --nicole data/short_intervals.csv
+  python run_v17.py --data data/newsubset.csv --composite data/short_intervals.csv --nboot 20 --skip-figures
+  caffeinate -i python run_v17.py --data data/newsubset.csv --composite data/short_intervals.csv
 Output: out/v17/report.md, draws.npy, bootstrap_info.csv, cv_deciles.csv, fig_main/, fig_supp/
 """
 from __future__ import annotations
@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 import transfer_model as ff
 import paper_pipeline as pp
 import figures as figs
-import verify_numbers as vn
+import data_build as db
 
 PO = ff.PARAM_ORDER                      # [k_Lt, k_Ft, k_Ld, k_Fd, A_t, A_d]
 OUT = os.path.join("out", "v17")
@@ -173,7 +173,7 @@ def sec_table1(x, draws):
     say(f"  draws with k_Ft > {FAST_KFT}: {int((ok[:, 1] > FAST_KFT).sum())}")
 
 
-def sec_results_numbers(x):
+def sec_results_numbers(x, df):
     header("RESULTS-TEXT NUMBERS at the estimate")
     p = dict(zip(PO, x))
     k_Lt, k_Ft, k_Ld, k_Fd, A_t, A_d = x
@@ -181,8 +181,9 @@ def sec_results_numbers(x):
         gms = figs._games_for_transfer_frac(p, frac, 90)
         say(f"  {int(frac * 100)}% of transfer ceiling over 90 days: {gms:.0f} gameplays = "
             f"{gms * figs.MINUTES_PER_GAME / 60:.1f} h")
-    sd0, st0 = ff.advance_interval(0, 0, 108, 0, k_Ld, k_Fd, k_Lt, k_Ft, A_d, A_t)
-    say(f"  Fig 4: predicted change at 108 d with no training {sd0 + st0:.2f}; "
+    mean_d = float(df.loc[df["nth_test"] == 2, "days_interval"].mean())
+    sd0, st0 = ff.advance_interval(0, 0, mean_d, 0, k_Ld, k_Fd, k_Lt, k_Ft, A_d, A_t)
+    say(f"  Fig 4: predicted change at the mean first interval ({mean_d:.0f} d) with no training {sd0 + st0:.2f}; "
         f"asymptote with extensive training {sd0 + A_t:.2f}")
     for D in (1, 365):
         sd, st = ff.advance_interval(0, 0, D, 440, k_Ld, k_Fd, k_Lt, k_Ft, A_d, A_t)
@@ -352,7 +353,7 @@ def make_figures(df, x, P, D, Y, w, draws, tab, nboot):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default="data/newsubset.csv")
-    ap.add_argument("--nicole", default="data/short_intervals.csv")
+    ap.add_argument("--composite", "--nicole", dest="composite", default="data/short_intervals.csv")
     ap.add_argument("--min-valid-subtests", type=int, default=3)
     ap.add_argument("--uid-prefix", default="NIC_")
     ap.add_argument("--nboot", type=int, default=200)
@@ -361,7 +362,7 @@ def main():
     ap.add_argument("--skip-figures", action="store_true")
     ap.add_argument("--force", action="store_true", help="continue even if k_Ft > 0.1")
     args = ap.parse_args()
-    os.makedirs(OUT, exist_ok=True); os.makedirs(vn.SCRATCH, exist_ok=True)
+    os.makedirs(OUT, exist_ok=True)
     t_start = time.time()
 
     # in-memory overrides: one start, one bound set, everywhere
@@ -386,7 +387,7 @@ def main():
         f"ftol {ff.CONFIG['ftol']}  gtol {ff.CONFIG['gtol']}")
     say(f"  Osman-anchored start: {fmt(x0)}")
 
-    newsub, merged = vn.build_merged_once(args)
+    newsub, merged = db.build_merged_once(args)
     df, uids, P, D, Y, w = prepare(merged)
     r = fit_and_check(P, D, Y, w, x0, "MAIN (pooled, T1-T5)")
     x = np.asarray(r.x)
@@ -395,10 +396,10 @@ def main():
 
     if x[1] > FAST_KFT and not args.force:
         say(f"\n  !! k_Ft = {x[1]:.3g} > {FAST_KFT}: the Osman-anchored start reached the fast basin.")
-        say("     Stopping before the bootstrap. Raise this with Bob; rerun with --force to continue.")
+        say("     Stopping before the bootstrap; rerun with --force to continue.")
         sys.exit(2)
 
-    sec_results_numbers(x)
+    sec_results_numbers(x, df)
     sec_data_checks(df, uids, x, args.uid_prefix)
 
     header(f"BOOTSTRAP ({args.nboot} resamples, start = point estimate)")

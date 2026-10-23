@@ -1,5 +1,5 @@
 import pandas as pd
-import merge_nicole_refit as mnr
+import composite_extract as mnr
 
 NICOLE = "data/short_intervals.csv"
 GI = "data/newsubset.csv"

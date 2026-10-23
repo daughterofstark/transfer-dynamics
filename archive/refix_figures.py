@@ -11,14 +11,14 @@ redraws:
 Everything else in fig_main/ and fig_supp/ is left untouched.
 
 Run (same directory as the rest):
-  python refix_figures.py --data newsubset.csv --nicole "Medha ncpt ...csv"
+  python refix_figures.py --data newsubset.csv --nicole data/short_intervals.csv
 """
 from __future__ import annotations
 import argparse, copy, os, tempfile
 import pandas as pd
 
 import transfer_model as ff
-import merge_nicole_refit as mnr
+import composite_extract as mnr
 import figures as figs
 
 HUGE = 10 ** 9

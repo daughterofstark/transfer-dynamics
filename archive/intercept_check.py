@@ -11,13 +11,13 @@ Reports for the merged sample AND the original-only sample (they may differ, sin
 the augmentation is short-interval-heavy).
 
 Run:
-  python intercept_check.py --data newsubset.csv --nicole "Medha ncpt ...csv"
+  python intercept_check.py --data newsubset.csv --nicole data/short_intervals.csv
 """
 from __future__ import annotations
 import argparse
 import numpy as np, pandas as pd
 
-import merge_nicole_refit as mnr
+import composite_extract as mnr
 
 
 def _t2_delta(df, max_games=25):

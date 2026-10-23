@@ -1,5 +1,5 @@
 import pandas as pd
-import merge_nicole_refit as mnr
+import composite_extract as mnr
 
 raw = mnr._clean_cols(pd.read_csv("data/short_intervals.csv", low_memory=False))
 gi = mnr._clean_cols(pd.read_csv("data/newsubset.csv", low_memory=False))

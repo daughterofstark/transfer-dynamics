@@ -1,6 +1,6 @@
 # Input data
 
-Participant-level data are not distributed with this repository and must never be committed (`.gitignore` excludes `data/*`, `*.csv` and `*.npy`). Place the two extracts here, or pass their paths with `--data` and `--nicole`.
+Participant-level data are not distributed with this repository and must never be committed (`.gitignore` excludes `data/*`, `*.csv` and `*.npy`). Place the two extracts here, or pass their paths with `--data` and `--composite`.
 
 ## 1. Grand Index extract: `data/newsubset.csv`
 
@@ -41,7 +41,7 @@ One row per subtest result. Column names are matched case-insensitively.
 
 The file contains other columns, including `DATE_OF_BIRTH`. The analysis does not use them.
 
-### How composite records are built (`merge_nicole_refit.py`, `paper_pipeline.build_merged`)
+### How composite records are built (`composite_extract.py`, `paper_pipeline.build_merged`)
 
 1. Each sitting's date is the date of its first subtest result, recorded before any rows are dropped.
 2. Index scores of 0 are dropped. Where a subtest appears twice in a sitting, the first result is kept.

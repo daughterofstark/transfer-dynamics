@@ -11,7 +11,7 @@ Sections (run independently with --only):
   unweighted  Limitation: refit with all weights = 1                             (1 fit)
 
 Run:
-  python verify_numbers.py --data newsubset.csv --nicole "Medha ncpt ...csv"
+  python verify_numbers.py --data newsubset.csv --nicole data/short_intervals.csv
   python verify_numbers.py --data newsubset.csv --nicole "...csv" --only exposure
   python verify_numbers.py --data newsubset.csv --nicole "...csv" --only halflife --nboot 200
 """
@@ -23,7 +23,7 @@ from scipy.optimize import minimize
 
 import transfer_model as ff
 import paper_pipeline as pp
-import merge_nicole_refit as mnr
+import composite_extract as mnr
 try:
     import paper_additions as add; HAVE_ADD = True
 except Exception:

@@ -19,7 +19,7 @@ from scipy.stats import spearmanr
 import transfer_model as ff
 import paper_pipeline as pp
 import figures as figs
-import verify_numbers as vn
+import data_build as db
 import run_v17 as rv
 
 PO = ff.PARAM_ORDER
@@ -43,16 +43,15 @@ def run_ids(s):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default="data/newsubset.csv")
-    ap.add_argument("--nicole", default="data/short_intervals.csv")
+    ap.add_argument("--composite", "--nicole", dest="composite", default="data/short_intervals.csv")
     ap.add_argument("--min-valid-subtests", type=int, default=3)
     ap.add_argument("--uid-prefix", default="NIC_")
     ap.add_argument("--rebuild", action="store_true")
     args = ap.parse_args()
-    os.makedirs(vn.SCRATCH, exist_ok=True)
     os.makedirs(os.path.join(OUT, "fig_main"), exist_ok=True)
     pre = args.uid_prefix
 
-    newsub, merged = vn.build_merged_once(args)
+    newsub, merged = db.build_merged_once(args)
     df, uids, P, D, Y, w = rv.prepare(merged)
     is_comp = df["user_id"].astype(str).str.startswith(pre)
 
@@ -134,7 +133,7 @@ def main():
     s = pd.to_datetime(gi["signup_date"], format="%d/%m/%y", errors="coerce")
     dgi = s + pd.to_timedelta(gi["days_since_signup"], unit="D")
     say(f"  Grand Index: {dgi.min().date()} to {dgi.max().date()}   (unparseable signup dates: {int(s.isna().sum()):,})")
-    rawc = pd.read_csv(args.nicole, usecols=["TEST_RUN_ID", "TRESULT_CREATED_AT"], low_memory=False)
+    rawc = pd.read_csv(args.composite, usecols=["TEST_RUN_ID", "TRESULT_CREATED_AT"], low_memory=False)
     tf = pd.to_datetime(rawc["TRESULT_CREATED_AT"], errors="coerce").groupby(run_ids(rawc["TEST_RUN_ID"])).min()
     dc = run_ids(df.loc[is_comp, "test_run_id"]).map(tf)
     say(f"  composite:   {dc.min().date()} to {dc.max().date()}   (sittings without a date: {int(dc.isna().sum()):,})")

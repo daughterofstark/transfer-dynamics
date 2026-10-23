@@ -1,5 +1,5 @@
 import numpy as np, pandas as pd
-import merge_nicole_refit as mnr
+import composite_extract as mnr
 
 NIC = "data/short_intervals.csv"
 raw = mnr._clean_cols(pd.read_csv(NIC, low_memory=False))

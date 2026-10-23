@@ -571,7 +571,7 @@ def make_all(df, params, P, D, Y, w, main_dir, supp_dir, nboot=200, seed=7, max_
     _try(man, "3x3 empirical match",       lambda: fig_dose_9panel(df, params, f"{md}/fig_dose_9panel.png", draws=draws))
     _try(man, "3-panel dose row",          lambda: fig_dose_row(df, params, f"{md}/fig_dose_row.png", draws=draws))
     _try(man, "dose-response partition",   lambda: fig_dose_partition(df, params, f"{md}/fig_dose_partition.png"))
-    _try(man, "fixed dose x time window",  lambda: fig_time_window(df, params, f"{md}/fig_time_window.png"))
+    _try(man, "fixed dose x time window",  lambda: fig_time_window(df, params, f"{md}/fig_time_window.png", fixed_games=440))
     _try(man, "dose x time heatmap",       lambda: fig_dose_time_heatmap(params, f"{md}/fig_dose_time_heatmap.png"))
     _try(man, "maintenance concept",       lambda: fig_maintenance_concept(df, params, f"{md}/fig_maintenance_concept.png"))
     _try(man, "maintenance dose",          lambda: fig_maintenance(params, f"{md}/fig_maintenance.png", kft_ci=kft_ci))

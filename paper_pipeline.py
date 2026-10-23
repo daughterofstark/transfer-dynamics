@@ -1,23 +1,7 @@
 """
-paper_pipeline.py — ONE canonical pipeline for the restructured paper.
-======================================================================
-Main model = MERGED 2-5 fit (original + Nicole, min_tests>=2, T1-T5, no exclusion,
-day buckets [-1,0.5,90,150,9999] with the same-day D0 split). One point fit drives
-every deterministic figure; only bootstrap / k-fold / k_Ft-profile refit.
-
-Runs, in one command:
-  1. build the merged dataset internally (newsubset + Nicole -> composite -> chains)
-  2. MAIN fit (merged 2-5) + ROBUSTNESS fit (original T1-T3), side by side
-  3. number manifest (copy these into the paper)
-  4. main figures (reusing the validated plot functions; spec-specific ones rebuilt)
-  6. exclusion-sensitivity as a TEXT robustness line (no figure)
-
-Everything imports the engine + helpers UNCHANGED (transfer_model, paper_additions,
-merge_nicole_refit, figures, reanalysis_v3).
-
-Run:
-  python paper_pipeline.py --data newsubset.csv --nicole "Medha ncpt ...csv" --nboot 200
-  python paper_pipeline.py ... --no-exclusion-sweep --no-figures   # skip slow bits
+paper_pipeline.py - merges the two extracts and defines the weighting bands.
+Used by v17 (via data_build.py): build_merged, MAIN_DAY_EDGES/LBLS, NOEXCL, _truncate.
+fit() and main() are the legacy v16 pipeline and are not part of the v17 workflow.
 """
 from __future__ import annotations
 import argparse, copy, os, tempfile
@@ -27,7 +11,7 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 import transfer_model as ff
-import merge_nicole_refit as mnr
+import composite_extract as mnr
 import figures as figs
 try:
     import paper_additions as add;      HAVE_ADD = True
@@ -65,9 +49,9 @@ def _truncate(frame, max_test):
 
 
 # ───────────────────────── build merged data (internal) ─────────────────────────
-def build_merged(data, nicole, min_valid_subtests, uid_prefix, out_csv):
-    print(f"\n{'='*70}\n  BUILD MERGED DATA (newsubset + Nicole)\n{'='*70}")
-    run = mnr.build_nicole_composite(nicole, min_valid_subtests)
+def build_merged(data, composite, min_valid_subtests, uid_prefix, out_csv):
+    print(f"\n{'='*70}\n  BUILD MERGED DATA (Grand Index + composite)\n{'='*70}")
+    run = mnr.build_composite(composite, min_valid_subtests)
     chains, _ = mnr.build_chains(run)
     newsub = mnr._clean_cols(pd.read_csv(data))
     newsub = mnr.enforce_same_battery(newsub, "original")

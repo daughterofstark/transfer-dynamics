@@ -1,5 +1,5 @@
 import numpy as np, pandas as pd
-import merge_nicole_refit as mnr
+import composite_extract as mnr
 
 raw = mnr._clean_cols(pd.read_csv("data/short_intervals.csv", low_memory=False))
 raw["nth_run"] = pd.to_numeric(raw["nth_run"], errors="coerce")

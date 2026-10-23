@@ -1,5 +1,5 @@
 import numpy as np, pandas as pd
-import merge_nicole_refit as mnr
+import composite_extract as mnr
 
 raw = mnr._clean_cols(pd.read_csv("data/short_intervals.csv", low_memory=False))
 for c in ["days_between_test_runs", "gameplays_between_test_runs", "nth_run"]:

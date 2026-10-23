@@ -40,7 +40,7 @@ Tested with Python 3.13.5 on macOS.
 Equivalent manual commands:
 
 ```
-.venv/bin/python run_v17.py --data data/newsubset.csv --nicole data/short_intervals.csv --rebuild
+.venv/bin/python run_v17.py --data data/newsubset.csv --composite data/short_intervals.csv --rebuild
 .venv/bin/python descriptives_v17.py
 ```
 
@@ -62,7 +62,7 @@ Equivalent manual commands:
 | Fig. 2 | `fig_main/fig_param_bootstrap.png` |
 | Fig. 3 | `fig_main/fig_dose_9panel.png` |
 | Fig. 4 | `fig_main/fig_dose_partition.png` |
-| Fig. 5 | `fig_main/fig_time_window.png` (written at 440 gameplays by `descriptives_v17.py`) |
+| Fig. 5 | `fig_main/fig_time_window.png` (440 gameplays) |
 | Fig. 6 | `fig_main/fig_maintenance_concept.png` |
 | Fig. 7 | `fig_main/fig_maintenance.png` |
 | Fig. 8 | `fig_main/fig_schedules.png` |
@@ -95,10 +95,10 @@ run_paper.sh            one command: rebuild data, fit, bootstrap, figures, desc
 run_v17.py              analysis entry point
 descriptives_v17.py     descriptive numbers; writes Fig. 5 at 440 gameplays
 transfer_model.py       model engine, imported unchanged (settings are applied in memory)
-merge_nicole_refit.py   builds composite records from the short-interval extract
+composite_extract.py    builds composite records from the short-interval extract
 paper_pipeline.py       merges the two extracts and defines the weighting bands
 figures.py              figure builders
-verify_numbers.py       supplies the cached data build used above; its other sections are legacy
+data_build.py           builds or reuses the cached merged dataset
 requirements.txt        pinned dependencies
 CANONICAL_NUMBERS.md    every reported number and its source
 DECISIONS.md            analysis decisions and their rationale

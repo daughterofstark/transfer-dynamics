@@ -23,7 +23,7 @@ NBOOT=200
 SKIP=""
 if [ "${1:-}" = "--quick" ]; then NBOOT=20; SKIP="--skip-figures"; fi
 
-"$PY" run_v17.py --data "$DATA" --nicole "$COMPOSITE" --nboot "$NBOOT" --rebuild $SKIP
-"$PY" descriptives_v17.py --data "$DATA" --nicole "$COMPOSITE"
+"$PY" run_v17.py --data "$DATA" --composite "$COMPOSITE" --nboot "$NBOOT" --rebuild $SKIP
+"$PY" descriptives_v17.py --data "$DATA" --composite "$COMPOSITE"
 
 echo "Done. Reports: out/v17/report.md and out/v17/descriptives.md"

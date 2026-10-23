@@ -1,45 +1,12 @@
 """
-merge_nicole_refit.py  —  add Nicole's short-interval data to newsubset and refit.
-================================================================================
-Self-contained. Wraps the UNCHANGED engine (transfer_model.py) plus paper_additions.
-Does NOT depend on merge_and_refit.py / build_composite.py or any prior helper.
-
-What it does, in order:
-  Step 1  Nicole composite = MEAN of the non-zero per-subtest index_score values
-          per test_run (require >=3 valid). index_score is ALREADY per-subtest
-          census-normed (~100/15), so the mean keeps that census referencing; a
-          within-sample inverse-normal transform would instead re-rank against our
-          own cohort and discard exactly the demographic differences we want to
-          preserve. The mean is also count-invariant, so it sidesteps the battery-
-          length problem, and since we use same-battery chains only the per-battery
-          level cancels in the within-user change. (Cost: averaging correlated
-          subtests leaves SD ~12 vs newsubset's 15 -> a mild proportional scale
-          compression; only full norming would remove it.)
-  Step 2  Same-battery, consecutive chains from each user's first run; report how
-          often runs 1 and 2 share a battery, and the chain-length distribution.
-  Step 3  Recast Nicole chains into newsubset's native schema (cumulative
-          num_plays_before / days_since_signup, T1=0; normed_score = mean composite).
-  Step 4  Add a same-day (D0) time-interval bucket to the weighting bins BEFORE
-          weighting, so same-day retakes stop being silently 5x-upweighted.
-  Step 5  Refit no-exclusion, T1-T3: original vs merged, side by side.
-  Step 6  User-level bootstrap of BOTH fits (mirrors the engine's refit path) to
-          check whether the previously-unstable parameters (A_d, k_Ld, k_Ft) have
-          settled once Nicole's same-day data is in. Overlaid figure + CI table.
-
-Two things it SURFACES rather than deciding:
-  (a) min_tests=3 drops Nicole's two-timepoint pairs (most of her same-day signal).
-      Prints how many Nicole users enter at >=3 vs would enter at >=2, and how many
-      newsubset 2-test users lowering to 2 would add. Flip with --min-tests 2.
-  (b) Keeps Nicole to same-battery chains only (per-battery offsets cancel).
-
-Reporting rule: composites / practice effects in GI or per-subtest units only,
-never summed-subtest units (battery length varies across people).
-
-Run:
-  python merge_nicole_refit.py --data newsubset.csv --nicole "Medha ncpt short ...csv"
-  python merge_nicole_refit.py --data newsubset.csv --nicole nicole.csv --min-tests 2
-  python merge_nicole_refit.py ... --nboot 100        # faster bootstrap
-  python merge_nicole_refit.py ... --no-bootstrap      # skip Step 6
+composite_extract.py - composite records from the short-interval NCPT extract.
+Used by v17 through paper_pipeline.build_merged:
+  build_composite      mean of valid subtest index scores per sitting (>=3); one result per
+                       subtest (first attempt); sitting date = first subtest result; gameplays
+                       = the one stored value per sitting
+  build_chains         consecutive same-battery sittings starting at the first sitting
+  to_newsubset_schema  recast to the Grand Index schema; IDs prefixed NIC_
+fit_spec, bootstrap_draws, stability_report and main() are legacy (v16) exploration code.
 """
 from __future__ import annotations
 import argparse, copy, os, sys, tempfile
@@ -115,10 +82,10 @@ def _pick(df, candidates, required=True, what=""):
     return None
 
 
-# ───────────────────────── STEP 1: Nicole MEAN composite ─────────────────────────
-def build_nicole_composite(nicole_path, min_valid_subtests=3):
-    print(f"\n{'='*72}\n  STEP 1  Nicole composite = MEAN of per-subtest index_score\n{'='*72}")
-    raw = _clean_cols(pd.read_csv(nicole_path))
+# ───────────────────────── STEP 1: composite MEAN composite ─────────────────────────
+def build_composite(path, min_valid_subtests=3):
+    print(f"\n{'='*72}\n  STEP 1  composite = MEAN of per-subtest index_score\n{'='*72}")
+    raw = _clean_cols(pd.read_csv(path))
     print(f"  raw rows (subtest grain)      : {len(raw):,}")
 
     c_user   = _pick(raw, ["user_id"], what="user_id")
@@ -296,8 +263,8 @@ def to_newsubset_schema(chains, newsubset_cols, uid_prefix="NIC_"):
     for name in ["gender", "age", "education_level", "signup_date"]:
         if name in newsubset_cols and name in ch.columns:
             out[name] = ch[name].values
-    print(f"  Nicole users kept (chain>=2)   : {out['user_id'].nunique():,}")
-    print(f"  Nicole rows written            : {len(out):,}")
+    print(f"  composite participants kept (chain>=2)   : {out['user_id'].nunique():,}")
+    print(f"  composite rows written            : {len(out):,}")
     return out
 
 
@@ -307,13 +274,13 @@ BATT_CANDS = ["brainpower_test_id", "battery_id", "battery", "test_battery_id", 
 def enforce_same_battery(df, label):
     """If the original carries a battery column, keep each user's leading
        same-battery run (chain stops at the first battery change), mirroring how
-       Nicole's chains are built. If no battery column exists, warn and pass
+       composite's chains are built. If no battery column exists, warn and pass
        through — it cannot be enforced or verified from this file."""
     col = next((c for c in BATT_CANDS if c in df.columns), None)
     if col is None:
         print(f"  [{label}] NO battery column present ({'/'.join(BATT_CANDS[:3])}…). "
               f"Cannot enforce or VERIFY same-battery on the original from this file; "
-              f"assuming it was enforced upstream before sharing (per PI).")
+              f"assuming it was enforced upstream before extraction.")
         return df
     df = df.sort_values(["user_id", "nth_test"])
     keep, trimmed = [], 0
@@ -525,9 +492,9 @@ def min_tests_flag(newsubset_path, chain_lengths, min_tests=3, max_test=3):
     print(f"\n{'='*72}\n  FLAG (a): chain window — min_tests={min_tests}, up to T{max_test}\n{'='*72}")
     n_in  = int((chain_lengths >= min_tests).sum())
     n_out = int(((chain_lengths >= 2) & (chain_lengths < min_tests)).sum())
-    print(f"  Nicole users, same-battery chain length >= {min_tests} : {n_in:,}  (ENTER)")
-    print(f"  Nicole users, 2 <= chain length < {min_tests}      : {n_out:,}  (excluded at this threshold)")
-    print(f"  -> at min_tests={min_tests} you keep {n_in:,} of {n_in+n_out:,} chained (>=2) Nicole users."
+    print(f"  composite participants, same-battery chain length >= {min_tests} : {n_in:,}  (ENTER)")
+    print(f"  composite participants, 2 <= chain length < {min_tests}      : {n_out:,}  (excluded at this threshold)")
+    print(f"  -> at min_tests={min_tests} you keep {n_in:,} of {n_in+n_out:,} chained (>=2) composite participants."
           + ("  Most same-day signal is in the length-2 pairs." if min_tests > 2 else
              "  Length-2 pairs (incl. same-day retakes) ARE included."))
     try:
@@ -560,7 +527,7 @@ def main():
     ap.add_argument("--no-bootstrap", action="store_true")
     ap.add_argument("--day-edges", default="-1,0.5,90,180,9999",
                     help="comma-sep day-bin edges for weighting. Default keeps the same-day "
-                         "D0 split then 0-90/90-180/180+. PI's new buckets: '-1,0.5,60,150,9999'.")
+                         "D0 split then 0-90/90-180/180+. alternative buckets: '-1,0.5,60,150,9999'.")
     ap.add_argument("--day-labels", default=None,
                     help="comma-sep labels (len = #edges-1). If omitted, auto-derived from edges.")
     ap.add_argument("--tag", default="",
@@ -584,9 +551,9 @@ def main():
     boot_png    = f"merged_stability_bootstrap{sfx}.png"
 
     if not os.path.exists(args.data):   sys.exit(f"newsubset not found: {args.data}")
-    if not os.path.exists(args.nicole): sys.exit(f"Nicole file not found: {args.nicole}")
+    if not os.path.exists(args.nicole): sys.exit(f"composite extract not found: {args.nicole}")
 
-    run = build_nicole_composite(args.nicole, args.min_valid_subtests)
+    run = build_composite(args.nicole, args.min_valid_subtests)
     chains, lengths = build_chains(run)
 
     newsub = _clean_cols(pd.read_csv(args.data))
@@ -605,7 +572,7 @@ def main():
 
     min_tests_flag(args.data, lengths, args.min_tests, args.max_test)
 
-    # short-vs-long chain imbalance (the PI's short-chain-bias worry)
+    # short-vs-long chain imbalance 
     print(f"\n{'='*72}\n  CHAIN COMPOSITION (short-vs-long balance)\n{'='*72}")
     chain_composition(newsub_m, "original", args.min_tests, args.max_test)
     chain_composition(merged,   "merged",   args.min_tests, args.max_test)
@@ -624,6 +591,10 @@ def main():
         dm = bootstrap_draws(Pm, Dm, Ym, wm, pm, "merged", args.nboot, seed=7,
                              kft_floor=args.boot_kft_floor)
         stability_report(da, pa, dm, pm, out=boot_png)
+
+
+# legacy name, used by archived scripts
+build_nicole_composite = build_composite
 
 
 if __name__ == "__main__":
