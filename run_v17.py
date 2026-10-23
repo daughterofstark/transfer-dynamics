@@ -376,7 +376,7 @@ def main():
     import scipy
     try:
         c = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
-        dirty = subprocess.check_output(["git", "status", "--porcelain"], text=True).strip()
+        dirty = subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=no"], text=True).strip()
     except Exception:
         c, dirty = "unavailable", ""
     say(f"  Python {sys.version.split()[0]}  NumPy {np.__version__}  SciPy {scipy.__version__}  "

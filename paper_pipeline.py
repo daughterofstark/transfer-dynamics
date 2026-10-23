@@ -45,8 +45,8 @@ NOEXCL = dict(winsorize_outliers=False, max_plays_interval=HUGE,
               max_days_interval=HUGE, max_plays_per_day=HUGE)
 
 # LOCKED weighting bins
-MAIN_DAY_EDGES = [-1.0, 0.5, 90.0, 150.0, 9999.0]      # merged: same-day D0 split
-MAIN_DAY_LBLS  = ["D0", "D0-90", "D90-150", "D150+"]
+MAIN_DAY_EDGES = [-1.0, 90.0, 150.0, 9999.0]   # 0-90 band includes same-day retests
+MAIN_DAY_LBLS = ["D0-90", "D90-150", "D150+"]
 ROBUST_DAY_EDGES = [0.0, 90.0, 150.0, 9999.0]          # original: no same-day
 ROBUST_DAY_LBLS  = ["D0-90", "D90-150", "D150+"]
 
