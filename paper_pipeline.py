@@ -45,8 +45,8 @@ NOEXCL = dict(winsorize_outliers=False, max_plays_interval=HUGE,
               max_days_interval=HUGE, max_plays_per_day=HUGE)
 
 # LOCKED weighting bins
-MAIN_DAY_EDGES = [-1.0, 0.5, 90.0, 150.0, 9999.0]      # merged: same-day D0 split
-MAIN_DAY_LBLS  = ["D0", "D0-90", "D90-150", "D150+"]
+MAIN_DAY_EDGES = [-1.0, 90.0, 150.0, 9999.0]   # 0-90 band includes same-day retests
+MAIN_DAY_LBLS = ["D0-90", "D90-150", "D150+"]
 ROBUST_DAY_EDGES = [0.0, 90.0, 150.0, 9999.0]          # original: no same-day
 ROBUST_DAY_LBLS  = ["D0-90", "D90-150", "D150+"]
 
@@ -71,6 +71,12 @@ def build_merged(data, nicole, min_valid_subtests, uid_prefix, out_csv):
     chains, _ = mnr.build_chains(run)
     newsub = mnr._clean_cols(pd.read_csv(data))
     newsub = mnr.enforce_same_battery(newsub, "original")
+    # participants in both extracts: the same sittings scored two ways. Keep the Grand Index copy.
+    gi_ids = set(newsub["user_id"].astype(str))
+    in_both = chains["user_id"].astype(str).isin(gi_ids)
+    n_both = chains.loc[in_both, "user_id"].nunique()
+    print(f"  composite participants also in the Grand Index file, dropped: {n_both:,}")
+    chains = chains[~in_both].copy()
     nic = mnr.to_newsubset_schema(chains, list(newsub.columns), uid_prefix)
     newsub_s = newsub.copy(); newsub_s["user_id"] = newsub_s["user_id"].astype(str)
     merged = pd.concat([newsub_s, nic], ignore_index=True)
