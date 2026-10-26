@@ -49,12 +49,23 @@ def _truncate(frame, max_test):
 
 
 # ───────────────────────── build merged data (internal) ─────────────────────────
-def build_merged(data, composite, min_valid_subtests, uid_prefix, out_csv):
+def build_merged(data, composite, min_valid_subtests, uid_prefix, out_csv,
+                 gi_battery_policy="same-battery"):
     print(f"\n{'='*70}\n  BUILD MERGED DATA (Grand Index + composite)\n{'='*70}")
     run = mnr.build_composite(composite, min_valid_subtests)
     chains, _ = mnr.build_chains(run)
     newsub = mnr._clean_cols(pd.read_csv(data))
-    newsub = mnr.enforce_same_battery(newsub, "original")
+    if gi_battery_policy == "same-battery":
+        battery = next((c for c in mnr.BATT_CANDS if c in newsub), None)
+        if battery is None or newsub[battery].isna().any():
+            raise ValueError("same-battery policy requires a nonmissing Grand Index battery ID "
+                             "on every row. Supply the original extract with battery_id; "
+                             "use --gi-battery-policy retain only for an explicit alternative analysis.")
+        newsub = mnr.enforce_same_battery(newsub, "Grand Index")
+    elif gi_battery_policy == "retain":
+        print("  Grand Index policy: retain all supplied records, including battery changes.")
+    else:
+        raise ValueError(f"Unknown Grand Index battery policy: {gi_battery_policy}")
     # participants in both extracts: the same sittings scored two ways. Keep the Grand Index copy.
     gi_ids = set(newsub["user_id"].astype(str))
     in_both = chains["user_id"].astype(str).isin(gi_ids)

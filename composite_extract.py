@@ -109,6 +109,8 @@ def build_composite(path, min_valid_subtests=3):
     # when each sitting was taken: its first subtest result (the anchor the Grand Index intervals use)
     raw["_t_first"] = pd.to_datetime(raw[c_tres], errors="coerce")
     t_first_run = raw.groupby(c_run)["_t_first"].min()
+    # Sitting metadata must survive exclusion of un-normed/duplicate subtest rows.
+    sitting_plays = raw.groupby(c_run)[c_plays].max()
 
     # ── sanity on the raw per-subtest index scores (before dropping zeros) ──
     idx = raw[c_index]
@@ -153,7 +155,7 @@ def build_composite(path, min_valid_subtests=3):
         "battery":   g[c_batt].first(),
         "nth_run":   g[c_nth].first(),
         "days_btw":  g[c_days].max(),      # reference only; intervals use t_first
-        "plays_btw": g[c_plays].max(),     # one non-zero value per sitting
+        "plays_btw": sitting_plays.reindex(g.size().index),
         "composite": g[c_index].mean(),      # <-- MEAN of per-subtest census-normed indices
         "n_valid":   g[c_index].size(),
     }).reset_index().rename(columns={c_run: "test_run_id"})
