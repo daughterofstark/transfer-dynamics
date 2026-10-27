@@ -9,6 +9,9 @@ cd "$(dirname "$0")"
 PY="${PYTHON:-.venv/bin/python}"
 DATA="${DATA:-data/newsubset.csv}"
 COMPOSITE="${COMPOSITE:-data/short_intervals.csv}"
+OUT="${OUTPUT:-out/v17}"
+WORKERS="${WORKERS:-1}"
+GI_POLICY="${GI_BATTERY_POLICY:-same-battery}"
 
 if ! "$PY" -c "import numpy, scipy, pandas, matplotlib, seaborn" 2>/dev/null; then
   echo "Python environment not found or incomplete: $PY"
@@ -21,9 +24,9 @@ done
 
 NBOOT=200
 SKIP=""
-if [ "${1:-}" = "--quick" ]; then NBOOT=20; SKIP="--skip-figures"; fi
+if [ "${1:-}" = "--quick" ]; then NBOOT=20; SKIP="--skip-figures"; OUT="${OUTPUT:-out/quick}"; fi
 
-"$PY" run_v17.py --data "$DATA" --composite "$COMPOSITE" --nboot "$NBOOT" --rebuild $SKIP
-"$PY" descriptives_v17.py --data "$DATA" --composite "$COMPOSITE"
+"$PY" run_v17.py --data "$DATA" --composite "$COMPOSITE" --nboot "$NBOOT" --workers "$WORKERS" --out "$OUT" --gi-battery-policy "$GI_POLICY" --rebuild $SKIP
+"$PY" descriptives_v17.py --data "$DATA" --composite "$COMPOSITE" --out "$OUT" --gi-battery-policy "$GI_POLICY"
 
-echo "Done. Reports: out/v17/report.md and out/v17/descriptives.md"
+echo "Done. Reports: $OUT/report.md and $OUT/descriptives.md"

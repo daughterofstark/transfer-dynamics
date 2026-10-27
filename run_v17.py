@@ -18,7 +18,9 @@ Run:
 Output: out/v17/report.md, draws.npy, bootstrap_info.csv, cv_deciles.csv, fig_main/, fig_supp/
 """
 from __future__ import annotations
-import argparse, os, subprocess, sys, time
+import argparse, json, os, subprocess, sys, time
+from concurrent.futures import ProcessPoolExecutor
+import multiprocessing as mp
 import numpy as np
 import pandas as pd
 import matplotlib; matplotlib.use("Agg")
@@ -37,7 +39,7 @@ REPORT_PATH = os.path.join(OUT, "report.md")
 # ---------------------------------------------------------------- starting values
 # Osman et al. (2023) PLoS One 18:e0281095, Eq. 1:  dY = a + (b - a)(1 - exp(-c N))
 OSMAN_A, OSMAN_B, OSMAN_C = 1.403, 4.513, 0.0058
-HL_START_DAYS = 730.0        # practice-effect decline with retest interval (Calamia et al. 2012)
+HL_START_DAYS = 730.0        # chosen numerical start; not a half-life estimated by Calamia et al.
 KLD_START = 0.5              # first repeat administration acquires half the retest ceiling
 OSMAN_INTERVAL = 70.0        # Osman's T2 invitation interval; the interval his intercept refers to
 
@@ -111,24 +113,71 @@ def fit_and_check(P, D, Y, w, x0, label):
     say(f"  estimate: {fmt(x)}")
     say(f"  transfer half-life {hl(x[1]):.1f} d   retest half-life {hl(x[3]):.1f} d   "
         f"first-retest increment k_Ld*A_d = {x[2] * x[5]:.3f}")
+    path = os.path.join(OUT, "fits.json")
+    if os.path.exists(path):
+        with open(path) as fh:
+            records = json.load(fh)
+    else:
+        records = {}
+    records[label] = fit_record(r, P.shape[0])
+    with open(path, "w") as fh:
+        json.dump(records, fh, indent=2)
+    require_converged(r, label)
     return r
 
 
-def bootstrap(P, D, Y, w, x_hat, nboot, seed):
+def fit_record(r, n):
+    return dict(n=int(n), success=bool(r.success), wmse=float(r.fun), nit=int(r.nit),
+                nfev=int(r.nfev), message=str(r.message),
+                parameters=dict(zip(PO, map(float, r.x))))
+
+
+def require_converged(r, label):
+    if not r.success or not np.isfinite(r.fun) or not np.isfinite(r.x).all():
+        raise RuntimeError(f"{label} did not converge to finite estimates: {r.message}")
+
+
+def _bootstrap_init(P, D, Y, w, x_hat, config):
+    global _BOOT_DATA
+    ff.CONFIG.update(config)
+    _BOOT_DATA = P, D, Y, w, x_hat
+
+
+def _bootstrap_one(task):
+    b, idx = task
+    P, D, Y, w, x_hat = _BOOT_DATA
+    r = ff._fit(list(x_hat), P[idx], D[idx], Y[idx], w[idx], BOUNDS)
+    valid = bool(r.success and np.isfinite(r.fun) and np.isfinite(r.x).all())
+    return dict(b=b, success=valid, nit=int(r.nit), wmse=float(r.fun),
+                message=str(r.message), **dict(zip(PO, map(float, r.x))))
+
+
+def bootstrap(P, D, Y, w, x_hat, nboot, seed, workers=1):
     path = os.path.join(OUT, "draws.npy")
     rng = np.random.default_rng(seed); n = P.shape[0]
     draws = np.full((nboot, 6), np.nan); info = []; t0 = time.time()
-    for b in range(nboot):
-        idx = rng.integers(0, n, n)              # same draw sequence as figures._bootstrap
-        r = ff._fit(list(x_hat), P[idx], D[idx], Y[idx], w[idx], BOUNDS)
-        info.append(dict(b=b, success=bool(r.success), nit=r.nit, wmse=r.fun,
-                         message=str(r.message), **dict(zip(PO, r.x))))
-        if r.success:
-            draws[b] = r.x
-        if (b + 1) % 20 == 0:
-            print(f"    bootstrap {b + 1}/{nboot}  ({time.time() - t0:.0f} s)")
-    np.save(path, draws)
-    pd.DataFrame(info).to_csv(os.path.join(OUT, "bootstrap_info.csv"), index=False)
+    tasks = ((b, rng.integers(0, n, n)) for b in range(nboot))
+    pool = None
+    if workers == 1:
+        _bootstrap_init(P, D, Y, w, x_hat, dict(ff.CONFIG))
+        results = map(_bootstrap_one, tasks)
+    else:
+        pool = ProcessPoolExecutor(max_workers=workers, mp_context=mp.get_context("spawn"),
+                                   initializer=_bootstrap_init,
+                                   initargs=(P, D, Y, w, x_hat, dict(ff.CONFIG)))
+        results = pool.map(_bootstrap_one, tasks, chunksize=1)
+    try:
+        for row in results:
+            info.append(row)
+            if row["success"]:
+                draws[row["b"]] = [row[k] for k in PO]
+            np.save(path, draws)
+            pd.DataFrame(info).to_csv(os.path.join(OUT, "bootstrap_info.csv"), index=False)
+            if len(info) % 20 == 0:
+                print(f"    bootstrap {len(info)}/{nboot}  ({time.time() - t0:.0f} s)", flush=True)
+    finally:
+        if pool is not None:
+            pool.shutdown(wait=True, cancel_futures=True)
     return draws, pd.DataFrame(info)
 
 
@@ -275,10 +324,14 @@ def fig_calibration(tab, path):
 def sec_cv(P, D, Y, w, x_hat, k=5, seed=0):
     header("5-FOLD CROSS-VALIDATION (held-out group means, second administration)")
     rng = np.random.default_rng(seed); fold = rng.integers(0, k, P.shape[0])
-    pr = np.full(P.shape[0], np.nan); kft = []
+    pr = np.full(P.shape[0], np.nan); kft = []; diagnostics = []
     for fi in range(k):
         tr, te = fold != fi, fold == fi
         r = ff._fit(list(x_hat), P[tr], D[tr], Y[tr], w[tr], BOUNDS)
+        diagnostics.append(dict(fold=fi, **fit_record(r, int(tr.sum()))))
+        with open(os.path.join(OUT, "cv_fit_diagnostics.json"), "w") as fh:
+            json.dump(diagnostics, fh, indent=2)
+        require_converged(r, f"Cross-validation fold {fi}")
         kft.append(r.x[1]); pr[te] = ff.simulate_matrix(P[te], D[te], r.x)[:, 0]
     ac = Y[:, 0]; ok = np.isfinite(pr) & np.isfinite(ac)
     t = pd.DataFrame(dict(pred=pr[ok], obs=ac[ok]))
@@ -358,6 +411,9 @@ def make_figures(df, x, P, D, Y, w, draws, tab, nboot):
     header("FIGURE MANIFEST")
     for name, status in man:
         say(f"  {status[:40]:40s} {name}")
+    failed = [name for name, status in man if status != "OK"]
+    if failed:
+        raise RuntimeError("Figure generation failed: " + ", ".join(failed))
     say("  fig_main/fig_maintenance.png overwritten with the joint-bootstrap band (Fig. 7)")
     say("  fig_supp/figS4_uncertainty.png written (Supplementary Fig. 4)")
     say("  removed in v17: loss landscape, k_Ft profile, engine calibration (replaced by figS_calibration)")
@@ -365,6 +421,7 @@ def make_figures(df, x, P, D, Y, w, draws, tab, nboot):
 
 # ---------------------------------------------------------------- main
 def main():
+    global OUT, REPORT_PATH
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default="data/newsubset.csv")
     ap.add_argument("--composite", "--nicole", dest="composite", default="data/short_intervals.csv")
@@ -372,14 +429,21 @@ def main():
     ap.add_argument("--uid-prefix", default="NIC_")
     ap.add_argument("--nboot", type=int, default=200)
     ap.add_argument("--seed", type=int, default=7)
+    ap.add_argument("--workers", type=int, default=1, help="independent bootstrap processes; same seed/order")
+    ap.add_argument("--out", default=OUT, help="output directory, including its verified data cache")
+    ap.add_argument("--gi-battery-policy", choices=("same-battery", "retain"), default="same-battery")
     ap.add_argument("--rebuild", action="store_true")
     ap.add_argument("--skip-figures", action="store_true")
     ap.add_argument("--force", action="store_true", help="continue even if k_Ft > 0.1")
     ap.add_argument("--figures-only", action="store_true",
                     help="redraw figures from out/v17/draws.npy; no bootstrap; report.md untouched")
     args = ap.parse_args()
+    if args.workers < 1 or args.nboot < 1:
+        ap.error("--workers and --nboot must be positive")
+    OUT = args.out
+    db.SCRATCH = os.path.join(OUT, "_data_cache")
     os.makedirs(OUT, exist_ok=True)
-    global REPORT_PATH
+    REPORT_PATH = os.path.join(OUT, "report.md")
     if args.figures_only:
         REPORT_PATH = os.path.join(OUT, "figures_only.md")
     t_start = time.time()
@@ -407,6 +471,26 @@ def main():
     say(f"  Osman-anchored start: {fmt(x0)}")
 
     newsub, merged = db.build_merged_once(args)
+    provenance = dict(data=db.build_identity(args), python=sys.version,
+                      numpy=np.__version__, scipy=scipy.__version__, pandas=pd.__version__,
+                      matplotlib=matplotlib.__version__, source_commit=c,
+                      dirty_source=bool(dirty), seed=args.seed, nboot=args.nboot,
+                      workers=args.workers, start=dict(zip(PO, x0)), bounds=BOUNDS,
+                      code={name: db.sha256(os.path.join(os.path.dirname(__file__), name))
+                            for name in ("run_v17.py", "figures.py", "transfer_model.py")})
+    manifest_path = os.path.join(OUT, "run_manifest.json")
+    if args.figures_only:
+        with open(manifest_path) as fh:
+            previous = json.load(fh)
+        if (previous["data"] != provenance["data"] or
+                any(previous["code"][name] != provenance["code"][name]
+                    for name in ("transfer_model.py", "run_v17.py"))):
+            raise RuntimeError("Saved bootstrap draws do not match the current inputs, cohort policy or model")
+        if previous.get("draws_sha256") != db.sha256(os.path.join(OUT, "draws.npy")):
+            raise RuntimeError("draws.npy is not a completed bootstrap recorded for this folder; rerun the full analysis")
+    else:
+        with open(manifest_path, "w") as fh:
+            json.dump(provenance, fh, indent=2)
     df, uids, P, D, Y, w = prepare(merged)
     r = fit_and_check(P, D, Y, w, x0, "MAIN (pooled, T1-T5)")
     x = np.asarray(r.x)
@@ -432,7 +516,11 @@ def main():
     sec_data_checks(df, uids, x, args.uid_prefix)
 
     header(f"BOOTSTRAP ({args.nboot} resamples, start = point estimate)")
-    draws, info = bootstrap(P, D, Y, w, x, args.nboot, args.seed)
+    draws, info = bootstrap(P, D, Y, w, x, args.nboot, args.seed, workers=args.workers)
+    provenance["draws_sha256"] = db.sha256(os.path.join(OUT, "draws.npy"))
+    provenance["draws_completed"] = int(len(info))
+    with open(manifest_path, "w") as fh:
+        json.dump(provenance, fh, indent=2)
     say(f"  converged: {int(info.success.sum())} of {len(info)}")
     for _, row in info[~info.success].iterrows():
         say(f"    sample {row.b}: nit {row.nit}, message: {row.message}")

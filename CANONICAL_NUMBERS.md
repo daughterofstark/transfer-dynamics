@@ -1,5 +1,7 @@
 # Canonical numbers (v17)
 
+Historical snapshot for the original `v17-numbers` tag. The corrected analysis on this branch is reported separately in `REEVALUATION.md`; the values below are preserved for comparison.
+
 Sources: `out/v17/report.md` (`run_v17.py`, commit 252d83b, 200 bootstrap samples, seed 7) and `out/v17/descriptives.md` (`descriptives_v17.py`, whose refit matched to 0.0034%). Environment: Python 3.13.5, NumPy 2.5.3, SciPy 1.18.1, pandas 3.0.5, matplotlib 3.11.2.
 
 ## Main fit
