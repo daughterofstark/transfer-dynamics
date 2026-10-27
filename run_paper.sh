@@ -24,7 +24,7 @@ done
 
 NBOOT=200
 SKIP=""
-if [ "${1:-}" = "--quick" ]; then NBOOT=20; SKIP="--skip-figures"; fi
+if [ "${1:-}" = "--quick" ]; then NBOOT=20; SKIP="--skip-figures"; OUT="${OUTPUT:-out/quick}"; fi
 
 "$PY" run_v17.py --data "$DATA" --composite "$COMPOSITE" --nboot "$NBOOT" --workers "$WORKERS" --out "$OUT" --gi-battery-policy "$GI_POLICY" --rebuild $SKIP
 "$PY" descriptives_v17.py --data "$DATA" --composite "$COMPOSITE" --out "$OUT" --gi-battery-policy "$GI_POLICY"

@@ -74,6 +74,8 @@ def main():
         say(f"  largest relative difference from this run's saved point estimate: {100 * rel:.4f}%")
         if rel > 1e-3:
             raise RuntimeError("Descriptive refit differs from saved fit by more than 0.1%")
+    else:
+        say("  !! no fits.json in this folder; the refit was not checked against a saved run")
 
     header("SAMPLE AND ADMINISTRATIONS")
     m = merged.copy()

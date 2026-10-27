@@ -312,7 +312,7 @@ def fig_dose_partition(df, params, out, days=None, gmax=1800):
     total = SD + ST
     I = SD.mean()                       # direct intercept (near-constant in games)
     print(f"  [dose-partition] intercept I = {I:.3f} GI pts at {days:.0f} d "
-          f"(one retest of familiarity, decayed): k_Ld={p['k_Ld']:.3f}, A_d={p['A_d']:.2f}, "
+          f"(retest effect after one administration, decayed): k_Ld={p['k_Ld']:.3f}, A_d={p['A_d']:.2f}, "
           f"raw one-dose k_Ld*A_d = {p['k_Ld']*p['A_d']:.3f}; asymptote A = I + A_t = {I + p['A_t']:.2f}. "
           f"A higher A_d (from the short-interval augmentation) raises this intercept vs "
           f"long-interval-only estimates.")

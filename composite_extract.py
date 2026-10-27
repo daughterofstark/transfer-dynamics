@@ -111,6 +111,9 @@ def build_composite(path, min_valid_subtests=3):
     t_first_run = raw.groupby(c_run)["_t_first"].min()
     # Sitting metadata must survive exclusion of un-normed/duplicate subtest rows.
     sitting_plays = raw.groupby(c_run)[c_plays].max()
+    _nz = raw.loc[raw[c_plays].fillna(0) != 0].groupby(c_run)[c_plays].nunique()
+    if (_nz > 1).any():
+        raise ValueError(f"{int((_nz > 1).sum())} sittings carry more than one distinct non-zero gameplay count")
 
     # ── sanity on the raw per-subtest index scores (before dropping zeros) ──
     idx = raw[c_index]

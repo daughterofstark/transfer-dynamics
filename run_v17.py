@@ -486,6 +486,8 @@ def main():
                 any(previous["code"][name] != provenance["code"][name]
                     for name in ("transfer_model.py", "run_v17.py"))):
             raise RuntimeError("Saved bootstrap draws do not match the current inputs, cohort policy or model")
+        if previous.get("draws_sha256") != db.sha256(os.path.join(OUT, "draws.npy")):
+            raise RuntimeError("draws.npy is not a completed bootstrap recorded for this folder; rerun the full analysis")
     else:
         with open(manifest_path, "w") as fh:
             json.dump(provenance, fh, indent=2)
@@ -515,6 +517,10 @@ def main():
 
     header(f"BOOTSTRAP ({args.nboot} resamples, start = point estimate)")
     draws, info = bootstrap(P, D, Y, w, x, args.nboot, args.seed, workers=args.workers)
+    provenance["draws_sha256"] = db.sha256(os.path.join(OUT, "draws.npy"))
+    provenance["draws_completed"] = int(len(info))
+    with open(manifest_path, "w") as fh:
+        json.dump(provenance, fh, indent=2)
     say(f"  converged: {int(info.success.sum())} of {len(info)}")
     for _, row in info[~info.success].iterrows():
         say(f"    sample {row.b}: nit {row.nit}, message: {row.message}")

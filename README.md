@@ -35,9 +35,9 @@ Tested with Python 3.12.14 and 3.13.5 on macOS.
 ./run_paper.sh --quick    # 20 bootstrap samples, no figures (~6 min)
 ```
 
-`run_paper.sh` rebuilds the merged dataset from the raw inputs, runs `run_v17.py`, then runs `descriptives_v17.py`. Both modes write to `out/v17/`; set `OUTPUT` to preserve separate runs. Overrides: `DATA=... COMPOSITE=... PYTHON=... OUTPUT=... WORKERS=4 ./run_paper.sh`. The default GI policy is `same-battery`, requiring nonmissing battery IDs. `GI_BATTERY_POLICY=retain` is an explicit alternative. See `data/README.md`.
+`run_paper.sh` rebuilds the merged dataset from the raw inputs, runs `run_v17.py`, then runs `descriptives_v17.py`. The full run writes to `out/v17/` and `--quick` to `out/quick/`; set `OUTPUT` to choose another folder. Overrides: `DATA=... COMPOSITE=... PYTHON=... OUTPUT=... WORKERS=4 ./run_paper.sh`. The default GI policy is `same-battery`, requiring nonmissing battery IDs. `GI_BATTERY_POLICY=retain` is an explicit alternative. See `data/README.md`.
 
-`WORKERS=4` distributes independent bootstrap fits across four processes. Resampling indices and output order remain identical to the serial run; no additional package is required. Each draw is checkpointed.
+`WORKERS=4` distributes independent bootstrap fits across four processes. Resampling indices and output order remain identical to the serial run; no additional package is required. Progress is saved after each draw, but an interrupted run is not resumed; rerun it from the start. `--figures-only` refuses draws that are not a completed bootstrap.
 
 Equivalent manual commands:
 
