@@ -1,63 +1,16 @@
 """
-Four Forces Model — Corrected Publication Pipeline
-==================================================
-Models cognitive-training transfer dynamics in Lumosity users by fitting a
-six-parameter mechanistic model to longitudinal NCPT data.
+transfer_model.py - engine for the two-state model of NCPT composite-score change.
 
-The model decomposes NCPT score improvement into two latent states:
-  - Direct Practice (SD): test-familiarity gains that accrue once per NCPT
-    administration (diminishing returns toward A_d) and decay over days.
-  - Transfer (ST): gains from gameplay that accrue toward A_t as a function of
-    cumulative games and decay over days.
+Two latent states, each with a ceiling, a learning rate and a forgetting rate:
+  retest effect (SD)  A_d, k_Ld, k_Fd   gained once per NCPT administration, decays by day
+  transfer (ST)       A_t, k_Lt, k_Ft   gained from gameplays, decays by day
+Predicted change from the first administration = SD + ST.
+Parameter order throughout: [k_Lt, k_Ft, k_Ld, k_Fd, A_t, A_d].
 
-Governed by the "Four Forces": k_Ld, k_Fd (direct learn/forget) and
-k_Lt, k_Ft (transfer learn/forget), plus asymptotes A_d, A_t.
-
-────────────────────────────────────────────────────────────────────────────
-CHANGES vs the previous version (what reviewers flagged / what was fixed)
-────────────────────────────────────────────────────────────────────────────
-CORRECTNESS
-  * advance_interval: recurrence multiplier r is now floored at a small POSITIVE
-    value. Previously r could go negative under heavy daily play and was raised
-    to a fractional power (r**D) -> nan/complex. Behaviourally a floored r is
-    correct (over-saturation pins ST at A_t via the clamp).
-  * viz3: the 365-day home-play simulation never administers an NCPT, so the
-    Direct state decays to 0 and "Total (SD+ST)" was identical to ST while the
-    "Direct contribution" shading was empty. This is now stated explicitly; the
-    AUC objective is defined on transfer skill (ST) only; an OPTIONAL, clearly
-    labelled assessment-spike overlay shows the transient SD bumps that would
-    appear IF the NCPT were re-administered on CONFIG["assessment_days"].
-HONESTY / REPORTING
-  * k_Ft identifiability is shown directly via a PROFILE LIKELIHOOD (viz9):
-    every half-life from ~1898 yr down to the TC floor fits equally well, so
-    k_Ft is fixed by assumption, not estimated. The TC framing is stated as
-    such (no "this proves durability" language).
-  * The two "direct share" quantities are separated and labelled: (a) the
-    one-retest T2 ratio (low-dose Δ / high-dose Δ) and (b) the asymptotic
-    A_d/(A_t+A_d) share. The misleading shared "target ~33%" tag is removed and
-    the direct-dominant asymptote result is reported plainly.
-  * Per-filter user counts are printed so non-binding filters are visible.
-  * Out-of-sample R²/MAE via 5-fold CV (viz10); bootstrap 95% CIs for all six
-    parameters (viz11); expanded residual diagnostics with in-sample R² (viz7);
-    regression-to-the-mean diagnostic (viz12).
-PLUMBING
-  * A vectorised engine (simulate_matrix / wmse_matrix) — validated to machine
-    precision against the scalar advance_interval/simulate_user — powers fitting,
-    profiling, bootstrap and CV. Scalar functions are retained for the figures.
-  * Cohort definitions are CONFIG-driven and consistent across viz1/2/8.
-  * Stale docstrings corrected; matplotlib uses the Agg backend for headless save.
-
-NOTE: causal interpretation of the dose-response / "optimal schedule" remains a
-Discussion-level caveat — dose was self-selected, so these are model-implied-
-if-causal, not experimental, results. The code cannot fix that; the manuscript
-must hedge it.
-
-Usage
------
-  python othernewupdate.py                          # CONFIG defaults
-  python othernewupdate.py --data my_data.csv
-  python othernewupdate.py --fast                   # quick run (small boot/grid)
-  python othernewupdate.py --nboot 500 --nfolds 10
+Core used by the v17 analysis: advance_interval, simulate_matrix, wmse_matrix, _fit,
+half_life, prepare_data, compute_user_weights, df_to_matrices, CONFIG, PARAM_ORDER.
+The remaining functions (multi-start optimizer, profile and bootstrap helpers, plotting
+functions, main()) come from earlier versions; their printed and figure text uses older terms.
 """
 from __future__ import annotations
 

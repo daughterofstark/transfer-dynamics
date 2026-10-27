@@ -20,8 +20,6 @@ try:
     import reanalysis_v3 as rean;       HAVE_REAN = True
 except Exception:
     HAVE_REAN = False
-    print("  NOTE: reanalysis_v3 not importable — the exclusion sweep will be SKIPPED.\n"
-          "        Equivalent analysis: python verify_numbers.py --only sweep")
 
 PO = ff.PARAM_ORDER
 HUGE = 10 ** 9
