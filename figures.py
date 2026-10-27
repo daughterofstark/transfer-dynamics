@@ -72,6 +72,24 @@ def _binidx(v):
     return np.nan
 
 
+def mean_model_trajectory(P, D, params, draws=None):
+    """Mean individual predictions and their parameter-bootstrap interval.
+
+    The point estimate and every draw use the same observed interval inputs.
+    These are confidence intervals for a group mean, not prediction intervals.
+    """
+    P, D = np.asarray(P, dtype=float), np.asarray(D, dtype=float)
+    x = [params[k] for k in PO]
+    center = np.nanmean(ff.simulate_matrix(P, D, x), axis=0)
+    if draws is None:
+        return center, None
+    valid = np.asarray(draws)[np.isfinite(draws).all(axis=1)]
+    if len(valid) == 0:
+        raise ValueError("No finite bootstrap draws for model uncertainty")
+    means = np.array([np.nanmean(ff.simulate_matrix(P, D, row), axis=0) for row in valid])
+    return center, np.percentile(means, [2.5, 97.5], axis=0)
+
+
 # ═══════════════════════ conceptual schematic ═══════════════════════
 def fig_schematic(params, out):
     """Conceptual: two INDEPENDENT processes, three parameters each; observed change
@@ -197,7 +215,6 @@ def fig_dose_row(df, params, out, draws=None, fix_row=1):
         if c not in S.columns or c not in Pl.columns or c not in Da.columns:
             raise RuntimeError("need T1..T3 present")
 
-    def _params_of(row): return {k: row[PO.index(k)] for k in PO}
     d2 = S[2] - S[1]; d3 = S[3] - S[1]
     b12 = Pl[2].apply(_binidx); b23 = Pl[3].apply(_binidx)
     fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharey=True)
@@ -211,24 +228,11 @@ def fig_dose_row(df, params, out, draws=None, fix_row=1):
         m2, m3 = o2.mean(), o3.mean()
         c2 = 1.96 * o2.std() / np.sqrt(len(o2)); c3 = 1.96 * o3.std() / np.sqrt(len(o3))
         P2, D2, P3, D3 = Pl[2].loc[uids], Da[2].loc[uids], Pl[3].loc[uids], Da[3].loc[uids]
-        pr2, pr3 = [], []
-        for u in uids:
-            if np.isnan(P2[u]) or np.isnan(D2[u]): continue
-            s1, t1 = _adv(params, 0, 0, D2[u], P2[u]); pr2.append(s1 + t1)
-            if not (np.isnan(P3[u]) or np.isnan(D3[u])):
-                s2, t2 = _adv(params, s1, t1, D3[u], P3[u]); pr3.append(s2 + t2)
-        mp2 = np.mean(pr2) if pr2 else np.nan; mp3 = np.mean(pr3) if pr3 else np.nan
-        if draws is not None:
-            mp = np.nanmean(P2.values), np.nanmean(D2.values), np.nanmean(P3.values), np.nanmean(D3.values)
-            bb2, bb3 = [], []
-            for row in draws:
-                if np.any(np.isnan(row)): continue
-                dp = _params_of(row)
-                s1, t1 = _adv(dp, 0, 0, mp[1], mp[0]); bb2.append(s1 + t1)
-                s2, t2 = _adv(dp, s1, t1, mp[3], mp[2]); bb3.append(s2 + t2)
-            if bb2:
-                lo2, hi2 = np.percentile(bb2, [2.5, 97.5]); lo3, hi3 = np.percentile(bb3, [2.5, 97.5])
-                ax.fill_between([1, 2, 3], [0, lo2, lo3], [0, hi2, hi3], color=INK, alpha=.15, zorder=0)
+        (mp2, mp3), band = mean_model_trajectory(np.column_stack([P2, P3]),
+                                                np.column_stack([D2, D3]), params, draws)
+        if band is not None:
+            ax.fill_between([1, 2, 3], np.r_[0, band[0]], np.r_[0, band[1]],
+                            color=INK, alpha=.15, zorder=0)
         ax.errorbar([1, 2, 3], [0, m2, m3], yerr=[0, c2, c3], fmt="o-", color=CORAL, capsize=3, ms=6,
                     label="observed" if j == 0 else None)
         ax.plot([1, 2, 3], [0, mp2, mp3], "s--", color=INK, ms=5,
@@ -249,15 +253,13 @@ def fig_dose_row(df, params, out, draws=None, fix_row=1):
 def fig_dose_9panel(df, params, out, draws=None):
     """Rows = T1->T2 dose bin, cols = T2->T3 dose bin (<=50 / 51-400 / 400+).
        Observed mean delta (+/-95% CI) vs model (each participant's own intervals).
-       If `draws` (bootstrap param sets) is given, a model uncertainty band is added
-       at each cell's mean exposure, so low-N cells show model range too. Shared axes."""
+       If `draws` is given, each draw is predicted for individual participants,
+       then averaged within the cell, matching the central line. Shared axes."""
     S, Pl, Da = _wide(df)
     for c in (1, 2, 3):
         if c not in S.columns or c not in Pl.columns or c not in Da.columns:
             raise RuntimeError("need T1..T3 present for the 3x3 panel")
 
-    def _params_of(row):
-        return {k: row[PO.index(k)] for k in PO}
     d2 = S[2] - S[1]; d3 = S[3] - S[1]
     b12 = Pl[2].apply(_binidx); b23 = Pl[3].apply(_binidx)
     total = int(((b12.notna()) & (b23.notna())).sum())
@@ -275,27 +277,11 @@ def fig_dose_9panel(df, params, out, draws=None):
             c2 = 1.96 * o2.std() / np.sqrt(len(o2)); c3 = 1.96 * o3.std() / np.sqrt(len(o3))
             # model = each participant's OWN intervals, then averaged (no median/90d proxy)
             P2, D2, P3, D3 = Pl[2].loc[uids], Da[2].loc[uids], Pl[3].loc[uids], Da[3].loc[uids]
-            pr2, pr3 = [], []
-            for u in uids:
-                if np.isnan(P2[u]) or np.isnan(D2[u]):
-                    continue
-                sd1, st1 = _adv(params, 0, 0, D2[u], P2[u]); pr2.append(sd1 + st1)
-                if not (np.isnan(P3[u]) or np.isnan(D3[u])):
-                    sd2, st2 = _adv(params, sd1, st1, D3[u], P3[u]); pr3.append(sd2 + st2)
-            mp2 = np.mean(pr2) if pr2 else np.nan; mp3 = np.mean(pr3) if pr3 else np.nan
-            # bootstrap model band at the cell's mean exposure (parameter uncertainty)
-            if draws is not None:
-                mp = np.nanmean(P2.values), np.nanmean(D2.values), np.nanmean(P3.values), np.nanmean(D3.values)
-                b2, b3 = [], []
-                for row in draws:
-                    if np.any(np.isnan(row)):
-                        continue
-                    dp = _params_of(row)
-                    s1, t1 = _adv(dp, 0, 0, mp[1], mp[0]); b2.append(s1 + t1)
-                    s2, t2 = _adv(dp, s1, t1, mp[3], mp[2]); b3.append(s2 + t2)
-                if b2:
-                    lo2, hi2 = np.percentile(b2, [2.5, 97.5]); lo3, hi3 = np.percentile(b3, [2.5, 97.5])
-                    ax.fill_between([1, 2, 3], [0, lo2, lo3], [0, hi2, hi3], color=INK, alpha=.15, zorder=0)
+            (mp2, mp3), band = mean_model_trajectory(np.column_stack([P2, P3]),
+                                                    np.column_stack([D2, D3]), params, draws)
+            if band is not None:
+                ax.fill_between([1, 2, 3], np.r_[0, band[0]], np.r_[0, band[1]],
+                                color=INK, alpha=.15, zorder=0)
             ax.errorbar([1, 2, 3], [0, m2, m3], yerr=[0, c2, c3], fmt="o-", color=CORAL, capsize=3, ms=5,
                         label="observed" if (i == 0 and j == 0) else None)
             ax.plot([1, 2, 3], [0, mp2, mp3], "s--", color=INK, ms=4,

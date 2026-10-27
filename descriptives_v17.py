@@ -2,7 +2,7 @@
 descriptives_v17.py - descriptive and point-estimate numbers for the v17 manuscript.
 
 No bootstrap. Builds the prepared data exactly as run_v17.py does, refits the point
-estimate from the same start (checked against the reported v17 estimate), and reports
+estimate from the same start (checked against the saved fit for this run), and reports
 sample flow, exposure, weighting cells, demographics, dates, residuals and the
 Results-text numbers at the data-derived mean interval. Regenerates the Fig. 5 panel
 at 440 gameplays. Writes out/v17/descriptives.md and out/v17/supp_table1_weights.csv;
@@ -11,7 +11,7 @@ does not touch out/v17/report.md.
 Run:  python descriptives_v17.py            (add --rebuild to rebuild the merged data)
 """
 from __future__ import annotations
-import argparse, os
+import argparse, json, os
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
@@ -24,7 +24,6 @@ import run_v17 as rv
 
 PO = ff.PARAM_ORDER
 OUT = os.path.join("out", "v17")
-V17 = np.array([0.0045704, 0.0021256, 0.3076, 0.0014601, 3.0535, 7.2487])   # report.md, commit 252d83b
 LINES: list[str] = []
 
 
@@ -41,13 +40,20 @@ def run_ids(s):
 
 
 def main():
+    global OUT
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default="data/newsubset.csv")
     ap.add_argument("--composite", "--nicole", dest="composite", default="data/short_intervals.csv")
     ap.add_argument("--min-valid-subtests", type=int, default=3)
     ap.add_argument("--uid-prefix", default="NIC_")
     ap.add_argument("--rebuild", action="store_true")
+    ap.add_argument("--out", default=OUT)
+    ap.add_argument("--gi-battery-policy", choices=("same-battery", "retain"), default="same-battery")
     args = ap.parse_args()
+    OUT = args.out
+    rv.OUT = OUT
+    db.SCRATCH = os.path.join(OUT, "_data_cache")
+    ff.CONFIG["maxiter"] = 10_000
     os.makedirs(os.path.join(OUT, "fig_main"), exist_ok=True)
     pre = args.uid_prefix
 
@@ -57,12 +63,17 @@ def main():
 
     header("POINT ESTIMATE (refit from the v17 start; no bootstrap)")
     r = ff._fit(rv.osman_start(), P, D, Y, w, rv.BOUNDS)
+    rv.require_converged(r, "Descriptive point refit")
     x = np.asarray(r.x); p = dict(zip(PO, x))
-    rel = float(np.max(np.abs(x / V17 - 1)))
     say(f"  WMSE {r.fun:.6f}   " + "  ".join(f"{k}={v:.5g}" for k, v in zip(PO, x)))
-    say(f"  largest relative difference from the reported v17 estimate: {100 * rel:.4f}%")
-    if rel > 1e-3:
-        say("  !! differs from the reported v17 run by more than 0.1%; do not use these numbers until resolved")
+    fit_path = os.path.join(OUT, "fits.json")
+    if os.path.exists(fit_path):
+        with open(fit_path) as fh:
+            stored = json.load(fh)["MAIN (pooled, T1-T5)"]["parameters"]
+        rel = float(np.max(np.abs(x / [stored[k] for k in PO] - 1)))
+        say(f"  largest relative difference from this run's saved point estimate: {100 * rel:.4f}%")
+        if rel > 1e-3:
+            raise RuntimeError("Descriptive refit differs from saved fit by more than 0.1%")
 
     header("SAMPLE AND ADMINISTRATIONS")
     m = merged.copy()
@@ -114,7 +125,7 @@ def main():
     rho2, _ = spearmanr(days[days > 0], plays[days > 0])
     say(f"  Spearman rho (first-interval days, gameplays) = {rho:.3f};  excluding same-day = {rho2:.3f}")
 
-    header("DEMOGRAPHICS AT FIRST ADMINISTRATION")
+    header("RECORDED DEMOGRAPHICS (composite age is AGE_AT_SIGNUP)")
     t1 = df[df["nth_test"] == 1]
     t1c = t1["user_id"].astype(str).str.startswith(pre)
     for lab, sub in (("Grand Index", t1[~t1c]), ("composite", t1[t1c])):
