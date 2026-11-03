@@ -1,0 +1,15 @@
+Characteristic,T1 only,Returned for testing (any battery),Included in model (subset of repeat testers)
+"Participants, n","183,320","207,918","172,731"
+"Age at T1, mean (SD), years",45.98 (17.05),53.04 (15.82),52.85 (15.73)
+"GI at T1, mean (SD)",101.71 (14.46),99.56 (14.25),100.08 (14.07)
+"Age-referenced baseline GI, mean (SD)",-1.71 (11.79),-0.40 (11.40),0.00 (11.28)
+"Gameplays before T1, median [IQR]","14.0 [9.0, 18.0]","15.0 [11.0, 18.0]","15.0 [11.0, 18.0]"
+"Days from signup to T1, median [IQR]","7.7 [2.8, 127.1]","7.2 [3.1, 91.1]","7.1 [3.0, 82.5]"
+"Female, n (%)","89,216 (48.7%)","114,566 (55.1%)","94,641 (54.8%)"
+"Male, n (%)","75,078 (41.0%)","74,494 (35.8%)","62,343 (36.1%)"
+"Gender not reported, n (%)","19,026 (10.4%)","18,858 (9.1%)","15,747 (9.1%)"
+"High school or less, n (%)","21,414 (11.7%)","20,906 (10.1%)","17,123 (9.9%)"
+"Some college or undergraduate degree, n (%)","98,451 (53.7%)","110,027 (52.9%)","91,340 (52.9%)"
+"Professional or graduate education, n (%)","40,261 (22.0%)","53,891 (25.9%)","45,043 (26.1%)"
+"Other education, n (%)","3,245 (1.8%)","3,545 (1.7%)","2,847 (1.6%)"
+"Education not reported, n (%)","19,949 (10.9%)","19,549 (9.4%)","16,378 (9.5%)"

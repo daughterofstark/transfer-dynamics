@@ -1,0 +1,27 @@
+[
+  {
+    "battery_id": 17,
+    "subtests": "Divided visual attention; Forward memory span (v1); Arithmetic reasoning; Grammatical reasoning; Progressive matrices; Go/no-go (v2)",
+    "norming_reference_participants": 37394
+  },
+  {
+    "battery_id": 32,
+    "subtests": "Divided visual attention; Forward memory span (v1); Arithmetic reasoning; Grammatical reasoning; Progressive matrices; Reverse memory span (v1); Digit symbol coding (v1); Trail making part A; Trail making part B",
+    "norming_reference_participants": 51992
+  },
+  {
+    "battery_id": 39,
+    "subtests": "Forward memory span (v1); Arithmetic reasoning; Grammatical reasoning; Progressive matrices; Reverse memory span (v1); Digit symbol coding (v1); Trail making part A; Trail making part B",
+    "norming_reference_participants": 103610
+  },
+  {
+    "battery_id": 50,
+    "subtests": "Arithmetic reasoning; Grammatical reasoning; Progressive matrices; Trail making part A; Trail making part B; Forward memory span (v2); Reverse memory span (v2); Digit symbol coding (v2)",
+    "norming_reference_participants": 148583
+  },
+  {
+    "battery_id": 60,
+    "subtests": "Scale balance; Posner cueing; Complex memory span; Object recognition; Dual search",
+    "norming_reference_participants": 3390
+  }
+]

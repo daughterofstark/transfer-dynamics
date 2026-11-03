@@ -1,59 +1,30 @@
-# Input data
+# Private analysis inputs
 
-Participant-level data are not distributed with this repository and must never be committed (`.gitignore` excludes `data/*`, `*.csv` and `*.npy`). Place the two extracts here, or pass their paths with `--data` and `--composite`.
+Do not commit participant-level files. Only this README is tracked here. Obtain the two NPZ files from Bob's v23 private data handoff; verify with `python reproduce.py validate`. NumPy loads use `allow_pickle=False`.
 
-## 1. Grand Index extract: `data/newsubset.csv`
+## timing_input.npz
 
-One row per NCPT administration. Participants were restricted upstream to at least two administrations and no more than 25 gameplays before the first administration.
+One row per participant, in a fixed order. No user ID, DOB or absolute calendar timestamp is present. These remain private participant trajectories, not automatically cleared public data.
 
-| Column | Use |
-|---|---|
-| `user_id` | Participant identifier |
-| `nth_test` | Administration number (1 = baseline) |
-| `test_run_id` | Sitting identifier |
-| `battery_id` | Battery identifier, required by the default same-battery policy |
-| `normed_score` | Grand Index (census-normed; mean 100, SD 15). The modeled outcome is its change from baseline |
-| `num_plays_before` | Cumulative gameplays before the administration; interval gameplays are its differences |
-| `days_since_signup` | Integer days from signup to the administration; interval days are its differences |
-| `signup_date` | Day-first `DD/MM/YY`; used only to report dates |
-| `age`, `gender`, `education_level` | Descriptive statistics only |
-| `created_at`, `raw_score` | Not used |
+| Field | Shape / definition |
+| --- | --- |
+| `age` | `(n,)`, exact age in years at T1; eligibility is attained age 18–89 |
+| `GI0` | `(n,)`, baseline Grand Index |
+| `battery` | `(n,)`, same battery throughout retained T1–T5; 17, 32, 39, 50 or 60 |
+| `Y` | `(n,4)`, cumulative GI change from T1 at T2–T5; NaN after follow-up ends |
+| `P` | `(n,4)`, gameplays in consecutive intervals, not cumulative since T1 |
+| `D` | `(n,4)`, difference between calendar dates; rate filter uses `P/(D+1)` |
+| `D_exact` | `(n,4)`, exact elapsed days from test timestamps |
+| `ptr` | `(n,4,2)`, int64 start/inclusive and end/exclusive offsets into segment arrays |
+| `dt` | `(segments,)`, duration in days; exact partial days, full active days, compressed inactive spans |
+| `plays` | `(segments,)`, observed gameplay count in each segment |
 
-Notes:
-- Parse `signup_date` with `format="%d/%m/%y"`. Month-first parsing gives wrong dates.
-- The original GI extract includes `battery_id`. The default `--gi-battery-policy same-battery` keeps each participant's initial sequence on one battery, ending at the first change. It raises an error when IDs are missing. Battery IDs 39 and 50 are the older and newer subscriber batteries; three subtests differ in version.
-- `--gi-battery-policy retain` explicitly keeps all supplied GI records. This option reproduces the earlier GI cohort after correcting gameplay metadata. The presence or absence of an optional column never silently chooses the cohort. The original `v17-numbers` input was documented without a battery identifier; use that tag to reproduce the uncorrected manuscript numbers.
+The valid-mask of P/D/D_exact equals Y's. Every participant has at least T2. Valid follow-ups form a prefix; there is no bridging across an excluded visit. Segments are ordered by participant, interval and time, contiguous in the global arrays. `sum(dt)` and `sum(plays)` within each pointer slice equal D_exact and P. `subset()` deliberately retains global segment arrays and their pointers.
 
-## 2. Short-interval composite extract: `data/short_intervals.csv`
+## selection_input.npz
 
-One row per subtest result. Column names are matched case-insensitively.
+391,238 baseline-eligible participants, including T1-only testers. Row order is independent of the model array; there is **no cross-file identifier**. Fields are age_t1, grand_index, plays_before, days_signup_to_t1, education_level, battery_id, gender (f/m/empty), returned, in_analysis, first_failure, later_failure, omitted_visits.
 
-| Column | Use |
-|---|---|
-| `USER_ID` | Participant identifier |
-| `TEST_RUN_ID` | Sitting identifier |
-| `BRAINPOWER_TEST_ID` | Battery; chains are restricted to one battery |
-| `NTH_RUN` | Sitting number across all of a participant's sittings |
-| `TEST_SECTION_ID` | Subtest |
-| `INDEX_SCORE` | Census-referenced subtest index; 0 marks a subtest without norms |
-| `TRESULT_CREATED_AT` | Subtest result time; a sitting's date is its first result |
-| `GAMEPLAYS_BETWEEN_TEST_RUNS` | Gameplays since the previous sitting |
-| `DAYS_BETWEEN_TEST_RUNS` | Not used for intervals (based on sitting creation times) |
-| `AGE_AT_SIGNUP`, `GENDER`, `EDUCATION_LEVEL`, `SIGNUP_DATE` | Descriptive statistics only |
+`returned` includes any subsequent recorded test, even one later excluded. `in_analysis` identifies the final repeated-test cohort. Failure labels are sequential, mutually exclusive first failures: battery_change, subtest_composition, invalid_GI, gameplay_rate, four_SD, or empty. Later failures truncate an otherwise retained trajectory. These labels are inputs from the upstream extract/score/eligibility pipeline, not reclassified by the reporting code.
 
-The file contains other columns, including `DATE_OF_BIRTH`. The analysis does not use them.
-
-### How composite records are built (`composite_extract.py`, `paper_pipeline.build_merged`)
-
-1. Each sitting's date and gameplay count are recorded from the untouched subtest rows, before any rows are dropped. The date is the first subtest result and the gameplay count is the sitting maximum.
-2. Index scores of 0 are dropped. Where a subtest appears twice in a sitting, the first result is kept.
-3. The composite is the mean of the remaining subtest index scores; at least three are required.
-4. The raw sitting gameplay maximum is aligned with the retained composite sittings. A gameplay count carried by an excluded subtest remains available.
-5. For each participant, the analysis keeps the leading run of consecutive sittings (by `NTH_RUN`) on the same battery. The run must start at `NTH_RUN` 1, so that the baseline is the participant's first NCPT administration.
-6. Participants who also appear in the Grand Index extract are dropped from the composite records; their Grand Index records are kept.
-7. Records are recast to the Grand Index schema (days from the first sitting, cumulative gameplays), with participant IDs prefixed `NIC_`.
-
-## 3. Derived files (not committed)
-
-- `out/v17/_data_cache/`: merged and Grand Index-only datasets plus a manifest of input checksums, policy, builder-code hashes and output checksums. A changed input, policy, builder or cached output triggers a rebuild. `--out` relocates both outputs and cache.
-- `out/v17/`: analysis outputs (see the main README).
+The data handoff begins **after** warehouse extraction, score normalization and eligibility decisions. It reproduces the model, validation, numerical paper outputs and descriptive table counts. It does not independently re-extract Snowflake or reconstruct original trial logs. See `docs/data_preparation.md` for those upstream definitions and release limitations.

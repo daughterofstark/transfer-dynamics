@@ -1,0 +1,104 @@
+{
+  "17": {
+    "subtests": [
+      29,
+      28,
+      30,
+      27,
+      32,
+      31
+    ],
+    "slugs": [
+      "wordy_equations_v2",
+      "span_board_v2",
+      "grammatical_reasoning_v2",
+      "dva_v2",
+      "reaction_v3",
+      "progressive_matrices"
+    ]
+  },
+  "32": {
+    "subtests": [
+      29,
+      38,
+      28,
+      33,
+      39,
+      40,
+      30,
+      27,
+      31
+    ],
+    "slugs": [
+      "wordy_equations_v2",
+      "DigitSymbolGame",
+      "span_board_v2",
+      "reverse_span_board_v2",
+      "TrailMakingPartAGame",
+      "TrailMakingPartBGame",
+      "grammatical_reasoning_v2",
+      "dva_v2",
+      "progressive_matrices"
+    ]
+  },
+  "39": {
+    "subtests": [
+      29,
+      38,
+      28,
+      33,
+      39,
+      40,
+      30,
+      31
+    ],
+    "slugs": [
+      "wordy_equations_v2",
+      "DigitSymbolGame",
+      "span_board_v2",
+      "reverse_span_board_v2",
+      "TrailMakingPartAGame",
+      "TrailMakingPartBGame",
+      "grammatical_reasoning_v2",
+      "progressive_matrices"
+    ]
+  },
+  "50": {
+    "subtests": [
+      29,
+      45,
+      43,
+      44,
+      39,
+      40,
+      30,
+      31
+    ],
+    "slugs": [
+      "wordy_equations_v2",
+      "digit_symbol_v3",
+      "span_board_v3",
+      "reverse_span_board_v3",
+      "TrailMakingPartAGame",
+      "TrailMakingPartBGame",
+      "grammatical_reasoning_v2",
+      "progressive_matrices"
+    ]
+  },
+  "60": {
+    "subtests": [
+      54,
+      52,
+      53,
+      55,
+      51
+    ],
+    "slugs": [
+      "object_recognition",
+      "PosnerCueingGame",
+      "complex_span",
+      "DualSearchGame",
+      "figure_weights"
+    ]
+  }
+}

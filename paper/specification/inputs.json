@@ -1,0 +1,23 @@
+{
+  "selection_input.npz": {
+    "sha256": "dffd659ac79c11375c85579a0bd513afeb835abad8f86022c38bd2db46684220",
+    "bytes": 6344410
+  },
+  "timing_input.npz": {
+    "sha256": "45dafc0501c0d59e6713f09f9d9e1204db4034c0f10b774112fe5a3dfc99ff7a",
+    "bytes": 305176768
+  },
+  "cohort": {
+    "participants": 172731,
+    "test_timepoints": 409486,
+    "intervals": 236755,
+    "gameplays": 96461780,
+    "visit_counts": [
+      172731,
+      172731,
+      46868,
+      12466,
+      4690
+    ]
+  }
+}

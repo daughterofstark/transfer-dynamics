@@ -1,0 +1,24 @@
+{
+  "GI_inclusive": [
+    40.0,
+    160.0
+  ],
+  "GI_basis": "Normative mean100 SD15; four SD",
+  "interval_change_inclusive": [
+    -26.59388096492413,
+    32.36921748058884
+  ],
+  "interval_change_basis": "Prior untrimmed account-clean five-battery cohort pooled consecutive changes: mean2.887668257832354 SD7.370387305689121; thresholds frozen at approval, no iterative clipping",
+  "trajectory_policy": "Retain consecutive valid prefix only. Invalid T1 or T2 excludes participant; invalid T3 preserves T1\u2013T2. Never bridge a failed sitting.",
+  "completion_policy": {
+    "applies_to_subtest": 38,
+    "near_full_seconds_min": 89,
+    "early_response_count_min": 66,
+    "early_response_count_max": 69,
+    "early_duration_seconds_min": 20,
+    "combination": "duration>=89 OR (responses between66 and69 inclusive AND duration>=20), with original duration0<t<=90 and nonnegative correct-count requirements",
+    "reference_and_analysis_same_rule": true,
+    "threshold_status": "Conservative analyst-selected operational tolerances; not verified task-code constants",
+    "scoring_retained": "90*correct/observed duration; subtest45 unchanged"
+  }
+}

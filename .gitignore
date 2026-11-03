@@ -1,20 +1,26 @@
-# Inputs and generated outputs. Participant-level data must never be committed.
-data/*
-!data/README.md
-out/
-_verify_scratch/
-*.csv
-*.tsv
-*.npy
-*.npz
-*.parquet
-*.xlsx
-*.pkl
-# Environment
+# Participant-level inputs and generated outputs are never committed.
+/data/*
+!/data/README.md
+/outputs/
 .venv/
 __pycache__/
 *.pyc
 .DS_Store
-# Legacy scripts write reports and figures to the repository root
-/verify_report.md
-/*.png
+*.npy
+*.npz
+*.pkl
+*.parquet
+*.sqlite
+*.db
+*.dylib
+*.so
+**/build/
+# Historical workflow writes local inputs/outputs here.
+/legacy/v17/data/*
+!/legacy/v17/data/README.md
+/legacy/v17/out/
+/legacy/v17/_verify_scratch/
+/legacy/v17/*.png
+/legacy/v17/verify_report.md
+.env
+.env.*
