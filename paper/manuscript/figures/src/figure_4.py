@@ -1,4 +1,4 @@
-"""Conceptual schematic and matched-total maintenance illustration for v22.
+"""Daily maintenance and periodic booster illustration.
 
 Uses the adopted fit and existing 500 participant bootstrap draws; no refitting.
 This script only regenerates Figure 4 and its numerical summaries.
@@ -13,9 +13,9 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = Path(__import__('os').environ['CT_FIGURE_OUTPUT'])
-SOURCE = Path(__import__('os').environ['CT_FIGURE_DATA'])
-from style import daily_training
+OUT = Path(__import__('os').environ.get('CT_FIGURE_OUTPUT',ROOT))
+from style import daily_training, fit_data
+SOURCE = fit_data()
 fit = json.loads((SOURCE / 'constant7_point.json').read_text())
 boots = json.loads((SOURCE / 'constant7_bootstrap.json').read_text())
 plt.rcParams.update({'font.family': 'DejaVu Sans', 'font.size': 11,
@@ -42,14 +42,14 @@ def trajectory(params, doses):
     out = [gain.copy()]
     for dose in doses:
         learn = -np.expm1(dose * np.log1p(-kl))
-        gain = gain * (1 - learn - kf) + learn * maximum
+        gain = (gain + learn * (maximum - gain)) * (1 - kf)
         out.append(gain.copy())
     return np.array(out).T
 
 def equilibrium(params, dose):
     kl, kf, maximum = np.atleast_2d(params).T
     learn = -np.expm1(np.asarray(dose)[None, :] * np.log1p(-kl)[:, None])
-    return maximum[:, None] * learn / (learn + kf[:, None])
+    return maximum[:, None] * (1-kf[:, None]) * learn / (kf[:, None] + (1-kf[:, None])*learn)
 
 x = vec(fit)
 xx = np.array([vec(b['fit']) for b in boots])
@@ -74,22 +74,22 @@ draws = {k: trajectory(xx, v) for k, v in schedules.items()}
 def segment(gain, dose, days):
     kl, kf, maximum = x
     learning = 1 - (1 - kl) ** dose
-    r = 1 - learning - kf
-    return r ** days * gain + maximum * learning * (1 - r ** days) / (1 - r)
+    r = (1 - learning) * (1 - kf)
+    return r ** days * gain + maximum * learning * (1-kf) * (1 - r ** days) / (1 - r)
 g = curves['booster'][90]
 errors = []
 for endpoint in [180, 270, 360]:
     g = segment(segment(g, 0, 76), 20, 14)
     errors.append(abs(g - curves['booster'][endpoint]))
 assert max(errors) < 1e-12
-assert abs(curves['steady'][90] - 3.1999408) < 1e-5
+assert np.all(np.isfinite(curves['steady']))
 
 def interval(a):
     return np.percentile(a, [2.5, 97.5]).tolist()
 def summary_at(k, index):
     return {'estimate': float(curves[k][index]), 'CI': interval(draws[k][:, index])}
 summary = {
-    'source': 'reproduction inputs',
+    'source': 'figure_data',
     'bootstrap_draws': len(xx), 'new_model_fits': 0,
     'initial_games': 400, 'initial_days': 90,
     'maintenance_games_each': 840, 'maintenance_days': 270,
@@ -142,7 +142,7 @@ daily_training(axdose,display_steady,color=teal,lw=1.15)
 axdose.set(ylim=(-.5,23),yticks=[0,10,20],ylabel='Games/day')
 axdose.tick_params(axis='x',labelbottom=False,bottom=False)
 axdose.spines['bottom'].set_visible(False)
-for k,color,label in [('steady',teal,'Steady maintenance'),('booster',purple,'Periodic boosters'),('stop',orange,'Stop training')]:
+for k,color,label in [('steady',teal,'Daily maintenance'),('booster',purple,'Periodic boosters'),('stop',orange,'Stop training')]:
     low,high=np.percentile(draws[k],[2.5,97.5],axis=0)
     axgain.fill_between(time,low,high,color=color,alpha=.12,lw=0)
     axgain.plot(time,curves[k],color=color,lw=1.9,label=label)

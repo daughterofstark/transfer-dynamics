@@ -1,15 +1,16 @@
 """Figure 2: joint distribution and separate marginal cumulative distributions.
 
-Frozen cohort, unchanged counts/limits. No models fitted. Requires local inputs.
+Cohort distributions from the validated calendar-day model input.
 """
 from pathlib import Path
 import json
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
-from style import setup,save,INK
-OUT=Path(__import__('os').environ['CT_FIGURE_OUTPUT'])
-a=np.load(__import__('os').environ['CT_INPUT'])
+from style import setup,save,INK,analysis_root
+BASE=Path(__file__).resolve().parents[1]
+OUT=Path(__import__('os').environ.get('CT_FIGURE_OUTPUT',BASE))
+a=np.load(__import__('os').environ.get('CT_INPUT',analysis_root()/'data/timing_input.npz'))
 d,p=a['D'][:,0],a['P'][:,0]
 assert len(d)==len(p)==172731
 assert np.isfinite(d).all() and np.isfinite(p).all()

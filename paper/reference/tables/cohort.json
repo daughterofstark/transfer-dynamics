@@ -1,0 +1,15 @@
+{
+  "participants": 172731,
+  "test_timepoints": 409486,
+  "intervals": 236755,
+  "gameplays": 96461780,
+  "visit_counts": [
+    172731,
+    172731,
+    46868,
+    12466,
+    4690
+  ],
+  "baseline_SD": 14.070262920879836,
+  "change_SD": 7.219025553096185
+}

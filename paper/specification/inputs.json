@@ -1,11 +1,7 @@
 {
-  "selection_input.npz": {
-    "sha256": "dffd659ac79c11375c85579a0bd513afeb835abad8f86022c38bd2db46684220",
-    "bytes": 6344410
-  },
   "timing_input.npz": {
-    "sha256": "45dafc0501c0d59e6713f09f9d9e1204db4034c0f10b774112fe5a3dfc99ff7a",
-    "bytes": 305176768
+    "sha256": "e836dba6686779fa199df75f0ded81b6be7f3c4cf6f60b390a3a41d1b29701e6",
+    "bytes": 226696876
   },
   "cohort": {
     "participants": 172731,
@@ -19,5 +15,9 @@
       12466,
       4690
     ]
+  },
+  "supplement_aggregates.json": {
+    "sha256": "6f52167182d9b09ee65f2617292e35ec283ac6d634bd5a7ee29c41e7b79475d8",
+    "bytes": 5964
   }
 }

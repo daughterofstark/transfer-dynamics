@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "resamples_per_model": 500,
+  "models": {
+    "primary": {
+      "audited": 500,
+      "max_loss_error": 0.0,
+      "max_scaled_projected_gradient": 9.703428732560653e-06
+    },
+    "saturating": {
+      "audited": 500,
+      "max_loss_error": 0.0,
+      "max_scaled_projected_gradient": 5.936567793305178e-06
+    },
+    "drift": {
+      "audited": 500,
+      "max_loss_error": 0.0,
+      "max_scaled_projected_gradient": 2.784423878061342e-06
+    },
+    "slowing": {
+      "audited": 500,
+      "max_loss_error": 0.0,
+      "max_scaled_projected_gradient": 5.248184384200328e-06,
+      "max_prediction_error_48_vs128": 1.5851428503133036e-08
+    }
+  },
+  "resampling": "Identical seeds, participant multiplicities and refitted baseline age-reference coefficients across all four models",
+  "slowing_half_retention_history": "400 integer gameplays over 90 days; evaluated using 128-node quadrature"
+}

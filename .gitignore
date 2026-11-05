@@ -1,6 +1,7 @@
 # Participant-level inputs and generated outputs are never committed.
 /data/*
 !/data/README.md
+!/data/supplement_aggregates.json
 /outputs/
 .venv/
 __pycache__/

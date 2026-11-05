@@ -8,8 +8,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
-from style import setup,save,TEAL,ORANGE
-O=Path(__import__('os').environ['CT_FIGURE_OUTPUT']);D=Path(__import__('os').environ['CT_FIGURE_DATA'])
+from style import setup,save,TEAL,ORANGE,figure_data
+BASE=Path(__file__).resolve().parents[1]
+O=Path(__import__('os').environ.get('CT_FIGURE_OUTPUT',BASE));D=figure_data()
 t=pd.read_csv(D/'figure2_time_comparison.csv')
 q=pd.read_csv(D/'figure2_dose_response.csv')
 v=pd.read_csv(D/'figure2_visits.csv')

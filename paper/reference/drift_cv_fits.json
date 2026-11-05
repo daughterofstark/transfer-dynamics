@@ -1,1 +1,592 @@
-[{"fold":2,"fit":{"model":"age_baseline_drift9","parameters":{"learning_per_game":0.005872699985764134,"training_forgetting_per_day":0.003516338248457422,"game_ceiling_GI":3.94652821752436,"test_increment_age50_GI":1.5018507940928982,"age_beta_per20":-0.4250393827241781,"retest_forgetting_per_day":1e-06},"derived":{"training_half_life_days":196.77509563372348,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.653744038401715,"dose_70_games_day":1.3987464950201665,"dose_80_games_day":2.404953888119586,"dose_90_games_day":5.459858806917264,"GI_at_1_games_day":2.4684931117222835,"GI_at_2_games_day":3.0351799129459596,"dose_3GI_games_day":1.9028018157374347,"drift_GI_per_year_age30":-0.44326754260423473,"drift_GI_per_year_age50":-0.5595608766801402,"drift_GI_per_year_age70":-0.6758542107560457,"drift_GI_per_year_age85":-0.7630742113129748},"wmse":47.438897550458435,"success":true,"max_scaled_projected_gradient":1.418717476227081e-07,"stationarity":null,"bound_hits":["retest_forgetting_per_day_lower"],"fixed_parameters":{},"nit":35,"message":"CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH","starts":[{"wmse":47.43889755045924,"success":true,"gradient":7.160461867662498e-09,"derived":{"training_half_life_days":196.77490969323438,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6537440852974045,"dose_70_games_day":1.3987476166864559,"dose_80_games_day":2.4049558234445887,"dose_90_games_day":5.459863247655267,"GI_at_1_games_day":2.468492428270959,"GI_at_2_games_day":3.035179420276949,"dose_3GI_games_day":1.9028031675098653}},{"wmse":47.43889755045877,"success":true,"gradient":2.180931573609441e-07,"derived":{"training_half_life_days":196.77500908507582,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6537441082081675,"dose_70_games_day":1.398746999639833,"dose_80_games_day":2.404954758896771,"dose_90_games_day":5.459860805706728,"GI_at_1_games_day":2.4684928216968913,"GI_at_2_games_day":3.035179712718196,"dose_3GI_games_day":1.9028023675772157}},{"wmse":47.438897550458435,"success":true,"gradient":1.418717476227081e-07,"derived":{"training_half_life_days":196.77509563372348,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.653744038401715,"dose_70_games_day":1.3987464950201665,"dose_80_games_day":2.404953888119586,"dose_90_games_day":5.459858806917264,"GI_at_1_games_day":2.4684931117222835,"GI_at_2_games_day":3.0351799129459596,"dose_3GI_games_day":1.9028018157374347,"drift_GI_per_year_age30":-0.44326754260423473,"drift_GI_per_year_age50":-0.5595608766801402,"drift_GI_per_year_age70":-0.6758542107560457,"drift_GI_per_year_age85":-0.7630742113129748}},{"wmse":47.43889755045922,"success":true,"gradient":3.7043360278627094e-07,"derived":{"training_half_life_days":196.77462024304936,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6537442046749036,"dose_70_games_day":1.3987500149342516,"dose_80_games_day":2.404959957447759,"dose_90_games_day":5.459872706149504,"GI_at_1_games_day":2.468490645421627,"GI_at_2_games_day":3.0351779729363733,"dose_3GI_games_day":1.9028070935521038}},{"wmse":47.438897550459735,"success":true,"gradient":7.396626581022596e-08,"derived":{"training_half_life_days":196.774917315787,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.653744107106911,"dose_70_games_day":1.398747518507984,"dose_80_games_day":2.4049556543624453,"dose_90_games_day":5.459862861866602,"GI_at_1_games_day":2.468492466418008,"GI_at_2_games_day":3.0351794366359326,"dose_3GI_games_day":1.9028031195238908}}],"elapsed_seconds":17.332713125000737,"outcome_parameter_count":9,"baseline_reference_parameter_count":3,"reference_coefficients":[103.15278161205012,-10.610923353546152,-2.4219182431896114],"baseline_GI_coefficient_per15":-2.6847831845632255,"drift_GI_per_year_age50":-0.5595608766801402,"drift_GI_per_year_per20years":-0.1162933340759055,"reference_refit":true,"linear_coefficients":[-2.6847831845632255,-0.5595608766801402,-0.1162933340759055],"audit":{"loss_error":9.308109838457312e-13,"gradient":1.418717476227081e-07,"boundary":null}}},{"fold":1,"fit":{"model":"age_baseline_drift9","parameters":{"learning_per_game":0.0064263918775093725,"training_forgetting_per_day":0.00409658897375992,"game_ceiling_GI":3.918818558050035,"test_increment_age50_GI":1.493621184189027,"age_beta_per20":-0.411787204830515,"retest_forgetting_per_day":1e-06},"derived":{"training_half_life_days":168.85424534477946,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.662465230455375,"dose_70_games_day":1.4897613718791831,"dose_80_games_day":2.5627057407409666,"dose_90_games_day":5.826802827509509,"GI_at_1_games_day":2.3932252758825494,"GI_at_2_games_day":2.969343846158987,"dose_3GI_games_day":2.0886624340690485,"drift_GI_per_year_age30":-0.36985405411770034,"drift_GI_per_year_age50":-0.5001024449432137,"drift_GI_per_year_age70":-0.630350835768727,"drift_GI_per_year_age85":-0.728037128887862},"wmse":47.42187793871689,"success":true,"max_scaled_projected_gradient":1.0247477969680869e-07,"stationarity":null,"bound_hits":["retest_forgetting_per_day_lower"],"fixed_parameters":{},"nit":32,"message":"CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH","starts":[{"wmse":47.421877938717394,"success":true,"gradient":3.153263558159155e-10,"derived":{"training_half_life_days":168.85394697018782,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6624651634298792,"dose_70_games_day":1.4897634432469138,"dose_80_games_day":2.5627093197003576,"dose_90_games_day":5.826811075045898,"GI_at_1_games_day":2.3932240578491397,"GI_at_2_games_day":2.9693429378115286,"dose_3GI_games_day":2.088665080720312}},{"wmse":47.421877938719284,"success":true,"gradient":3.443258714763783e-08,"derived":{"training_half_life_days":168.8539508824045,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6624651571879218,"dose_70_games_day":1.4897634851683736,"dose_80_games_day":2.562709391607429,"dose_90_games_day":5.8268112370969884,"GI_at_1_games_day":2.3932240506899762,"GI_at_2_games_day":2.9693429413080183,"dose_3GI_games_day":2.0886650681699144}},{"wmse":47.421877938719405,"success":true,"gradient":2.91092487748419e-06,"derived":{"training_half_life_days":168.85390933047094,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.662465280415843,"dose_70_games_day":1.4897640288805676,"dose_80_games_day":2.562710329103575,"dose_90_games_day":5.826813384004981,"GI_at_1_games_day":2.3932222279971085,"GI_at_2_games_day":2.969340838749791,"dose_3GI_games_day":2.08867139316505}},{"wmse":47.42187793871802,"success":true,"gradient":9.666134310096516e-07,"derived":{"training_half_life_days":168.8534439352375,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6624651624934316,"dose_70_games_day":1.4897687696998243,"dose_80_games_day":2.5627185089124334,"dose_90_games_day":5.826832154079284,"GI_at_1_games_day":2.393221167197122,"GI_at_2_games_day":2.9693409063391334,"dose_3GI_games_day":2.0886709666003527}},{"wmse":47.42187793871689,"success":true,"gradient":1.0247477969680869e-07,"derived":{"training_half_life_days":168.85424534477946,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.662465230455375,"dose_70_games_day":1.4897613718791831,"dose_80_games_day":2.5627057407409666,"dose_90_games_day":5.826802827509509,"GI_at_1_games_day":2.3932252758825494,"GI_at_2_games_day":2.969343846158987,"dose_3GI_games_day":2.0886624340690485,"drift_GI_per_year_age30":-0.36985405411770034,"drift_GI_per_year_age50":-0.5001024449432137,"drift_GI_per_year_age70":-0.630350835768727,"drift_GI_per_year_age85":-0.728037128887862}}],"elapsed_seconds":25.211073499998747,"outcome_parameter_count":9,"baseline_reference_parameter_count":3,"reference_coefficients":[103.0982794279676,-10.625710210096589,-2.3766986882194714],"baseline_GI_coefficient_per15":-2.663431708299698,"drift_GI_per_year_age50":-0.5001024449432137,"drift_GI_per_year_per20years":-0.13024839082551332,"reference_refit":true,"linear_coefficients":[-2.663431708299698,-0.5001024449432137,-0.13024839082551332],"audit":{"loss_error":1.5205614545266144e-12,"gradient":1.0247477969680869e-07,"boundary":null}}},{"fold":0,"fit":{"model":"age_baseline_drift9","parameters":{"learning_per_game":0.0061977215936413746,"training_forgetting_per_day":0.0036465747159031042,"game_ceiling_GI":3.960618103777618,"test_increment_age50_GI":1.4685174155389087,"age_beta_per20":-0.4237086252834253,"retest_forgetting_per_day":1e-06},"derived":{"training_half_life_days":189.7349316752579,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6546145922647082,"dose_70_games_day":1.374468372371385,"dose_80_games_day":2.363472386158814,"dose_90_games_day":5.367502634557132,"GI_at_1_games_day":2.493505637589381,"GI_at_2_games_day":3.0581533904496925,"dose_3GI_games_day":1.8422941293978985,"drift_GI_per_year_age30":-0.3884809183921972,"drift_GI_per_year_age50":-0.5120425286231187,"drift_GI_per_year_age70":-0.6356041388540402,"drift_GI_per_year_age85":-0.7282753465272314},"wmse":47.393846153547386,"success":true,"max_scaled_projected_gradient":9.03656290551746e-07,"stationarity":null,"bound_hits":["retest_forgetting_per_day_lower"],"fixed_parameters":{},"nit":29,"message":"CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH","starts":[{"wmse":47.39384615354775,"success":true,"gradient":6.045181735903224e-07,"derived":{"training_half_life_days":189.73503719873793,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.654614823065376,"dose_70_games_day":1.3744683815410281,"dose_80_games_day":2.363472397861382,"dose_90_games_day":5.367502632858857,"GI_at_1_games_day":2.4935059522934124,"GI_at_2_games_day":3.058153780817795,"dose_3GI_games_day":1.8422931553717459}},{"wmse":47.393846153547386,"success":true,"gradient":9.03656290551746e-07,"derived":{"training_half_life_days":189.7349316752579,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6546145922647082,"dose_70_games_day":1.374468372371385,"dose_80_games_day":2.363472386158814,"dose_90_games_day":5.367502634557132,"GI_at_1_games_day":2.493505637589381,"GI_at_2_games_day":3.0581533904496925,"dose_3GI_games_day":1.8422941293978985,"drift_GI_per_year_age30":-0.3884809183921972,"drift_GI_per_year_age50":-0.5120425286231187,"drift_GI_per_year_age70":-0.6356041388540402,"drift_GI_per_year_age85":-0.7282753465272314}},{"wmse":47.39384615354923,"success":true,"gradient":3.575208618967504e-08,"derived":{"training_half_life_days":189.73511879426624,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6546146577737934,"dose_70_games_day":1.374467530768374,"dose_80_games_day":2.3634709317686533,"dose_90_games_day":5.367499281463481,"GI_at_1_games_day":2.493506462362908,"GI_at_2_games_day":3.0581541371728242,"dose_3GI_games_day":1.8422921959155116}},{"wmse":47.393846153548516,"success":true,"gradient":1.5724653301770474e-07,"derived":{"training_half_life_days":189.7351357258693,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6546146693676963,"dose_70_games_day":1.374467527459943,"dose_80_games_day":2.363470925427366,"dose_90_games_day":5.367499262525439,"GI_at_1_games_day":2.4935065652826314,"GI_at_2_games_day":3.058154262585506,"dose_3GI_games_day":1.8422918824197272}},{"wmse":47.393846153548765,"success":true,"gradient":1.9960284922767541e-07,"derived":{"training_half_life_days":189.73497845558614,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6546147147949907,"dose_70_games_day":1.3744684381113703,"dose_80_games_day":2.3634724974001187,"dose_90_games_day":5.367502874653986,"GI_at_1_games_day":2.493506062257328,"GI_at_2_games_day":3.058153932832949,"dose_3GI_games_day":1.8422927800424875}}],"elapsed_seconds":27.90680749999956,"outcome_parameter_count":9,"baseline_reference_parameter_count":3,"reference_coefficients":[103.13497950614345,-10.597264058274003,-2.40080175457092],"baseline_GI_coefficient_per15":-2.6885632793188448,"drift_GI_per_year_age50":-0.5120425286231187,"drift_GI_per_year_per20years":-0.12356161023092152,"reference_refit":true,"linear_coefficients":[-2.6885632793188448,-0.5120425286231187,-0.12356161023092152],"audit":{"loss_error":1.9255708139098715e-12,"gradient":9.03656290551746e-07,"boundary":null}}},{"fold":3,"fit":{"model":"age_baseline_drift9","parameters":{"learning_per_game":0.006229770755912152,"training_forgetting_per_day":0.004038465377017868,"game_ceiling_GI":3.959197797309171,"test_increment_age50_GI":1.4851133483195866,"age_beta_per20":-0.4294527105250634,"retest_forgetting_per_day":1e-06},"derived":{"training_half_life_days":171.28947423643004,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6508652089441028,"dose_70_games_day":1.5150224140917992,"dose_80_games_day":2.606031106079485,"dose_90_games_day":5.924411005713982,"GI_at_1_games_day":2.4020576012513657,"GI_at_2_games_day":2.9877601642578586,"dose_3GI_games_day":2.034034698540718,"drift_GI_per_year_age30":-0.3794611585117708,"drift_GI_per_year_age50":-0.49527144343302415,"drift_GI_per_year_age70":-0.6110817283542775,"drift_GI_per_year_age85":-0.6979394420452175},"wmse":47.54313610480117,"success":true,"max_scaled_projected_gradient":1.3775950082885867e-09,"stationarity":null,"bound_hits":["retest_forgetting_per_day_lower"],"fixed_parameters":{},"nit":24,"message":"CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH","starts":[{"wmse":47.54313610480211,"success":true,"gradient":9.884736925782215e-07,"derived":{"training_half_life_days":171.28932510039937,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6508650212478231,"dose_70_games_day":1.515023208413483,"dose_80_games_day":2.6060324801996626,"dose_90_games_day":5.924414183899069,"GI_at_1_games_day":2.402058002367127,"GI_at_2_games_day":2.987760892775902,"dose_3GI_games_day":2.034032624748013}},{"wmse":47.54313610480192,"success":true,"gradient":2.914535375655672e-07,"derived":{"training_half_life_days":171.28967932811148,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6508652194426261,"dose_70_games_day":1.5150209046739525,"dose_80_games_day":2.6060284989817895,"dose_90_games_day":5.924405004158266,"GI_at_1_games_day":2.402058659522341,"GI_at_2_games_day":2.987761042905187,"dose_3GI_games_day":2.034032239618776}},{"wmse":47.54313610480125,"success":true,"gradient":2.252767484349638e-06,"derived":{"training_half_life_days":171.28911569771168,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6508652409340302,"dose_70_games_day":1.515026303811404,"dose_80_games_day":2.6060378156098225,"dose_90_games_day":5.924426389424971,"GI_at_1_games_day":2.402055345064548,"GI_at_2_games_day":2.987758488762212,"dose_3GI_games_day":2.0340393699637564}},{"wmse":47.54313610480117,"success":true,"gradient":1.3775950082885867e-09,"derived":{"training_half_life_days":171.28947423643004,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6508652089441028,"dose_70_games_day":1.5150224140917992,"dose_80_games_day":2.606031106079485,"dose_90_games_day":5.924411005713982,"GI_at_1_games_day":2.4020576012513657,"GI_at_2_games_day":2.9877601642578586,"dose_3GI_games_day":2.034034698540718,"drift_GI_per_year_age30":-0.3794611585117708,"drift_GI_per_year_age50":-0.49527144343302415,"drift_GI_per_year_age70":-0.6110817283542775,"drift_GI_per_year_age85":-0.6979394420452175}},{"wmse":47.54313610480145,"success":true,"gradient":1.8381726703607963e-07,"derived":{"training_half_life_days":171.2895300438806,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6508653035016746,"dose_70_games_day":1.515022382926129,"dose_80_games_day":2.606031049557043,"dose_90_games_day":5.924410856886827,"GI_at_1_games_day":2.4020575986201336,"GI_at_2_games_day":2.9877601528519167,"dose_3GI_games_day":2.0340347312768907}}],"elapsed_seconds":18.91964887499853,"outcome_parameter_count":9,"baseline_reference_parameter_count":3,"reference_coefficients":[103.11028462877198,-10.640863722473279,-2.381438799816551],"baseline_GI_coefficient_per15":-2.692170442246255,"drift_GI_per_year_age50":-0.49527144343302415,"drift_GI_per_year_per20years":-0.11581028492125334,"reference_refit":true,"linear_coefficients":[-2.692170442246255,-0.49527144343302415,-0.11581028492125334],"audit":{"loss_error":4.547473508864641e-13,"gradient":1.3775950082885867e-09,"boundary":null}}},{"fold":4,"fit":{"model":"age_baseline_drift9","parameters":{"learning_per_game":0.006189644155699916,"training_forgetting_per_day":0.004168181388707884,"game_ceiling_GI":3.9732074828019686,"test_increment_age50_GI":1.503478570957762,"age_beta_per20":-0.4156629071564811,"retest_forgetting_per_day":1e-06},"derived":{"training_half_life_days":165.94805475636431,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6599026814670492,"dose_70_games_day":1.5740941313450814,"dose_80_games_day":2.707941125448315,"dose_90_games_day":6.158176699291724,"GI_at_1_games_day":2.374314992067618,"GI_at_2_games_day":2.9700642893126474,"dose_3GI_games_day":2.0828324428506937,"drift_GI_per_year_age30":-0.3730900393893205,"drift_GI_per_year_age50":-0.5107249856220264,"drift_GI_per_year_age70":-0.6483599318547323,"drift_GI_per_year_age85":-0.7515861415292616},"wmse":47.41948246090751,"success":true,"max_scaled_projected_gradient":1.2945503043738837e-06,"stationarity":null,"bound_hits":["retest_forgetting_per_day_lower"],"fixed_parameters":{},"nit":32,"message":"CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH","starts":[{"wmse":47.41948246090845,"success":true,"gradient":1.2587522387037654e-07,"derived":{"training_half_life_days":165.94777529784307,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6599027282693836,"dose_70_games_day":1.5740972562203717,"dose_80_games_day":2.707946517385843,"dose_90_games_day":6.158189074095145,"GI_at_1_games_day":2.3743138416546667,"GI_at_2_games_day":2.9700637309304616,"dose_3GI_games_day":2.082833924368625}},{"wmse":47.419482460908455,"success":true,"gradient":8.855826868759712e-08,"derived":{"training_half_life_days":165.94807160605004,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6599026876269372,"dose_70_games_day":1.574095222416223,"dose_80_games_day":2.707943001462301,"dose_90_games_day":6.158180958760871,"GI_at_1_games_day":2.3743152207710634,"GI_at_2_games_day":2.9700648850506273,"dose_3GI_games_day":2.0828306813300164}},{"wmse":47.419482460908746,"success":true,"gradient":8.105088506505585e-07,"derived":{"training_half_life_days":165.94813454202378,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.659902837938391,"dose_70_games_day":1.574095366564472,"dose_80_games_day":2.7079432458034542,"dose_90_games_day":6.158181488994926,"GI_at_1_games_day":2.3743149678431905,"GI_at_2_games_day":2.970064610711053,"dose_3GI_games_day":2.082831465779276}},{"wmse":47.41948246090951,"success":true,"gradient":8.90245931029889e-08,"derived":{"training_half_life_days":165.94805311566236,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6599026589171985,"dose_70_games_day":1.574095030783335,"dose_80_games_day":2.7079426728622464,"dose_90_games_day":6.158180218955906,"GI_at_1_games_day":2.3743153255293765,"GI_at_2_games_day":2.970064961416165,"dose_3GI_games_day":2.082830469192036}},{"wmse":47.41948246090751,"success":true,"gradient":1.2945503043738837e-06,"derived":{"training_half_life_days":165.94805475636431,"retest_half_life_days":693146.8339862972,"age_ratio_per20":0.6599026814670492,"dose_70_games_day":1.5740941313450814,"dose_80_games_day":2.707941125448315,"dose_90_games_day":6.158176699291724,"GI_at_1_games_day":2.374314992067618,"GI_at_2_games_day":2.9700642893126474,"dose_3GI_games_day":2.0828324428506937,"drift_GI_per_year_age30":-0.3730900393893205,"drift_GI_per_year_age50":-0.5107249856220264,"drift_GI_per_year_age70":-0.6483599318547323,"drift_GI_per_year_age85":-0.7515861415292616}}],"elapsed_seconds":19.023824833002436,"outcome_parameter_count":9,"baseline_reference_parameter_count":3,"reference_coefficients":[103.14095331935681,-10.61233711627328,-2.423010407522295],"baseline_GI_coefficient_per15":-2.659438779522257,"drift_GI_per_year_age50":-0.5107249856220264,"drift_GI_per_year_per20years":-0.13763494623270586,"reference_refit":true,"linear_coefficients":[-2.659438779522257,-0.5107249856220264,-0.13763494623270586],"audit":{"loss_error":1.6839862837514374e-12,"gradient":1.2945503043738837e-06,"boundary":null}}}]
+[
+  {
+    "fold": 0,
+    "fit": {
+      "model": "age_baseline_drift9",
+      "parameters": {
+        "learning_per_game": 0.00623525076100043,
+        "training_forgetting_per_day": 0.0037044691466049614,
+        "game_ceiling_GI": 3.9539346531877833,
+        "test_increment_age50_GI": 1.470692280651728,
+        "age_beta_per20": -0.42349450942937283,
+        "retest_forgetting_per_day": 1e-06,
+        "test_diminishing_fraction": 0.0
+      },
+      "derived": {
+        "training_half_life_days": 186.76428061852317,
+        "retest_half_life_days": 693146.8339862972,
+        "age_ratio_per20": 0.6547547706338762,
+        "dose_70_games_day": 1.393137417206958,
+        "dose_80_games_day": 2.3957207174791364,
+        "dose_90_games_day": 5.441754541323602,
+        "GI_at_1_games_day": 2.476896453966049,
+        "GI_at_2_games_day": 3.043605707074726,
+        "dose_3GI_games_day": 1.8805316756222492,
+        "drift_GI_per_year_age30": -0.38745711194404325,
+        "drift_GI_per_year_age50": -0.5108675448919072,
+        "drift_GI_per_year_age70": -0.6342779778397712,
+        "drift_GI_per_year_age85": -0.7268358025506692
+      },
+      "wmse": 47.39245599050998,
+      "success": true,
+      "max_scaled_projected_gradient": 1.722740533423408e-07,
+      "stationarity": null,
+      "bound_hits": [
+        "retest_forgetting_per_day_lower"
+      ],
+      "fixed_parameters": {
+        "test_diminishing_fraction": 0.0
+      },
+      "nit": 42,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "starts": [
+        {
+          "wmse": 47.392455990511614,
+          "success": true,
+          "gradient": 9.718782629464785e-07,
+          "derived": {
+            "training_half_life_days": 186.7640267475967,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6547549008070292,
+            "dose_70_games_day": 1.3931389062190263,
+            "dose_80_games_day": 2.3957232883824235,
+            "dose_90_games_day": 5.441760452757144,
+            "GI_at_1_games_day": 2.4768957527918416,
+            "GI_at_2_games_day": 3.043605308886338,
+            "dose_3GI_games_day": 1.8805327932445743
+          }
+        },
+        {
+          "wmse": 47.39245599051067,
+          "success": true,
+          "gradient": 1.7744580939070581e-07,
+          "derived": {
+            "training_half_life_days": 186.76402468589515,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6547548204778695,
+            "dose_70_games_day": 1.3931383215710027,
+            "dose_80_games_day": 2.3957222830711626,
+            "dose_90_games_day": 5.441758169827843,
+            "GI_at_1_games_day": 2.4768958749391836,
+            "GI_at_2_games_day": 3.0436052755347434,
+            "dose_3GI_games_day": 1.8805328427985868
+          }
+        },
+        {
+          "wmse": 47.39245599050998,
+          "success": true,
+          "gradient": 1.722740533423408e-07,
+          "derived": {
+            "training_half_life_days": 186.76428061852317,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6547547706338762,
+            "dose_70_games_day": 1.393137417206958,
+            "dose_80_games_day": 2.3957207174791364,
+            "dose_90_games_day": 5.441754541323602,
+            "GI_at_1_games_day": 2.476896453966049,
+            "GI_at_2_games_day": 3.043605707074726,
+            "dose_3GI_games_day": 1.8805316756222492,
+            "drift_GI_per_year_age30": -0.38745711194404325,
+            "drift_GI_per_year_age50": -0.5108675448919072,
+            "drift_GI_per_year_age70": -0.6342779778397712,
+            "drift_GI_per_year_age85": -0.7268358025506692
+          }
+        }
+      ],
+      "elapsed_seconds": 9.403346208000585,
+      "baseline_GI_coefficient_per15": -2.688613306692543,
+      "outcome_parameter_count": 9,
+      "baseline_reference_parameter_count": 3,
+      "reference_coefficients": [
+        103.13497950614345,
+        -10.597264058274003,
+        -2.40080175457092
+      ],
+      "drift_GI_per_year_age50": -0.5108675448919072,
+      "drift_GI_per_year_per20years": -0.12341043294786398,
+      "reference_refit": true,
+      "linear_coefficients": [
+        -2.688613306692543,
+        -0.5108675448919072,
+        -0.12341043294786398
+      ],
+      "audit": {
+        "loss_error": 1.1226575225009583e-12,
+        "gradient": 1.722740533423408e-07,
+        "boundary": null
+      }
+    }
+  },
+  {
+    "fold": 1,
+    "fit": {
+      "model": "age_baseline_drift9",
+      "parameters": {
+        "learning_per_game": 0.00647297198900812,
+        "training_forgetting_per_day": 0.004174857583303537,
+        "game_ceiling_GI": 3.911676892796448,
+        "test_increment_age50_GI": 1.4963995443662974,
+        "age_beta_per20": -0.41155480075270345,
+        "retest_forgetting_per_day": 1e-06,
+        "test_diminishing_fraction": 0.0
+      },
+      "derived": {
+        "training_half_life_days": 165.68212507987923,
+        "retest_half_life_days": 693146.8339862972,
+        "age_ratio_per20": 0.6626192079681491,
+        "dose_70_games_day": 1.5137533695862473,
+        "dose_80_games_day": 2.604189528558642,
+        "dose_90_games_day": 5.92260821300179,
+        "GI_at_1_games_day": 2.3740634394188582,
+        "GI_at_2_games_day": 2.9524601232249195,
+        "dose_3GI_games_day": 2.139137947260562,
+        "drift_GI_per_year_age30": -0.3689600839429275,
+        "drift_GI_per_year_age50": -0.4989046556793762,
+        "drift_GI_per_year_age70": -0.6288492274158248,
+        "drift_GI_per_year_age85": -0.7263076562181614
+      },
+      "wmse": 47.420246353089574,
+      "success": true,
+      "max_scaled_projected_gradient": 6.522486755502862e-08,
+      "stationarity": null,
+      "bound_hits": [
+        "retest_forgetting_per_day_lower"
+      ],
+      "fixed_parameters": {
+        "test_diminishing_fraction": 0.0
+      },
+      "nit": 28,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "starts": [
+        {
+          "wmse": 47.42024635308989,
+          "success": true,
+          "gradient": 1.964376401457446e-06,
+          "derived": {
+            "training_half_life_days": 165.6816463573248,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6626191954865005,
+            "dose_70_games_day": 1.5137576923223048,
+            "dose_80_games_day": 2.604196992125781,
+            "dose_90_games_day": 5.9226253753301705,
+            "GI_at_1_games_day": 2.3740612783261934,
+            "GI_at_2_games_day": 2.952458676003342,
+            "dose_3GI_games_day": 2.1391421584680907
+          }
+        },
+        {
+          "wmse": 47.420246353089574,
+          "success": true,
+          "gradient": 6.522486755502862e-08,
+          "derived": {
+            "training_half_life_days": 165.68212507987923,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6626192079681491,
+            "dose_70_games_day": 1.5137533695862473,
+            "dose_80_games_day": 2.604189528558642,
+            "dose_90_games_day": 5.92260821300179,
+            "GI_at_1_games_day": 2.3740634394188582,
+            "GI_at_2_games_day": 2.9524601232249195,
+            "dose_3GI_games_day": 2.139137947260562,
+            "drift_GI_per_year_age30": -0.3689600839429275,
+            "drift_GI_per_year_age50": -0.4989046556793762,
+            "drift_GI_per_year_age70": -0.6288492274158248,
+            "drift_GI_per_year_age85": -0.7263076562181614
+          }
+        },
+        {
+          "wmse": 47.42024635308986,
+          "success": true,
+          "gradient": 5.5097039792798066e-08,
+          "derived": {
+            "training_half_life_days": 165.6821358970715,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6626191952260078,
+            "dose_70_games_day": 1.5137530209267485,
+            "dose_80_games_day": 2.604188928132708,
+            "dose_90_games_day": 5.922606843223069,
+            "GI_at_1_games_day": 2.374063619524786,
+            "GI_at_2_games_day": 2.952460246645981,
+            "dose_3GI_games_day": 2.1391375867809344
+          }
+        }
+      ],
+      "elapsed_seconds": 8.976009499998327,
+      "baseline_GI_coefficient_per15": -2.6634856389518853,
+      "outcome_parameter_count": 9,
+      "baseline_reference_parameter_count": 3,
+      "reference_coefficients": [
+        103.0982794279676,
+        -10.625710210096589,
+        -2.3766986882194714
+      ],
+      "drift_GI_per_year_age50": -0.4989046556793762,
+      "drift_GI_per_year_per20years": -0.1299445717364487,
+      "reference_refit": true,
+      "linear_coefficients": [
+        -2.6634856389518853,
+        -0.4989046556793762,
+        -0.1299445717364487
+      ],
+      "audit": {
+        "loss_error": 1.4921397450962104e-13,
+        "gradient": 6.522486755502862e-08,
+        "boundary": null
+      }
+    }
+  },
+  {
+    "fold": 2,
+    "fit": {
+      "model": "age_baseline_drift9",
+      "parameters": {
+        "learning_per_game": 0.005906985083007581,
+        "training_forgetting_per_day": 0.003581453516678404,
+        "game_ceiling_GI": 3.940584958992322,
+        "test_increment_age50_GI": 1.504370430431446,
+        "age_beta_per20": -0.42479508644297825,
+        "retest_forgetting_per_day": 1e-06,
+        "test_diminishing_fraction": 0.0
+      },
+      "derived": {
+        "training_half_life_days": 193.19117165664562,
+        "retest_half_life_days": 693146.8339862972,
+        "age_ratio_per20": 0.6539037651486839,
+        "dose_70_games_day": 1.4215761615039548,
+        "dose_80_games_day": 2.4443682693899653,
+        "dose_90_games_day": 5.550464659089136,
+        "GI_at_1_games_day": 2.4498698458559987,
+        "GI_at_2_games_day": 3.019269903891662,
+        "dose_3GI_games_day": 1.9462130903613184,
+        "drift_GI_per_year_age30": -0.4420195104358247,
+        "drift_GI_per_year_age50": -0.5580574756662307,
+        "drift_GI_per_year_age70": -0.6740954408966366,
+        "drift_GI_per_year_age85": -0.7611239148194411
+      },
+      "wmse": 47.43739241278061,
+      "success": true,
+      "max_scaled_projected_gradient": 9.536858367775407e-08,
+      "stationarity": null,
+      "bound_hits": [
+        "retest_forgetting_per_day_lower"
+      ],
+      "fixed_parameters": {
+        "test_diminishing_fraction": 0.0
+      },
+      "nit": 22,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "starts": [
+        {
+          "wmse": 47.43739241278106,
+          "success": true,
+          "gradient": 4.503154999464567e-08,
+          "derived": {
+            "training_half_life_days": 193.19073627238564,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6539038828626935,
+            "dose_70_games_day": 1.4215785524511695,
+            "dose_80_games_day": 2.4443723974184075,
+            "dose_90_games_day": 5.550474149805118,
+            "GI_at_1_games_day": 2.4498679097930394,
+            "GI_at_2_games_day": 3.019268246990679,
+            "dose_3GI_games_day": 1.9462176578185801
+          }
+        },
+        {
+          "wmse": 47.43739241278061,
+          "success": true,
+          "gradient": 9.536858367775407e-08,
+          "derived": {
+            "training_half_life_days": 193.19117165664562,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6539037651486839,
+            "dose_70_games_day": 1.4215761615039548,
+            "dose_80_games_day": 2.4443682693899653,
+            "dose_90_games_day": 5.550464659089136,
+            "GI_at_1_games_day": 2.4498698458559987,
+            "GI_at_2_games_day": 3.019269903891662,
+            "dose_3GI_games_day": 1.9462130903613184,
+            "drift_GI_per_year_age30": -0.4420195104358247,
+            "drift_GI_per_year_age50": -0.5580574756662307,
+            "drift_GI_per_year_age70": -0.6740954408966366,
+            "drift_GI_per_year_age85": -0.7611239148194411
+          }
+        },
+        {
+          "wmse": 47.437392412784526,
+          "success": true,
+          "gradient": 2.2723781483065344e-06,
+          "derived": {
+            "training_half_life_days": 193.190749023127,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6539047508888832,
+            "dose_70_games_day": 1.4215761733833976,
+            "dose_80_games_day": 2.444368306171373,
+            "dose_90_games_day": 5.550464856316764,
+            "GI_at_1_games_day": 2.4498662475819484,
+            "GI_at_2_games_day": 3.019265467172519,
+            "dose_3GI_games_day": 1.946225141132023
+          }
+        }
+      ],
+      "elapsed_seconds": 8.790482667001925,
+      "baseline_GI_coefficient_per15": -2.6848335490938133,
+      "outcome_parameter_count": 9,
+      "baseline_reference_parameter_count": 3,
+      "reference_coefficients": [
+        103.15278161205012,
+        -10.610923353546152,
+        -2.4219182431896114
+      ],
+      "drift_GI_per_year_age50": -0.5580574756662307,
+      "drift_GI_per_year_per20years": -0.11603796523040594,
+      "reference_refit": true,
+      "linear_coefficients": [
+        -2.6848335490938133,
+        -0.5580574756662307,
+        -0.11603796523040594
+      ],
+      "audit": {
+        "loss_error": 5.115907697472721e-13,
+        "gradient": 9.536858367775407e-08,
+        "boundary": null
+      }
+    }
+  },
+  {
+    "fold": 3,
+    "fit": {
+      "model": "age_baseline_drift9",
+      "parameters": {
+        "learning_per_game": 0.0062737347097352025,
+        "training_forgetting_per_day": 0.0041181052989164154,
+        "game_ceiling_GI": 3.952281025873592,
+        "test_increment_age50_GI": 1.4880263004898227,
+        "age_beta_per20": -0.429167080472706,
+        "retest_forgetting_per_day": 1e-06,
+        "test_diminishing_fraction": 0.0
+      },
+      "derived": {
+        "training_half_life_days": 167.9702004227246,
+        "retest_half_life_days": 693146.8339862972,
+        "age_ratio_per20": 0.6510511421606042,
+        "dose_70_games_day": 1.5405577949860376,
+        "dose_80_games_day": 2.6501733772291565,
+        "dose_90_games_day": 6.026284860675937,
+        "GI_at_1_games_day": 2.3821572573414493,
+        "GI_at_2_games_day": 2.970308243754199,
+        "dose_3GI_games_day": 2.083521307126825,
+        "drift_GI_per_year_age30": -0.37851171102441017,
+        "drift_GI_per_year_age50": -0.4939820337844493,
+        "drift_GI_per_year_age70": -0.6094523565444885,
+        "drift_GI_per_year_age85": -0.696055098614518
+      },
+      "wmse": 47.541504249440365,
+      "success": true,
+      "max_scaled_projected_gradient": 1.4333156432089026e-07,
+      "stationarity": null,
+      "bound_hits": [
+        "retest_forgetting_per_day_lower"
+      ],
+      "fixed_parameters": {
+        "test_diminishing_fraction": 0.0
+      },
+      "nit": 28,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "starts": [
+        {
+          "wmse": 47.54150424944167,
+          "success": true,
+          "gradient": 5.146867958679397e-07,
+          "derived": {
+            "training_half_life_days": 167.97021304659432,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6510510734516191,
+            "dose_70_games_day": 1.5405568804119227,
+            "dose_80_games_day": 2.6501718032128703,
+            "dose_90_games_day": 6.0262812765770395,
+            "GI_at_1_games_day": 2.382157832319979,
+            "GI_at_2_games_day": 2.9703086979645947,
+            "dose_3GI_games_day": 2.08352001496869
+          }
+        },
+        {
+          "wmse": 47.541504249440365,
+          "success": true,
+          "gradient": 1.4333156432089026e-07,
+          "derived": {
+            "training_half_life_days": 167.9702004227246,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6510511421606042,
+            "dose_70_games_day": 1.5405577949860376,
+            "dose_80_games_day": 2.6501733772291565,
+            "dose_90_games_day": 6.026284860675937,
+            "GI_at_1_games_day": 2.3821572573414493,
+            "GI_at_2_games_day": 2.970308243754199,
+            "dose_3GI_games_day": 2.083521307126825,
+            "drift_GI_per_year_age30": -0.37851171102441017,
+            "drift_GI_per_year_age50": -0.4939820337844493,
+            "drift_GI_per_year_age70": -0.6094523565444885,
+            "drift_GI_per_year_age85": -0.696055098614518
+          }
+        },
+        {
+          "wmse": 47.54150424944142,
+          "success": true,
+          "gradient": 4.2864689448239477e-07,
+          "derived": {
+            "training_half_life_days": 167.97035189220082,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6510512503715941,
+            "dose_70_games_day": 1.540555300460073,
+            "dose_80_games_day": 2.6501690775385622,
+            "dose_90_games_day": 6.026275024603152,
+            "GI_at_1_games_day": 2.382157803030923,
+            "GI_at_2_games_day": 2.970308209721935,
+            "dose_3GI_games_day": 2.0835215125505133
+          }
+        }
+      ],
+      "elapsed_seconds": 9.063354249999975,
+      "baseline_GI_coefficient_per15": -2.6922200949949113,
+      "outcome_parameter_count": 9,
+      "baseline_reference_parameter_count": 3,
+      "reference_coefficients": [
+        103.11028462877198,
+        -10.640863722473279,
+        -2.381438799816551
+      ],
+      "drift_GI_per_year_age50": -0.4939820337844493,
+      "drift_GI_per_year_per20years": -0.1154703227600392,
+      "reference_refit": true,
+      "linear_coefficients": [
+        -2.6922200949949113,
+        -0.4939820337844493,
+        -0.1154703227600392
+      ],
+      "audit": {
+        "loss_error": 1.4992451724538114e-12,
+        "gradient": 1.4333156432089026e-07,
+        "boundary": null
+      }
+    }
+  },
+  {
+    "fold": 4,
+    "fit": {
+      "model": "age_baseline_drift9",
+      "parameters": {
+        "learning_per_game": 0.0062348504439767105,
+        "training_forgetting_per_day": 0.004244540737756695,
+        "game_ceiling_GI": 3.965755480965673,
+        "test_increment_age50_GI": 1.5061213917812146,
+        "age_beta_per20": -0.41542886228506753,
+        "retest_forgetting_per_day": 1e-06,
+        "test_diminishing_fraction": 0.0
+      },
+      "derived": {
+        "training_half_life_days": 162.95640322589588,
+        "retest_half_life_days": 693146.8339862972,
+        "age_ratio_per20": 0.6600571463804339,
+        "dose_70_games_day": 1.5982331200698778,
+        "dose_80_games_day": 2.7496891668575603,
+        "dose_90_games_day": 6.254663548850634,
+        "GI_at_1_games_day": 2.355411265818467,
+        "GI_at_2_games_day": 2.953109714449435,
+        "dose_3GI_games_day": 2.1312772254648524,
+        "drift_GI_per_year_age30": -0.37218972065343675,
+        "drift_GI_per_year_age50": -0.509531748808755,
+        "drift_GI_per_year_age70": -0.6468737769640731,
+        "drift_GI_per_year_age85": -0.7498802980805618
+      },
+      "wmse": 47.41794431235694,
+      "success": true,
+      "max_scaled_projected_gradient": 1.8272243236725426e-07,
+      "stationarity": null,
+      "bound_hits": [
+        "retest_forgetting_per_day_lower"
+      ],
+      "fixed_parameters": {
+        "test_diminishing_fraction": 0.0
+      },
+      "nit": 27,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "starts": [
+        {
+          "wmse": 47.4179443123573,
+          "success": true,
+          "gradient": 5.3478329246539587e-08,
+          "derived": {
+            "training_half_life_days": 162.9565383294435,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6600570687646917,
+            "dose_70_games_day": 1.59823116208786,
+            "dose_80_games_day": 2.7496857899351643,
+            "dose_90_games_day": 6.254655809392181,
+            "GI_at_1_games_day": 2.3554123210528775,
+            "GI_at_2_games_day": 2.9531104936737727,
+            "dose_3GI_games_day": 2.1312750279739263
+          }
+        },
+        {
+          "wmse": 47.41794431235694,
+          "success": true,
+          "gradient": 1.8272243236725426e-07,
+          "derived": {
+            "training_half_life_days": 162.95640322589588,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6600571463804339,
+            "dose_70_games_day": 1.5982331200698778,
+            "dose_80_games_day": 2.7496891668575603,
+            "dose_90_games_day": 6.254663548850634,
+            "GI_at_1_games_day": 2.355411265818467,
+            "GI_at_2_games_day": 2.953109714449435,
+            "dose_3GI_games_day": 2.1312772254648524,
+            "drift_GI_per_year_age30": -0.37218972065343675,
+            "drift_GI_per_year_age50": -0.509531748808755,
+            "drift_GI_per_year_age70": -0.6468737769640731,
+            "drift_GI_per_year_age85": -0.7498802980805618
+          }
+        },
+        {
+          "wmse": 47.41794431235695,
+          "success": true,
+          "gradient": 1.482442553211969e-07,
+          "derived": {
+            "training_half_life_days": 162.9565278025164,
+            "retest_half_life_days": 693146.8339862972,
+            "age_ratio_per20": 0.6600570706048408,
+            "dose_70_games_day": 1.5982312832881231,
+            "dose_80_games_day": 2.749685999101648,
+            "dose_90_games_day": 6.254656289701358,
+            "GI_at_1_games_day": 2.3554122133837874,
+            "GI_at_2_games_day": 2.953110392300958,
+            "dose_3GI_games_day": 2.131275322544688
+          }
+        }
+      ],
+      "elapsed_seconds": 10.344952916999318,
+      "baseline_GI_coefficient_per15": -2.65951413617713,
+      "outcome_parameter_count": 9,
+      "baseline_reference_parameter_count": 3,
+      "reference_coefficients": [
+        103.14095331935681,
+        -10.61233711627328,
+        -2.423010407522295
+      ],
+      "drift_GI_per_year_age50": -0.509531748808755,
+      "drift_GI_per_year_per20years": -0.1373420281553182,
+      "reference_refit": true,
+      "linear_coefficients": [
+        -2.65951413617713,
+        -0.509531748808755,
+        -0.1373420281553182
+      ],
+      "audit": {
+        "loss_error": 3.126388037344441e-13,
+        "gradient": 1.8272243236725426e-07,
+        "boundary": null
+      }
+    }
+  }
+]

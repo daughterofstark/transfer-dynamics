@@ -19,7 +19,7 @@ def files_for(model):
     p=PREFIX[model]
     if model in ['primary','saturating']:return p+'_point.json',p+'_cv_fits.json',p+'_bootstrap.json'
     if model=='drift':return 'drift_point_fit.json','drift_cv_fits.json','drift_bootstrap_records.json'
-    return 'slowing_point.json','slowing_cv.json',None
+    return 'slowing_point.json','slowing_cv.json','slowing_bootstrap.json'
 
 def manifest(args):
     sources=sorted((ROOT/'paper/analysis').glob('*.py'))+sorted((ROOT/'paper/analysis').glob('*.c'))+[ROOT/'reproduce.py',ROOT/'paper/specification/bootstrap_seeds.json']
@@ -30,7 +30,7 @@ def manifest(args):
 def validate(args):
     a=load_model(args.input);got=counts(a);expected=read(ROOT/'paper/specification/inputs.json')
     assert sha256(args.input)==expected['timing_input.npz']['sha256'],'Not the frozen paper input'
-    if args.selection.exists():assert sha256(args.selection)==expected['selection_input.npz']['sha256']
+    if args.selection.exists():assert sha256(args.selection)==expected['supplement_aggregates.json']['sha256']
     assert all(got[k]==expected['cohort'][k] for k in ['participants','test_timepoints','intervals','gameplays','visit_counts'])
     save(args.output/'input_validation.json',got);save(args.output/'run_manifest.json',manifest(args));print('Inputs validated:',got,flush=True)
 
@@ -52,10 +52,6 @@ def predict(a,r,kind,adaptive=False):
     if kind=='slowing':
         import slowing,slowing_adaptive
         pr=slowing.predict(a,r,nodes=128 if adaptive else None)
-        if adaptive:
-            # Preserve global ordered segment pointers when finding owners.
-            for i in slowing_adaptive.affected(a,r):
-                pr[i],err=slowing_adaptive.integrate_person(a,r,int(i));assert err<2e-6
         return pr
     return benchmark_predict(a,r,kind)
 
@@ -82,10 +78,7 @@ def replay(args):
             if kind=='slowing':
                 import slowing,slowing_adaptive
                 pr=slowing.predict(a,fit,nodes=128)
-                ids=slowing_adaptive.affected(a,fit);ids=ids[fold[ids]==k]
-                for i in ids:
-                    pr[i],err=slowing_adaptive.integrate_person(a,fit,int(i));assert err<2e-6
-                print('Slowing adaptive fold',k,'participants',len(ids),flush=True)
+
             pred[fold==k]=pr[fold==k]
             sm=m.subset(a,np.flatnonzero(fold==k)[:30]);p1=predict(sm,fit,kind)
             sm['Y']=sm['Y']+37.;p2=predict(sm,fit,kind)
@@ -100,19 +93,25 @@ def replay(args):
         print('Replayed',kind,'RMSE',metrics[kind]['rmse'],flush=True)
     if args.audit_bootstrap:
         seeds=read(ROOT/'paper/specification/bootstrap_seeds.json')
-        for kind in ['primary','saturating']+(['drift'] if args.comparisons else []):
-            rows=read(source/files_for(kind)[2]);num=200 if kind=='drift' else 500
+        for kind in ['primary','saturating']+(['drift','slowing'] if args.comparisons else []):
+            rows=read(source/files_for(kind)[2]);num=500
             assert len(rows)==num and sorted(r['draw'] for r in rows)==sorted(s['draw'] for s in seeds[:num])
             errors=[];boundary_count=0
             for row in sorted(rows,key=lambda x:x['draw']):
                 assert row['seed']==next(s['seed'] for s in seeds if s['draw']==row['draw'])
                 fit=row['fit'];w=np.bincount(np.random.default_rng(row['seed']).integers(n,size=n),minlength=n).astype(float)
                 coef=f.reference(a,w);np.testing.assert_allclose(coef,fit['reference_coefficients'],atol=1e-10,rtol=0)
-                o=m.Objective(f.center(a,coef),w) if kind!='drift' else __import__('drift').Objective(a,w)
-                x=m.vector(fit);loss,g=o(x);error=abs(loss-fit['wmse']);assert error<1e-7;errors.append(error)
-                fixed={} if kind=='saturating' else {6:0.}
-                if m.active_gradient(x,g,fixed=fixed)>=1e-4:
-                    assert fit['stationarity'];check=m.boundary_check(o,x,fit['stationarity']['boundary_gameplays_per_day'],fixed);assert check['passed'];boundary_count+=1
+                if kind=='slowing':
+                    import slowing
+                    o=slowing.Objective(a,w,nodes=48);x=slowing.vector(fit)
+                else:
+                    o=m.Objective(f.center(a,coef),w) if kind!='drift' else __import__('drift').Objective(a,w)
+                    x=m.vector(fit)
+                loss,g=o(x);error=abs(loss-fit['wmse']);assert error<1e-7;errors.append(error)
+                if kind=='slowing':assert slowing.m.active_gradient(x,g)<1e-4
+                else:
+                    fixed={} if kind=='saturating' else {6:0.}
+                    assert m.active_gradient(x,g,fixed=fixed)<1e-4
                 if len(errors)%100==0:print(kind,'bootstrap audited',len(errors),flush=True)
             checks.append(dict(model=kind,bootstrap_audited=len(errors),max_loss_error=max(errors),boundary_stationarity_checks=boundary_count,new_bootstrap_fits=0))
     save(args.output/'prediction_metrics.json',metrics);save(args.output/'replay_audit.json',checks)
@@ -140,8 +139,15 @@ def fit_one(task):
         r=drift.fitted(A,w,starts)
     elif kind=='slowing':
         import slowing,slowing_fit
-        if phase=='bootstrap':raise ValueError('No slowing-decay bootstrap in the paper')
-        r=slowing.fit(A,w,nodes=48) if phase=='point' else slowing_fit.fit(A,w,index)
+        if phase=='bootstrap':
+            try:r=slowing.fit(A,w,starts=[slowing.vector(point),slowing.STARTS[0]],nodes=48)
+            except AssertionError:
+                r=slowing.fit(A,w,starts=slowing.STARTS,nodes=48);r['additional_starts_required']=True
+            import simulations
+            retention=simulations.evaluate(r['parameters'],simulations.schedule(400),True,nodes=128)
+            r['derived']['training_half_retention_400_90_days']=retention['half_retention_days']
+            r['derived']['remaining_fraction_365_after_400_90']=retention['remaining_fraction']['365']
+        else:r=slowing.fit(A,w,nodes=48) if phase=='point' else slowing_fit.fit(A,w,index)
     else:
         import benchmarks
         coef=f.reference(A,w);r,_=benchmarks.fit(f.center(A,coef),w,kind,baseline=True);r['reference_coefficients']=coef.tolist()
@@ -155,7 +161,6 @@ def refit(args):
     if mpath.exists():assert read(mpath)==current,'Code, inputs or runtime changed: use a new output directory'
     else:save(mpath,current)
     if kind=='benchmarks' and phase=='bootstrap':raise ValueError('Benchmarks have no bootstrap in this paper')
-    if kind=='slowing' and phase=='bootstrap':raise ValueError('Slowing decay has no bootstrap in this paper')
     kinds=BENCHMARKS if kind=='benchmarks' else [kind]
     for k in kinds:
         if kind=='benchmarks':filename='benchmark_point_fits.json' if phase=='point' else 'benchmark_cv_fits.json'
@@ -163,7 +168,7 @@ def refit(args):
         path=out/filename
         point=None
         if phase=='bootstrap':
-            point=read(out/files_for(k)[0]);total=200 if k=='drift' else 500
+            point=read(out/files_for(k)[0]);total=500
             draws=total if args.draws is None else args.draws
             if not 1<=draws<=total:raise ValueError(f'draws must be 1..{total}')
             seeds=read(ROOT/'paper/specification/bootstrap_seeds.json')[:draws]
@@ -197,8 +202,8 @@ def figures(args):
     out=args.output/'figures';out.mkdir(exist_ok=True)
     data=args.output/'figure_data';data.mkdir(exist_ok=True)
     source=args.results or REF
-    import shutil
-    for name in ['constant7_point.json','constant7_bootstrap.json']:shutil.copy2(source/name,data/name)
+    os.environ['CT_FIT_DATA']=str(source.resolve())
     for n in range(1,5):
         subprocess.run([sys.executable,str(ROOT/f'paper/manuscript/figures/src/figure_{n}.py')],check=True)
+    subprocess.run([sys.executable,str(ROOT/'paper/manuscript/figures/src/supplementary_figure_1.py')],check=True)
     print('Figures:',out,flush=True)

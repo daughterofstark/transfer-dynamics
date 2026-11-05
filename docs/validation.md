@@ -1,25 +1,46 @@
-# Validation of the v23 consolidation
+# Validation of the calendar-day analysis
 
-Checked on macOS arm64 with Python 3.12.14, NumPy 2.5.3, SciPy 1.18.1, pandas 3.0.5 and matplotlib 3.11.2. Clang compiled the three C objectives. The local Xcode launcher required its direct compiler path and SDK via CC/CFLAGS; a configured Clang/GCC installation normally needs no override.
-
-The staged source tree was exported into a separate directory with no historical analysis folders or compiled libraries. With only the two external NPZ inputs, it compiled, ran all model/benchmark/comparison replays, regenerated numerical tables and all four figures, and passed `tests/check_paper_outputs.py`. Six synthetic tests also passed in that separate source export. This was a fresh source checkout using the documented installed package versions, not a newly provisioned operating system.
+Validated on 5 November 2026 with Python 3.12.14 and the pinned scientific libraries in `requirements.txt`. A C compiler builds the objectives automatically.
 
 ## Numerical checks
 
-- Cohort: 172,731 people; 409,486 test timepoints; 236,755 intervals; 96,461,780 gameplays. Daily segment sums reconcile to every interval.
-- Re-evaluated all **500 primary**, **500 retest-saturation** and **200 aging-comparison** saved bootstrap fits. All reproduced their saved objective values (maximum discrepancy 0 in this runtime). Boundary-stationarity checks passed for 64, 60 and 19 fits respectively. No draw was discarded. These are audits of existing fits, **not 1,200 newly optimized fits**.
-- Reconstructed all held-out predictions using the saved fitting-sample coefficients. Outcome perturbation checks passed. RMSE: primary 6.890850764; mean change 7.032379591; retest-only 6.972689529; no-forgetting 6.919613595; cumulative-use 6.916924694; aging 6.888298356; slowing decay 6.890548186.
-- Fresh primary optimization: full-sample fit, CV fold 0 and bootstrap draw 0. Objective differences from the saved fits were below 6e-13; the largest half-life difference was 0.0044 day. This smoke check exercises independent optimization and resampling; it does not claim all bootstrap fits were freshly optimized during packaging.
-- The independent tests check C/Python recurrences, analytic gradients, daily timing, participant weighting, nonzero retest gain at zero gameplay, nested comparators and separation of held-out outcomes from prediction/reference fitting.
+- Inputs: 172,731 participants, 409,486 NCPT test timepoints, 236,755 intervals and 96,461,780 gameplays. Counts and calendar-day gaps reconcile at every interval. Daily events contain observed integer game counts and nonnegative integer day gaps. Tests divide games chronologically before timestamp fields are removed.
+- Primary fits include the full sample, all five held-out folds and all 500 participant bootstrap resamples. Retest saturation, longitudinal age-related change and slowing decay each include the same 500 matched participant bootstrap fits. All selected comparison and benchmark point/fold fits were regenerated using the calendar-day model.
+- Independently re-evaluated every saved primary, saturation, aging and slowing-decay bootstrap loss and projected gradient: all 2,000 passed, with zero loss discrepancy in this runtime. No draw was discarded.
+- Eight independent unit tests passed in a separate package directory. They cover compiled/Python recurrences, analytic gradients, equal participant weighting, held-out outcome independence, nested comparisons, same-date event ordering, retest input at zero training, and maintenance equilibrium.
+- Slowing-decay predictions differed by at most 1.4e-8 GI points between 48- and 128-node quadrature. Selected histories agreed with independent adaptive integration within 3.3e-6 GI points, below the 1e-5 audit tolerance and reporting precision. All 500 slowing-decay bootstrap fits also passed 48-versus-128-node prediction checks; their maximum difference was 1.59e-08 GI points.
 
-## Paper reconciliation
+## Held-out prediction errors
 
-Tables S1/S3 and later follow-up counts match exactly; within-person coefficients and cluster uncertainty agree to 1e-10; all Figure 3 aggregate numbers match exactly; all eight held-out RMSEs agree to 1e-10. The booster summaries match exactly. Rebuilt PNGs for Figures 1–4 are pixel-identical to the current manuscript exports. The 400-game cessation illustration and fixed SD denominators reproduce the paper's rounding.
+- primary: 6.890729517 GI points.
+- saturating: 6.890729518 GI points.
+- mean_change: 7.032379591 GI points.
+- retest_only: 6.972630552 GI points.
+- no_forgetting: 6.919613595 GI points.
+- static_dose_response: 6.916924694 GI points.
+- drift: 6.888187533 GI points.
+- slowing: 6.890460780 GI points.
 
-Machine-readable evidence is in `paper/reference/packaging_validation.json`. To repeat the numerical reconciliation after a full saved-fit replay:
+## Reproduction boundary and paper reconciliation
+
+The executable workflow starts with the frozen, scored cohort and an aggregate supplement file. Raw warehouse extraction and scoring from source logs are documented but are outside this package's execution boundary. The model file contains no account identifiers, dates of birth, timestamps, absolute dates or participant-level battery/demographic fields beyond whole-year age. Real score trajectories and relative timing remain sensitive data.
+
+The package was copied to a separate directory without compiled libraries or historical project folders. Using the documented installed dependencies, it compiled, replayed all model comparisons and benchmarks, regenerated every numerical table and all five figures, and passed `tests/check_paper_outputs.py`. This validates portability within the installed runtime, not installation on a newly provisioned operating system. Figure exports were visually inspected.
+
+Machine-readable validation and numerical reference outputs are in `paper/reference`. To repeat:
 
 ```sh
+python -m unittest discover -s tests -v
+python reproduce.py all --comparisons --audit-bootstrap
 python tests/check_paper_outputs.py --output outputs
 ```
 
-The original warehouse extraction, raw-log scoring and reference-map assembly are outside this package's executable reproduction boundary. Their definitions and standalone scoring primitives are preserved, while the run begins at the frozen scored cohort and selection inputs. Neither private inputs nor generated participant predictions are included in GitHub. The data release and Zenodo archive still require author review.
+The local manuscript and supplement include the current equations, estimates, uncertainty, comparison tables and captions. Word export and synchronization to the shared repository/private Zenodo draft are separate publishing steps.
+
+The four parameter-bootstrap sets share all 500 archived participant seeds. The aging set retains its validated first 200 resamples and adds the remaining 300; the slowing-decay set contains 500 newly optimized fits. Point estimates and validation-fold fits did not change. The latter model’s bootstrap half-retention times use the same 400-gameplay, 90-day initial course as the paper, followed by cessation. Numerical reporting uses all four complete bootstrap sets. See `matched_bootstrap_audit.json` for the per-model audit and `paired_bootstrap_summary.json` for paired derived comparisons.
+
+## Repository cleanup and handoff
+
+A fresh Git-file export was checked after consolidating the figure-input paths and documentation. All eight synthetic tests passed; all numerical tables, eight models’ held-out metrics and five figures reproduced. PNG exports are pixel-identical. Mathematical model code, scoring rules, private model input and saved fits are unchanged by this cleanup. See `paper/reference/repository_validation.json`. The 2,000-fit bootstrap audit was completed before cleanup and is retained in `matched_bootstrap_audit.json`; it was not rerun merely for documentation and path changes.
+
+The handoff contains the current Markdown paper, topic-organized supplement with linked contents, five figures, aggregate supplement input and canonical reference outputs. Duplicate figure inputs and obsolete aggregate exports were removed from the repository and preserved in the local project history. No participant-level model input, predictions, absolute local paths or private access tokens are included in the Git candidate. Zenodo and Word builds are separate next steps.

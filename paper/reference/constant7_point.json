@@ -1,1 +1,109 @@
-{"model":"constant7","parameters":{"learning_per_game":0.006253375157692455,"training_forgetting_per_day":0.00482146420455718,"game_ceiling_GI":3.967432494383984,"test_increment_age50_GI":1.4596394728548128,"age_beta_per20":-0.49774811826572185,"retest_forgetting_per_day":0.0005197144908724486,"test_diminishing_fraction":0.0},"derived":{"training_half_life_days":143.41594441956687,"retest_half_life_days":1333.3610238071458,"age_ratio_per20":0.6078980340313198,"dose_70_games_day":1.8035751679580794,"dose_80_games_day":3.104451773489721,"dose_90_games_day":7.072014917782806,"GI_at_1_games_day":2.2401989761378336,"GI_at_2_games_day":2.8610230866214206,"dose_3GI_games_day":2.4014339119554373},"wmse":47.47961299861382,"success":true,"max_scaled_projected_gradient":6.950947190528868e-08,"stationarity":null,"bound_hits":[],"fixed_parameters":{"test_diminishing_fraction":0.0},"nit":1,"message":"CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH","starts":[{"wmse":47.47961299861382,"success":true,"gradient":6.950947190528868e-08,"derived":{"training_half_life_days":143.41594441956687,"retest_half_life_days":1333.3610238071458,"age_ratio_per20":0.6078980340313198,"dose_70_games_day":1.8035751679580794,"dose_80_games_day":3.104451773489721,"dose_90_games_day":7.072014917782806,"GI_at_1_games_day":2.2401989761378336,"GI_at_2_games_day":2.8610230866214206,"dose_3GI_games_day":2.4014339119554373}},{"wmse":47.47961299861382,"success":true,"gradient":6.950947190528868e-08,"derived":{"training_half_life_days":143.41594441956687,"retest_half_life_days":1333.3610238071458,"age_ratio_per20":0.6078980340313198,"dose_70_games_day":1.8035751679580794,"dose_80_games_day":3.104451773489721,"dose_90_games_day":7.072014917782806,"GI_at_1_games_day":2.2401989761378336,"GI_at_2_games_day":2.8610230866214206,"dose_3GI_games_day":2.4014339119554373}},{"wmse":47.47961299861382,"success":true,"gradient":6.950947190528868e-08,"derived":{"training_half_life_days":143.41594441956687,"retest_half_life_days":1333.3610238071458,"age_ratio_per20":0.6078980340313198,"dose_70_games_day":1.8035751679580794,"dose_80_games_day":3.104451773489721,"dose_90_games_day":7.072014917782806,"GI_at_1_games_day":2.2401989761378336,"GI_at_2_games_day":2.8610230866214206,"dose_3GI_games_day":2.4014339119554373}},{"wmse":47.47961299861525,"success":true,"gradient":7.375108036687331e-07,"derived":{"training_half_life_days":143.41649931688517,"retest_half_life_days":1333.3618990302214,"age_ratio_per20":0.607897959550851,"dose_70_games_day":1.8035667130075255,"dose_80_games_day":3.1044371707853062,"dose_90_games_day":7.071981305471728,"GI_at_1_games_day":2.2402025693419207,"GI_at_2_games_day":2.8610255857991924,"dose_3GI_games_day":2.401426866657228}}],"elapsed_seconds":5.051057917000435,"baseline_GI_coefficient_per15":-2.6763423046192583,"reference_coefficients":[103.12746099152996,-10.61743341751799,-2.4007541518785427],"outcome_parameter_count":7,"reference_nuisance_coefficients":3,"independent_loss_error":8.952838470577262e-13}
+{
+  "model": "constant7",
+  "parameters": {
+    "learning_per_game": 0.006307283661913115,
+    "training_forgetting_per_day": 0.004910297074310143,
+    "game_ceiling_GI": 3.959579931450758,
+    "test_increment_age50_GI": 1.4618873890801178,
+    "age_beta_per20": -0.4972801350464542,
+    "retest_forgetting_per_day": 0.0005166524801034498,
+    "test_diminishing_fraction": 0.0
+  },
+  "derived": {
+    "training_half_life_days": 140.81510643299603,
+    "retest_half_life_days": 1341.2654225404704,
+    "age_ratio_per20": 0.6081825866880132,
+    "dose_70_games_day": 1.8302862807353646,
+    "dose_80_games_day": 3.150733640904832,
+    "dose_90_games_day": 7.179587428864452,
+    "GI_at_1_games_day": 2.221545479583916,
+    "GI_at_2_games_day": 2.843679219877185,
+    "dose_3GI_games_day": 2.4572070102831787
+  },
+  "wmse": 47.47793992573898,
+  "success": true,
+  "max_scaled_projected_gradient": 2.9377333196494864e-07,
+  "stationarity": null,
+  "bound_hits": [],
+  "fixed_parameters": {
+    "test_diminishing_fraction": 0.0
+  },
+  "nit": 44,
+  "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+  "starts": [
+    {
+      "wmse": 47.47793992574054,
+      "success": true,
+      "gradient": 3.4523103274780866e-07,
+      "derived": {
+        "training_half_life_days": 140.81535960811698,
+        "retest_half_life_days": 1341.2623580453444,
+        "age_ratio_per20": 0.6081826714069752,
+        "dose_70_games_day": 1.8302822999378383,
+        "dose_80_games_day": 3.1507267642154737,
+        "dose_90_games_day": 7.179571590356868,
+        "GI_at_1_games_day": 2.221546765512516,
+        "GI_at_2_games_day": 2.8436798984238574,
+        "dose_3GI_games_day": 2.457205445534987
+      }
+    },
+    {
+      "wmse": 47.477939925742646,
+      "success": true,
+      "gradient": 3.0128682730853263e-06,
+      "derived": {
+        "training_half_life_days": 140.81517361891824,
+        "retest_half_life_days": 1341.2651112805065,
+        "age_ratio_per20": 0.6081819495867974,
+        "dose_70_games_day": 1.8302851340685837,
+        "dose_80_games_day": 3.150731660621424,
+        "dose_90_games_day": 7.179582871651233,
+        "GI_at_1_games_day": 2.2215468029745717,
+        "GI_at_2_games_day": 2.843680635037498,
+        "dose_3GI_games_day": 2.4572021767744068
+      }
+    },
+    {
+      "wmse": 47.477939925739406,
+      "success": true,
+      "gradient": 1.1184287732192924e-06,
+      "derived": {
+        "training_half_life_days": 140.81516213922893,
+        "retest_half_life_days": 1341.2656456043153,
+        "age_ratio_per20": 0.6081828053887517,
+        "dose_70_games_day": 1.8302860670489458,
+        "dose_80_games_day": 3.1507332677810127,
+        "dose_90_games_day": 7.1795865415347855,
+        "GI_at_1_games_day": 2.221545131622432,
+        "GI_at_2_games_day": 2.8436787236510095,
+        "dose_3GI_games_day": 2.4572088393224427
+      }
+    },
+    {
+      "wmse": 47.47793992573898,
+      "success": true,
+      "gradient": 2.9377333196494864e-07,
+      "derived": {
+        "training_half_life_days": 140.81510643299603,
+        "retest_half_life_days": 1341.2654225404704,
+        "age_ratio_per20": 0.6081825866880132,
+        "dose_70_games_day": 1.8302862807353646,
+        "dose_80_games_day": 3.150733640904832,
+        "dose_90_games_day": 7.179587428864452,
+        "GI_at_1_games_day": 2.221545479583916,
+        "GI_at_2_games_day": 2.843679219877185,
+        "dose_3GI_games_day": 2.4572070102831787
+      }
+    }
+  ],
+  "elapsed_seconds": 14.086057291999168,
+  "baseline_GI_coefficient_per15": -2.676437368876863,
+  "reference_coefficients": [
+    103.12746099152996,
+    -10.61743341751799,
+    -2.4007541518785427
+  ],
+  "outcome_parameter_count": 7,
+  "reference_nuisance_coefficients": 3,
+  "independent_loss_error": 6.252776074688882e-13
+}

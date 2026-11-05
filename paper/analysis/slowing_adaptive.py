@@ -1,18 +1,22 @@
+"""High-resolution prediction check for the slowing-decay comparison."""
 import numpy as np
-from scipy.integrate import quad_vec
-import slowing as m
-def integrate_person(a,fit,i,tol=1e-7):
-    sub=m.m.subset(a,np.array([i]));x=m.vector(fit);kg,k=x[:2];lam=-np.log1p(-k)
-    o=m.Objective(sub,np.ones(1),reference=fit['reference_coefficients'],single=True,profile=False)
-    intervals=sub['ptr'][0][np.isfinite(sub['Y'][0])];start=int(intervals[0,0]);end=int(intervals[-1,1]);p=a['plays'][start:end];d=a['dt'][start:end];rate=p[p>0]/d[p>0]
-    g=-np.expm1(rate*np.log1p(-kg));points=-np.log(g+1e-9)/lam;points=np.unique(points[(points>0)&(points<50)])
-    def fn(u):
-        o.u[0]=u;o(x);return np.nan_to_num(o.pred[0])*np.exp(-u)
-    result,error=quad_vec(fn,0,50,epsabs=tol,epsrel=tol/10,points=points,limit=10000)
-    result+=fit['baseline_GI_coefficient_per15']*o.b[0];result[~np.isfinite(sub['Y'][0])]=np.nan
-    return result,float(error)
+from scipy.integrate import quad
+import slowing
 
-def affected(a,fit):
-    x=m.vector(fit);lam=-np.log1p(-x[1]);threshold=-np.log1p(-np.exp(-20*lam))/(-np.log1p(-x[0]))
-    ids=np.flatnonzero(a['plays']/a['dt']>threshold)
-    return np.unique(np.searchsorted(a['ptr'][:,0,0],ids,side='right')-1)
+def integrate_person(a,r,i):
+    x=slowing.vector(r);kl,k,A,q,beta,kr=x;lam=-np.log1p(-k)
+    def trace(u,j):
+        z=0.
+        for visit in range(j+1):
+            st,en=a['ptr'][i,visit]
+            for p,d in zip(a['plays'][st:en],a['dt'][st:en]):
+                z=(1-(1-z)*(1-kl)**p)*np.exp(-lam*u*d)
+        return np.exp(-u)*z
+    out=np.full(4,np.nan);H=0.;maxerr=0.
+    t=(a['age'][i]-50)/20;c=r['reference_coefficients'];base=r['baseline_GI_coefficient_per15']*(a['GI0'][i]-(c[0]+c[1]*t+c[2]*t*t))/15
+    for j in range(4):
+        if not np.isfinite(a['Y'][i,j]):continue
+        H=(H+q*np.exp(beta*t))*(1-kr)**a['D'][i,j]
+        g,err=quad(trace,0,50,args=(j,),epsabs=1e-10,epsrel=1e-9,limit=150)
+        out[j]=A*g+H+base;maxerr=max(maxerr,A*err)
+    return out,maxerr

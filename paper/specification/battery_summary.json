@@ -2,26 +2,36 @@
   {
     "battery_id": 17,
     "subtests": "Divided visual attention; Forward memory span (v1); Arithmetic reasoning; Grammatical reasoning; Progressive matrices; Go/no-go (v2)",
-    "norming_reference_participants": 37394
+    "norming_reference_participants": 37394,
+    "model_participants": 19544,
+    "model_completions": 45933
   },
   {
     "battery_id": 32,
     "subtests": "Divided visual attention; Forward memory span (v1); Arithmetic reasoning; Grammatical reasoning; Progressive matrices; Reverse memory span (v1); Digit symbol coding (v1); Trail making part A; Trail making part B",
-    "norming_reference_participants": 51992
+    "norming_reference_participants": 51992,
+    "model_participants": 27461,
+    "model_completions": 62285
   },
   {
     "battery_id": 39,
     "subtests": "Forward memory span (v1); Arithmetic reasoning; Grammatical reasoning; Progressive matrices; Reverse memory span (v1); Digit symbol coding (v1); Trail making part A; Trail making part B",
-    "norming_reference_participants": 103610
+    "norming_reference_participants": 103610,
+    "model_participants": 59304,
+    "model_completions": 136202
   },
   {
     "battery_id": 50,
     "subtests": "Arithmetic reasoning; Grammatical reasoning; Progressive matrices; Trail making part A; Trail making part B; Forward memory span (v2); Reverse memory span (v2); Digit symbol coding (v2)",
-    "norming_reference_participants": 148583
+    "norming_reference_participants": 148583,
+    "model_participants": 65245,
+    "model_completions": 161870
   },
   {
     "battery_id": 60,
     "subtests": "Scale balance; Posner cueing; Complex memory span; Object recognition; Dual search",
-    "norming_reference_participants": 3390
+    "norming_reference_participants": 3390,
+    "model_participants": 1177,
+    "model_completions": 3196
   }
 ]

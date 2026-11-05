@@ -44,7 +44,7 @@ def predict(a,r):
     z=np.ascontiguousarray((b['GI0']-100)/15)
     # C writes raw predictions; its profiled eta is ignored here.
     # mode=1 selects observed daily timing, not profiling behavior.
-    m.lib.objective(n,j,a['ptr'],a['dt'],a['plays'],a['P'],a['D_exact'],a['Y'],a['age'],np.ones(n),z,m.vector(r),1,grad,out,eta)
+    m.lib.objective(n,j,a['ptr'],a['dt'],a['plays'],a['P'],a['D'],a['Y'],a['age'],np.ones(n),z,m.vector(r),1,grad,out,eta)
     return out+r['baseline_GI_coefficient_per15']*z[:,None]
 
 def starts():

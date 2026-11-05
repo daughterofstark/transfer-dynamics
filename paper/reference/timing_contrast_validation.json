@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-05",
+  "initial_gameplays": 400,
+  "durations_days": [
+    90,
+    730
+  ],
+  "age_at_T1": 50,
+  "baseline_correction": 0,
+  "bootstrap_fits": 500,
+  "new_model_fits": 0,
+  "max_independent_prediction_or_CI_error": 1.9095836023552692e-14,
+  "figure4_day90_reconciled": true,
+  "730_day_and_cumulative_predictions_unchanged": true,
+  "source_sha256": {
+    "review_v17/publication-pr/paper/analysis/simulations.py": "d87cfecc9486a48fdcf98feebfc6bb5e7c8971d71a9a091623777a4cdb94f48c",
+    "review_v17/publication-pr/paper/reference/constant7_point.json": "8ea104aba96f2d17094d6ffc0b9b82d09142fc5cdb4eb298d7840a51409e9588",
+    "review_v17/publication-pr/paper/reference/constant7_bootstrap.json": "f0786feb2f0e57364a148ec69c0327173f5c08b521c29dcf8d321b6d4afa7bc8",
+    "review_v17/timing_contrast_90_20261105/timing_contrast.json": "ad4ddf07ce5a6630527934e694f950278a2b4d5d3d21def3d0134b486611106c"
+  }
+}

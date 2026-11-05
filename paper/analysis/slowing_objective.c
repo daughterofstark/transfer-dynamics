@@ -3,16 +3,10 @@
 #include <stdlib.h>
 typedef struct {double r,rg,rf,b,bg,bf;} Step;
 static inline Step step(double p,double d,double kg,double k,double u){
-  Step s;double lam=-log1p(-k)*u,dk=u*exp(-lam)/(1-k);
-  if(p==0){s.r=exp(-lam*d);s.rg=0;s.rf=-d*u*s.r/(1-k);s.b=s.bg=s.bf=0;return s;}
-  double rate=p/d,z=exp(rate*log1p(-kg)),g=1-z,gg=rate*z/(1-kg);
-  double r=exp(-lam)-g,rg=-gg,rf=-dk;
-  if(r<1e-9){r=1e-9;rg=rf=0;}
-  if(r>1-1e-12){r=1-1e-12;rg=rf=0;}
-  double h=1-r,v=g/h,vg=gg/h+g*rg/(h*h),vf=g*rf/(h*h);
-  s.r=pow(r,d);s.rg=d*s.r/r*rg;s.rf=d*s.r/r*rf;
-  s.b=v*(1-s.r);s.bg=vg*(1-s.r)-v*s.rg;s.bf=vf*(1-s.r)-v*s.rf;
-  return s;
+  Step s;double z=exp(p*log1p(-kg)),f=exp(d*u*log1p(-k));
+  double zg=-p*z/(1-kg),ff=-d*u*f/(1-k);
+  s.r=z*f;s.b=(1-z)*f;s.rg=zg*f;s.bg=-zg*f;
+  s.rf=z*ff;s.bf=(1-z)*ff;return s;
 }
 double objective(int n,int m,int nq,const double *nodes,const double *weights,
  const int64_t *ptr,const double *dt,const double *plays,const double *D,
@@ -20,8 +14,10 @@ double objective(int n,int m,int nq,const double *nodes,const double *weights,
  int profile,double *grad,double *pred,double *eta){
   double kg=x[0],kf=x[1],A=x[2],q50=x[3],beta=x[4],kr=x[5],sw=0,total=0;
   double numerator=0,denominator=0,bgrad[6]={0};
-  Step *cache=malloc(sizeof(Step)*129*nq);
-  for(int p=0;p<129;p++)for(int h=0;h<nq;h++)cache[p*nq+h]=step(p,1,kg,kf,nodes[h]);
+  /* Calendar-day factors are reused across participants. */
+  double *cache=malloc(sizeof(double)*4097*nq), zcache[4096];
+  for(int p=0;p<4096;p++)zcache[p]=exp(p*log1p(-kg));
+  for(int d=0;d<=4096;d++)for(int h=0;h<nq;h++)cache[d*nq+h]=exp(d*nodes[h]*log1p(-kf));
   for(int h=0;h<6;h++)grad[h]=0;
   for(int i=0;i<n;i++){
     if(W[i]==0)continue;
@@ -32,12 +28,13 @@ double objective(int n,int m,int nq,const double *nodes,const double *weights,
       double decay=pow(1-kr,D[ix]),previous=H;
       H=(H+1)*decay;Hf=Hf*decay-(previous+1)*D[ix]*decay/(1-kr);
       for(int64_t s=ptr[2*ix];s<ptr[2*ix+1];s++){
-        double p=plays[s],d=dt[s];int cached=d==1 && p>=0 && p<129 && p==(int)p;
+        double p=plays[s],d=dt[s],z=(p>=0 && p<4096 && p==(int)p)?zcache[(int)p]:exp(p*log1p(-kg));
         for(int h=0;h<nq;h++){
-          Step v=cached?cache[(int)p*nq+h]:step(p,d,kg,kf,nodes[h]);
+          double f=(d>=0 && d<=4096 && d==(int)d)?cache[(int)d*nq+h]:exp(d*nodes[h]*log1p(-kf));
+          double dz=-p*z/(1-kg),ff=-d*nodes[h]*f/(1-kf);
+          Step v={z*f,dz*f,z*ff,(1-z)*f,-dz*f,(1-z)*ff};
           double next=zz[h]*v.r+v.b;
           zg[h]=zg[h]*v.r+zz[h]*v.rg+v.bg;zf[h]=zf[h]*v.r+zz[h]*v.rf+v.bf;zz[h]=next;
-          if(zz[h]<0){zz[h]=zg[h]=zf[h]=0;}else if(zz[h]>1){zz[h]=1;zg[h]=zf[h]=0;}
         }
       }
       double z=0,zgg=0,zff=0;

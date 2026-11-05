@@ -1,1 +1,272 @@
-[{"fold":1,"fit":{"model":"hyperbolic_training7","parameters":{"learning_per_game":0.0064515139609954385,"training_decay_scale":0.008187302873451593,"game_ceiling_GI":4.136347089742018,"test_increment_age50_GI":1.5010040455342888,"age_beta_per20":-0.4856341590096548,"retest_forgetting_per_day":0.0006450543102153501},"wmse":47.453239896794514,"gradient":3.68028173111921e-05,"stationarity":null,"accepted":true,"bound_hits":[],"baseline_GI_coefficient_per15":-2.6622376967776202,"reference_coefficients":[103.0982794279676,-10.625710210096589,-2.3766986882194714],"nodes":24,"loss_audit_error":8.526512829121202e-14,"starts":[{"wmse":47.453239896794514,"gradient":3.68028173111921e-05,"accepted":true}],"reference_refit":true,"derived":{"isolated_input_half_life_days":121.63966021242547,"retest_half_life_days":1074.2097010374969,"age_ratio_per20":0.6153068706172403,"dose_70_games_day":2.2299757914638656,"dose_80_games_day":4.230307615261196,"dose_90_games_day":10.666599136414183,"dose_3GI_games_day":2.5881070696519854},"elapsed_seconds":37.71224099999381},"numerical_prediction_check":{"max_difference":0.06528840352882614,"mean_difference":7.542882803141241e-05}},{"fold":3,"fit":{"model":"hyperbolic_training7","parameters":{"learning_per_game":0.006288891050474734,"training_decay_scale":0.007974205915929513,"game_ceiling_GI":4.171027825299168,"test_increment_age50_GI":1.4881482336687772,"age_beta_per20":-0.5023871503297718,"retest_forgetting_per_day":0.0006403023111636373},"wmse":47.5701594205045,"gradient":0.00047536519311169433,"stationarity":{"kind":"quadrature_trace_clamp","rate":939.1304347737146,"node":0.3342525508835628,"tangent_gradient":3.22795544372317e-07,"normal_loss_changes":[1.7735639801230718e-07,9.533209777146112e-10,2.9313822125232036e-07,9.710930726214428e-09,6.723869390157233e-07,1.1527885845907804e-07],"passed":true},"accepted":true,"bound_hits":[],"baseline_GI_coefficient_per15":-2.6913863417267283,"reference_coefficients":[103.11028462877198,-10.640863722473279,-2.381438799816551],"nodes":24,"loss_audit_error":7.673861546209082e-13,"starts":[{"wmse":47.5701594205045,"gradient":0.00047536519311169433,"accepted":true}],"reference_refit":true,"derived":{"isolated_input_half_life_days":124.90366906888617,"retest_half_life_days":1082.1845133441186,"age_ratio_per20":0.6050845066274311,"dose_70_games_day":2.2279225717650704,"dose_80_games_day":4.225777069278898,"dose_90_games_day":10.649497555612806,"dose_3GI_games_day":2.4939236769857573},"elapsed_seconds":115.68009637499927},"numerical_prediction_check":{"max_difference":0.0468513943669393,"mean_difference":7.7474274480664e-05}},{"fold":2,"fit":{"model":"hyperbolic_training7","parameters":{"learning_per_game":0.00616072678136354,"training_decay_scale":0.007604779537048199,"game_ceiling_GI":4.121177855634096,"test_increment_age50_GI":1.5086778990992695,"age_beta_per20":-0.4990257488785217,"retest_forgetting_per_day":0.0006924033498186883},"wmse":47.47307748739345,"gradient":0.009035629974162669,"stationarity":{"kind":"quadrature_trace_clamp","rate":2879.99999999955,"node":2.31120911713522e-06,"tangent_gradient":4.1859978974035735e-05,"normal_loss_changes":[1.3718431191023228e-06,1.8073698981879716e-08,1.9033709435234414e-06,1.8086254982563332e-07,1.0016474263352393e-06,1.8187616959153274e-06],"passed":true},"accepted":true,"bound_hits":[],"baseline_GI_coefficient_per15":-2.6833947863236784,"reference_coefficients":[103.15278161205012,-10.610923353546152,-2.4219182431896114],"nodes":24,"loss_audit_error":8.597567102697212e-13,"starts":[{"wmse":47.47307748739345,"gradient":0.009035629974162669,"accepted":true}],"reference_refit":true,"derived":{"isolated_input_half_life_days":130.99561500436272,"retest_half_life_days":1000.727660148388,"age_ratio_per20":0.6071218608304831,"dose_70_games_day":2.1684457525090846,"dose_80_games_day":4.111894490447907,"dose_90_games_day":10.352954838762766,"dose_3GI_games_day":2.5574044275590695},"elapsed_seconds":241.72347820900177},"numerical_prediction_check":{"max_difference":0.07991167194371052,"mean_difference":7.071649962500724e-05}},{"fold":0,"fit":{"model":"hyperbolic_training7","parameters":{"learning_per_game":0.006254576922648802,"training_decay_scale":0.007347998693357512,"game_ceiling_GI":4.151516798247003,"test_increment_age50_GI":1.4790086415803263,"age_beta_per20":-0.49695981398924366,"retest_forgetting_per_day":0.0006573037468619024},"wmse":47.42635221845494,"gradient":5.925518604743112e-06,"stationarity":null,"accepted":true,"bound_hits":[],"baseline_GI_coefficient_per15":-2.6871689559148586,"reference_coefficients":[103.13497950614345,-10.597264058274003,-2.40080175457092],"nodes":24,"loss_audit_error":1.4637180356658064e-12,"starts":[{"wmse":47.42635282540462,"gradient":0.00010156605908022038,"accepted":false},{"wmse":47.42635221845494,"gradient":5.925518604743112e-06,"accepted":true}],"reference_refit":true,"derived":{"isolated_input_half_life_days":135.59086306343997,"retest_half_life_days":1054.184393112523,"age_ratio_per20":0.6083774315819532,"dose_70_games_day":2.0632915183878104,"dose_80_games_day":3.911789621684656,"dose_90_games_day":9.842842436953056,"dose_3GI_games_day":2.3566051998522624},"elapsed_seconds":254.82975595899916},"numerical_prediction_check":{"max_difference":0.07726881677698927,"mean_difference":6.663922803850028e-05}},{"fold":4,"fit":{"model":"hyperbolic_training7","parameters":{"learning_per_game":0.006288076548298149,"training_decay_scale":0.008170525046105517,"game_ceiling_GI":4.195873181378936,"test_increment_age50_GI":1.4863168802231235,"age_beta_per20":-0.49588746003905504,"retest_forgetting_per_day":0.0006356432595435672},"wmse":47.45727103847459,"gradient":9.194776131993727e-05,"stationarity":{"kind":"quadrature_trace_clamp","rate":2879.99999999955,"node":1.4492404475928177e-06,"tangent_gradient":9.194776131993727e-05,"normal_loss_changes":[1.852125208756661e-07,1.552393769088667e-10,2.7526942858457915e-07,1.835630314417358e-09,3.8980262218046846e-07,5.2103892755894776e-08],"passed":true},"accepted":true,"bound_hits":[],"baseline_GI_coefficient_per15":-2.6591686610453373,"reference_coefficients":[103.14095331935681,-10.61233711627328,-2.423010407522295],"nodes":24,"loss_audit_error":5.329070518200751e-13,"starts":[{"wmse":47.45731346510688,"gradient":0.002381811564517743,"accepted":false},{"wmse":47.45727103847459,"gradient":9.194776131993727e-05,"accepted":true}],"reference_refit":true,"derived":{"isolated_input_half_life_days":121.89047165129782,"retest_half_life_days":1090.1191031980616,"age_ratio_per20":0.6090301774486684,"dose_70_games_day":2.2834066870576475,"dose_80_games_day":4.33161575791988,"dose_90_games_day":10.921585918930235,"dose_3GI_games_day":2.4922716656043544},"elapsed_seconds":406.73809325000184},"numerical_prediction_check":{"max_difference":0.06135730488699398,"mean_difference":7.377487350802991e-05}}]
+[
+  {
+    "fold": 0,
+    "fit": {
+      "parameters": {
+        "learning_per_game": 0.006331981175068307,
+        "training_decay_scale": 0.007543256680087447,
+        "game_ceiling_GI": 4.146499967342208,
+        "test_increment_age50_GI": 1.4795612609559647,
+        "age_beta_per20": -0.4967518489921079,
+        "retest_forgetting_per_day": 0.0006512797958173253
+      },
+      "wmse": 47.42445076746299,
+      "gradient": 1.676576617519371e-07,
+      "stationarity": null,
+      "accepted": true,
+      "bound_hits": [],
+      "baseline_GI_coefficient_per15": -2.687268407969483,
+      "reference_coefficients": [
+        103.13497950614345,
+        -10.597264058274003,
+        -2.40080175457092
+      ],
+      "nodes": 24,
+      "elapsed_seconds": 9.478236999999353,
+      "starts": [
+        {
+          "wmse": 47.42445076746299,
+          "gradient": 1.676576617519371e-07,
+          "accepted": true,
+          "bound_hits": []
+        },
+        {
+          "wmse": 47.42445076746383,
+          "gradient": 1.4714645017221188e-06,
+          "accepted": true,
+          "bound_hits": []
+        }
+      ],
+      "model": "hyperbolic_training7",
+      "outcome_parameters": 7,
+      "reference_parameters": 3,
+      "reference_refit": true,
+      "derived": {
+        "isolated_input_half_life_days": 132.0681045619275,
+        "retest_half_life_days": 1063.9381785281917,
+        "age_ratio_per20": 0.6085039659496734,
+        "dose_70_games_day": 2.1126856077687655,
+        "dose_80_games_day": 4.011987483557838,
+        "dose_90_games_day": 10.120311431120234,
+        "dose_3GI_games_day": 2.4265440928083075
+      },
+      "loss_audit_error": 3.765876499528531e-13
+    }
+  },
+  {
+    "fold": 1,
+    "fit": {
+      "parameters": {
+        "learning_per_game": 0.006623222661691133,
+        "training_decay_scale": 0.008602678394671118,
+        "game_ceiling_GI": 4.130220304649916,
+        "test_increment_age50_GI": 1.499607588909266,
+        "age_beta_per20": -0.48555603767340916,
+        "retest_forgetting_per_day": 0.0006320513404978506
+      },
+      "wmse": 47.45101120782702,
+      "gradient": 1.5339814206863486e-08,
+      "stationarity": null,
+      "accepted": true,
+      "bound_hits": [],
+      "baseline_GI_coefficient_per15": -2.662273813063394,
+      "reference_coefficients": [
+        103.0982794279676,
+        -10.625710210096589,
+        -2.3766986882194714
+      ],
+      "nodes": 24,
+      "elapsed_seconds": 24.386653416997433,
+      "starts": [
+        {
+          "wmse": 47.451011207827996,
+          "gradient": 6.627875486077197e-07,
+          "accepted": true,
+          "bound_hits": []
+        },
+        {
+          "wmse": 47.45101120782702,
+          "gradient": 1.5339814206863486e-08,
+          "accepted": true,
+          "bound_hits": []
+        }
+      ],
+      "model": "hyperbolic_training7",
+      "outcome_parameters": 7,
+      "reference_parameters": 3,
+      "reference_refit": true,
+      "derived": {
+        "isolated_input_half_life_days": 115.74214695436666,
+        "retest_half_life_days": 1096.3161705015089,
+        "age_ratio_per20": 0.6153549410898144,
+        "dose_70_games_day": 2.3081125242711877,
+        "dose_80_games_day": 4.387363083926984,
+        "dose_90_games_day": 11.100266071386685,
+        "dose_3GI_games_day": 2.697502353478099
+      },
+      "loss_audit_error": 3.197442310920451e-13
+    }
+  },
+  {
+    "fold": 2,
+    "fit": {
+      "parameters": {
+        "learning_per_game": 0.005906269784303689,
+        "training_decay_scale": 0.007415082117612168,
+        "game_ceiling_GI": 4.139844539415595,
+        "test_increment_age50_GI": 1.5286619128759615,
+        "age_beta_per20": -0.496469756507159,
+        "retest_forgetting_per_day": 0.0007178071264139947
+      },
+      "wmse": 47.47070531484136,
+      "gradient": 1.0415721321596832e-07,
+      "stationarity": null,
+      "accepted": true,
+      "bound_hits": [],
+      "baseline_GI_coefficient_per15": -2.68351167669921,
+      "reference_coefficients": [
+        103.15278161205012,
+        -10.610923353546152,
+        -2.4219182431896114
+      ],
+      "nodes": 24,
+      "elapsed_seconds": 11.146839500001079,
+      "starts": [
+        {
+          "wmse": 47.47070531484136,
+          "gradient": 1.0415721321596832e-07,
+          "accepted": true,
+          "bound_hits": []
+        },
+        {
+          "wmse": 47.47070531484166,
+          "gradient": 2.130561534134844e-07,
+          "accepted": true,
+          "bound_hits": []
+        }
+      ],
+      "model": "hyperbolic_training7",
+      "outcome_parameters": 7,
+      "reference_parameters": 3,
+      "reference_refit": true,
+      "derived": {
+        "isolated_input_half_life_days": 134.3596529502053,
+        "retest_half_life_days": 965.2988279122524,
+        "age_ratio_per20": 0.6086756445590136,
+        "dose_70_games_day": 2.226371099081522,
+        "dose_80_games_day": 4.2273811474291305,
+        "dose_90_games_day": 10.659827095777942,
+        "dose_3GI_games_day": 2.5750385681125194
+      },
+      "loss_audit_error": 1.2079226507921703e-13
+    }
+  },
+  {
+    "fold": 3,
+    "fit": {
+      "parameters": {
+        "learning_per_game": 0.006349941735191559,
+        "training_decay_scale": 0.008169660949513907,
+        "game_ceiling_GI": 4.167444648565604,
+        "test_increment_age50_GI": 1.4901623258776722,
+        "age_beta_per20": -0.5019807921833213,
+        "retest_forgetting_per_day": 0.0006364824944245287
+      },
+      "wmse": 47.56803808888768,
+      "gradient": 2.62473577642122e-08,
+      "stationarity": null,
+      "accepted": true,
+      "bound_hits": [],
+      "baseline_GI_coefficient_per15": -2.691482318183712,
+      "reference_coefficients": [
+        103.11028462877198,
+        -10.640863722473279,
+        -2.381438799816551
+      ],
+      "nodes": 24,
+      "elapsed_seconds": 25.057826083997497,
+      "starts": [
+        {
+          "wmse": 47.56803808888809,
+          "gradient": 4.3773847415723745e-07,
+          "accepted": true,
+          "bound_hits": []
+        },
+        {
+          "wmse": 47.56803808888768,
+          "gradient": 2.62473577642122e-08,
+          "accepted": true,
+          "bound_hits": []
+        }
+      ],
+      "model": "hyperbolic_training7",
+      "outcome_parameters": 7,
+      "reference_parameters": 3,
+      "reference_refit": true,
+      "derived": {
+        "isolated_input_half_life_days": 121.90341690985113,
+        "retest_half_life_days": 1088.6812680617209,
+        "age_ratio_per20": 0.6053304376106352,
+        "dose_70_games_day": 2.284556293485628,
+        "dose_80_games_day": 4.340858835252784,
+        "dose_90_games_day": 10.969171920386549,
+        "dose_3GI_games_day": 2.5675730025882353
+      },
+      "loss_audit_error": 1.4921397450962104e-13
+    }
+  },
+  {
+    "fold": 4,
+    "fit": {
+      "parameters": {
+        "learning_per_game": 0.006377089950238144,
+        "training_decay_scale": 0.00838928803236476,
+        "game_ceiling_GI": 4.1897105082358,
+        "test_increment_age50_GI": 1.486632343121211,
+        "age_beta_per20": -0.49571183251050294,
+        "retest_forgetting_per_day": 0.000629834702382439
+      },
+      "wmse": 47.455280678256734,
+      "gradient": 6.061406867988474e-07,
+      "stationarity": null,
+      "accepted": true,
+      "bound_hits": [],
+      "baseline_GI_coefficient_per15": -2.659297930553846,
+      "reference_coefficients": [
+        103.14095331935681,
+        -10.61233711627328,
+        -2.423010407522295
+      ],
+      "nodes": 24,
+      "elapsed_seconds": 10.831086083002447,
+      "starts": [
+        {
+          "wmse": 47.455280678256734,
+          "gradient": 6.061406867988474e-07,
+          "accepted": true,
+          "bound_hits": []
+        },
+        {
+          "wmse": 47.45528067825765,
+          "gradient": 2.3640644297755605e-08,
+          "accepted": true,
+          "bound_hits": []
+        }
+      ],
+      "model": "hyperbolic_training7",
+      "outcome_parameters": 7,
+      "reference_parameters": 3,
+      "reference_refit": true,
+      "derived": {
+        "isolated_input_half_life_days": 118.69892443747419,
+        "retest_half_life_days": 1100.1757619002622,
+        "age_ratio_per20": 0.6091371493068739,
+        "dose_70_games_day": 2.3370031604707613,
+        "dose_80_games_day": 4.441408112593757,
+        "dose_90_games_day": 11.230216732578267,
+        "dose_3GI_games_day": 2.5673708407156686
+      },
+      "loss_audit_error": 6.110667527536862e-13
+    }
+  }
+]

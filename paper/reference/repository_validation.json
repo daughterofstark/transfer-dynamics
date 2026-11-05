@@ -1,0 +1,77 @@
+{
+  "date": "2026-11-05",
+  "unit_tests_passed": 8,
+  "clean_export_reproduction": {
+    "tables/age_reference.json": "matches",
+    "tables/cohort.json": "matches",
+    "tables/effect_size.json": "matches",
+    "tables/maintenance.json": "matches",
+    "tables/retest_saturation.json": "matches",
+    "tables/slowing_400.json": "matches",
+    "tables/supplement_table_1.csv": "matches",
+    "tables/supplement_table_2.csv": "matches",
+    "tables/supplement_table_3.csv": "matches",
+    "tables/supplement_table_3_later_followup.csv": "matches",
+    "tables/supplement_table_4.csv": "matches",
+    "tables/supplement_table_5.csv": "matches",
+    "tables/supplement_table_6.csv": "matches",
+    "tables/table_1.csv": "matches",
+    "tables/timing_contrast.json": "matches",
+    "tables/within_person.json": "matches",
+    "figure_data/figure2_dose_response.csv": "matches",
+    "figure_data/figure2_time_comparison.csv": "matches",
+    "figure_data/figure2_visits.csv": "matches",
+    "heldout_predictions": "all models and folds match",
+    "booster_comparison.json": "all summaries match",
+    "supplementary_schedule_comparison.json": "all summaries match",
+    "figures": "all five PNG/SVG exports present"
+  },
+  "figure_pixels": {
+    "Figure_1": "pixel-identical",
+    "Figure_2": "pixel-identical",
+    "Figure_3": "pixel-identical",
+    "Figure_4": "pixel-identical",
+    "Supplementary_Figure_1": "pixel-identical"
+  },
+  "mathematical_implementation_and_input_unchanged_by_cleanup": true,
+  "matched_bootstrap_audit": {
+    "passed": true,
+    "resamples_per_model": 500,
+    "models": {
+      "primary": {
+        "audited": 500,
+        "max_loss_error": 0.0,
+        "max_scaled_projected_gradient": 9.703428732560653e-06
+      },
+      "saturating": {
+        "audited": 500,
+        "max_loss_error": 0.0,
+        "max_scaled_projected_gradient": 5.936567793305178e-06
+      },
+      "drift": {
+        "audited": 500,
+        "max_loss_error": 0.0,
+        "max_scaled_projected_gradient": 2.784423878061342e-06
+      },
+      "slowing": {
+        "audited": 500,
+        "max_loss_error": 0.0,
+        "max_scaled_projected_gradient": 5.248184384200328e-06,
+        "max_prediction_error_48_vs128": 1.5851428503133036e-08
+      }
+    },
+    "resampling": "Identical seeds, participant multiplicities and refitted baseline age-reference coefficients across all four models",
+    "slowing_half_retention_history": "400 integer gameplays over 90 days; evaluated using 128-node quadrature"
+  },
+  "Git_file_scope": {
+    "passed": true,
+    "candidate_files": 136,
+    "participant_inputs_in_Git": false,
+    "aggregate_input_only": true,
+    "private_path_or_token_matches": [],
+    "supplement_contents_links_valid": true,
+    "working_and_repository_manuscript_match": true
+  },
+  "DOCX_rebuilt": false,
+  "Zenodo_uploaded": false
+}

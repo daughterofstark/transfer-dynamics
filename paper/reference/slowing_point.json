@@ -1,1 +1,57 @@
-{"model":"hyperbolic_training7","parameters":{"learning_per_game":0.006229253044832544,"training_decay_scale":0.007786964536157488,"game_ceiling_GI":4.158838427123923,"test_increment_age50_GI":1.4959449677484764,"age_beta_per20":-0.4955444118063269,"retest_forgetting_per_day":0.0006589337871841531},"wmse":47.47643884350819,"gradient":5.148661459159217e-05,"stationarity":null,"accepted":true,"bound_hits":[],"baseline_GI_coefficient_per15":-2.67666401598301,"reference_coefficients":[103.12746099152996,-10.61743341751799,-2.4007541518785427],"nodes":48,"loss_audit_error":5.400124791776761e-13,"starts":[{"wmse":47.47643884350819,"gradient":5.148661459159217e-05,"accepted":true}],"reference_refit":true,"derived":{"isolated_input_half_life_days":127.91909353985531,"retest_half_life_days":1051.5757423585155,"age_ratio_per20":0.6092391400147905,"dose_70_games_day":2.196194096474335,"dose_80_games_day":4.165046636680293,"dose_90_games_day":10.49154378905153,"dose_3GI_games_day":2.489487658329845},"elapsed_seconds":73.86129608299962,"purpose":"Numerical quadrature refinement; original start failed its stationarity audit. Retry uses fold1 fit then the original fixed start, with unchanged model and acceptance checks.","parameter_relative_change_from24":{"learning_per_game":-0.008740479231096401,"training_decay_scale":-0.01352753533098126,"game_ceiling_GI":0.00035419736957511454,"test_increment_age50_GI":0.0013678054703179857,"age_beta_per20":0.0003150067335644602,"retest_forgetting_per_day":0.008345098579569806}}
+{
+  "parameters": {
+    "learning_per_game": 0.0063138444179394095,
+    "training_decay_scale": 0.00801960877872168,
+    "game_ceiling_GI": 4.154377502235256,
+    "test_increment_age50_GI": 1.496718242652719,
+    "age_beta_per20": -0.4952836577018128,
+    "retest_forgetting_per_day": 0.0006524983451910953
+  },
+  "wmse": 47.47436786822541,
+  "gradient": 1.3166832205413468e-07,
+  "stationarity": null,
+  "accepted": true,
+  "bound_hits": [],
+  "baseline_GI_coefficient_per15": -2.676760141302074,
+  "reference_coefficients": [
+    103.12746099152996,
+    -10.61743341751799,
+    -2.4007541518785427
+  ],
+  "nodes": 48,
+  "elapsed_seconds": 26.048475958999916,
+  "starts": [
+    {
+      "wmse": 47.47436786822541,
+      "gradient": 1.3166832205413468e-07,
+      "accepted": true,
+      "bound_hits": []
+    },
+    {
+      "wmse": 47.47436786822572,
+      "gradient": 3.458304828539423e-07,
+      "accepted": true,
+      "bound_hits": []
+    },
+    {
+      "wmse": 47.47436786822594,
+      "gradient": 6.276557841073513e-09,
+      "accepted": true,
+      "bound_hits": []
+    }
+  ],
+  "model": "hyperbolic_training7",
+  "outcome_parameters": 7,
+  "reference_parameters": 3,
+  "reference_refit": true,
+  "derived": {
+    "isolated_input_half_life_days": 124.19369098683366,
+    "retest_half_life_days": 1061.9506123993613,
+    "age_ratio_per20": 0.6093980223348883,
+    "dose_70_games_day": 2.254766243610394,
+    "dose_80_games_day": 4.283665574963545,
+    "dose_90_games_day": 10.820073231720565,
+    "dose_3GI_games_day": 2.56865338428542
+  },
+  "loss_audit_error": 1.0018652574217413e-12
+}

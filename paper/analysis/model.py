@@ -30,10 +30,10 @@ def derived(x):
     kg,kf,A,q,beta,kr=map(float,x[:6])
     out=dict(training_half_life_days=half(kf),retest_half_life_days=half(kr),age_ratio_per20=float(np.exp(beta)))
     for pct in [70,80,90]:
-        g=kf*pct/(100-pct);out[f'dose_{pct}_games_day']=float(np.log1p(-g)/np.log1p(-kg)) if g<1 else None
+        g=kf*pct/((1-kf)*(100-pct));out[f'dose_{pct}_games_day']=float(np.log1p(-g)/np.log1p(-kg)) if g<1 else None
     for p in [1,2]:
-        g=-np.expm1(p*np.log1p(-kg));out[f'GI_at_{p}_games_day']=float(A*g/(g+kf))
-    g=kf*3/(A-3) if A>3 else np.inf;out['dose_3GI_games_day']=float(np.log1p(-g)/np.log1p(-kg)) if g<1 else None
+        g=-np.expm1(p*np.log1p(-kg));out[f'GI_at_{p}_games_day']=float(A*(1-kf)*g/(kf+(1-kf)*g))
+    g=kf*3/((1-kf)*(A-3)) if A>3 else np.inf;out['dose_3GI_games_day']=float(np.log1p(-g)/np.log1p(-kg)) if g<1 else None
     return out
 
 class Objective:
@@ -41,7 +41,7 @@ class Objective:
         self.a=a;self.w=np.ascontiguousarray(w,dtype=float);self.pred=np.full_like(a['Y'],np.nan);self.b=np.ascontiguousarray((a['GI0']-100)/15);self.eta=np.zeros(1)
     def __call__(self,x):
         a=self.a;grad=np.zeros(7);n,m=a['Y'].shape
-        val=lib.objective(n,m,a['ptr'],a['dt'],a['plays'],a['P'],a['D_exact'],a['Y'],a['age'],self.w,self.b,np.ascontiguousarray(x,dtype=float),1,grad,self.pred,self.eta)
+        val=lib.objective(n,m,a['ptr'],a['dt'],a['plays'],a['P'],a['D'],a['Y'],a['age'],self.w,self.b,np.ascontiguousarray(x,dtype=float),1,grad,self.pred,self.eta)
         self.pred+=self.eta[0]*self.b[:,None]
         return val,grad
 
@@ -54,63 +54,6 @@ def active_gradient(x,g,common=False,fixed=None):
         if x[j]-lo<1e-8:g[j]=min(g[j],0.)
         if hi is not None and hi-x[j]<1e-8:g[j]=max(g[j],0.)
     return float(max(abs(g[active]*SCALE[active])))
-
-def boundary_finish(obj,x,fixed):
-    """Optimize along a kink in the inherited retention clamp, without changing it.
-
-    The partial-day closed form has a derivative discontinuity at r=1e-9.
-    A nonsmooth minimum can have nonzero ordinary gradient; test stationarity
-    along the boundary and nondecreasing loss on both normal sides instead.
-    """
-    a=obj.a;near=[]
-    for st in range(0,len(a['dt']),1000000):
-        d=a['dt'][st:st+1000000];p=a['plays'][st:st+1000000]
-        rr=p/d;distance=abs(np.exp(rr*np.log1p(-x[0]))-x[1]-1e-9)
-        ix=np.flatnonzero((distance<1e-5)&(p>0))
-        for k in ix:near.append((float(distance[k]),int(st+k),float(rr[k])))
-    candidates=[];seen=set()
-    for _,seg,rr in sorted(near):
-        if rr in seen:continue
-        owner=np.where((a['ptr'][:,:,0]<=seg)&(a['ptr'][:,:,1]>seg))[0]
-        if not len(owner) or obj.w[owner[0]]==0:continue
-        seen.add(rr)
-        if len(seen)>4:break
-        active=[j for j in range(1,7) if j not in fixed]
-        bounds=[(BOUNDS[j][0]/SCALE[j],None if BOUNDS[j][1] is None else BOUNDS[j][1]/SCALE[j]) for j in active]
-        def expand(z):
-            xx=x.copy();xx[active]=z*SCALE[active]
-            for j,v in fixed.items():xx[j]=v
-            xx[0]=-np.expm1(np.log(xx[1]+1e-9)/rr)
-            return xx
-        def fun(z):
-            xx=expand(z);v,g=obj(xx);dk=-(1-xx[0])/(rr*(xx[1]+1e-9));g[1]+=g[0]*dk
-            return v,g[active]*SCALE[active]
-        opt=minimize(fun,x[active]/SCALE[active],jac=True,method='L-BFGS-B',bounds=bounds,
-            options={'maxiter':1000,'maxls':100,'ftol':1e-14,'gtol':1e-9})
-        xx=expand(opt.x);v,g=obj(xx)
-        if not (BOUNDS[0][0]<=xx[0]<=BOUNDS[0][1]):continue
-        check=boundary_check(obj,xx,rr,fixed)
-        if opt.success and check['passed']:
-            candidates.append((v,xx,check,int(opt.nit)))
-    return min(candidates,key=lambda z:z[0]) if candidates else None
-
-def boundary_check(obj,x,rr,fixed):
-    v,g=obj(x);g[1]+=g[0]*(-(1-x[0])/(rr*(x[1]+1e-9)))
-    active=[j for j in range(1,7) if j not in fixed]
-    pg=g.copy()
-    for j in active:
-        lo,hi=BOUNDS[j]
-        if x[j]-lo<1e-8:pg[j]=min(pg[j],0.)
-        if hi is not None and hi-x[j]<1e-8:pg[j]=max(pg[j],0.)
-    tangent=float(max(abs(pg[active]*SCALE[active])))
-    diffs=[]
-    for h in [1e-8,1e-7,1e-6]:
-        for sign in [-1,1]:
-            xx=x.copy();xx[0]+=sign*h
-            if BOUNDS[0][0]<=xx[0]<=BOUNDS[0][1]:diffs.append(float(obj(xx)[0]-v))
-    return dict(kind='inherited_clamp_boundary',boundary_gameplays_per_day=rr,
-        max_scaled_tangent_gradient=tangent,normal_perturbation_loss_changes=diffs,
-        passed=bool(tangent<1e-4 and min(diffs)>=-1e-9))
 
 def fit(a,w,common=False,starts=None,fixed=None):
     fixed=fixed or {};active=[j for j in range(5 if common else 7) if j not in fixed]
@@ -136,10 +79,6 @@ def fit(a,w,common=False,starts=None,fixed=None):
             opt=minimize(fun,opt.x,jac=True,method='L-BFGS-B',bounds=bounds,
                 options={'maxiter':500,'maxls':100,'maxcor':20,'ftol':1e-14,'gtol':1e-9})
         x=expand(opt.x);v,g=obj(x);hits=[];stationarity=None
-        if not common and active_gradient(x,g,common,fixed)>=1e-4:
-            finished=boundary_finish(obj,x,fixed)
-            if finished is not None:
-                v,x,stationarity,_=finished;_,g=obj(x)
         for j in active:
             lo,hi=BOUNDS[j]
             if x[j]-lo<1e-8:hits.append(NAMES[j]+'_lower')
@@ -160,14 +99,10 @@ def reference_predict(a,x):
         G=Rt=0.;q=q50*np.exp(beta*(a['age'][i]-50)/20)
         for j in range(a['Y'].shape[1]):
             if not np.isfinite(a['Y'][i,j]):continue
-            Rt=((1-alpha)*Rt+q)*(1-kr)**a['D_exact'][i,j]
+            Rt=((1-alpha)*Rt+q)*(1-kr)**a['D'][i,j]
             start,end=a['ptr'][i,j]
             for p,d in zip(a['plays'][start:end],a['dt'][start:end]):
-                if p==0:G*= (1-kf)**d
-                else:
-                    g=-np.expm1(p/d*np.log1p(-kg));r=np.clip(1-g-kf,1e-9,1-1e-12)
-                    G=G*r**d+g*A*(1-r**d)/(1-r)
-                G=np.clip(G,0,A)
+                G=(A-(A-G)*(1-kg)**p)*(1-kf)**d
             out[i,j]=G+Rt
     return out
 

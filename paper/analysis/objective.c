@@ -1,4 +1,4 @@
-/* Matched separate-decay model, piecewise constant observed daily training.
+/* Matched separate-decay model, observed game counts and calendar-day forgetting.
  * Training state is divided by A so only two state derivatives propagate.
  * Output includes independently checkable per-visit predictions.
  */
@@ -7,14 +7,11 @@
 typedef struct {double r,rg,rf,b,bg,bf;} Step;
 static inline Step step(double p,double d,double kg,double kf){
   Step s;
-  if(p==0){s.r=pow(1-kf,d);s.rg=0;s.rf=-d*s.r/(1-kf);s.b=s.bg=s.bf=0;return s;}
-  double rate=p/d,z=exp(rate*log1p(-kg)),g=1-z,gg=rate*z/(1-kg);
-  double r=1-g-kf,rg=-gg,rf=-1;
-  if(r<1e-9){r=1e-9;rg=rf=0;}
-  if(r>1-1e-12){r=1-1e-12;rg=rf=0;}
-  double h=1-r,v=g/h,vg=gg/h+g*rg/(h*h),vf=g*rf/(h*h);
-  s.r=pow(r,d);s.rg=d*s.r/r*rg;s.rf=d*s.r/r*rf;
-  s.b=v*(1-s.r);s.bg=vg*(1-s.r)-v*s.rg;s.bf=vf*(1-s.r)-v*s.rf;
+  double z=exp(p*log1p(-kg)), f=exp(d*log1p(-kf));
+  double zg=-p*z/(1-kg), ff=-d*f/(1-kf);
+  s.r=z*f; s.b=(1-z)*f;
+  s.rg=zg*f; s.bg=-zg*f;
+  s.rf=z*ff; s.bf=(1-z)*ff;
   return s;
 }
 double objective(int n,int m,const int64_t *ptr,const double *dt,const double *plays,
@@ -44,7 +41,6 @@ double objective(int n,int m,const int64_t *ptr,const double *dt,const double *p
         else s=step(p,duration,kg,kf);
         double next=zz*s.r+s.b;
         zg=zg*s.r+zz*s.rg+s.bg;zf=zf*s.r+zz*s.rf+s.bf;zz=next;
-        if(zz<0){zz=zg=zf=0;}else if(zz>1){zz=1;zg=zf=0;}
       }
       double value=A*zz+q*H,e=value-Y[ix];
       pred[ix]=value;loss+=e*e;count++;

@@ -11,7 +11,7 @@ if not LIB.exists() or LIB.stat().st_mtime<(R/'drift_objective.c').stat().st_mti
 lib=ctypes.CDLL(str(LIB));lib.objective.argtypes=[ctypes.c_int,ctypes.c_int,m.ia]+[m.fa]*10+[ctypes.c_int,m.fa,m.fa,m.fa];lib.objective.restype=ctypes.c_double
 def design(a,reference,drift=True):
     t=(a['age']-50)/20;mu=reference[0]+reference[1]*t+reference[2]*t*t
-    T=np.cumsum(np.nan_to_num(a['D_exact']),axis=1)/365.25
+    T=np.cumsum(np.nan_to_num(a['D']),axis=1)/365.25
     X=np.zeros((*a['Y'].shape,3));X[:,:,0]=(a['GI0']-mu)[:,None]/15
     if drift:X[:,:,1]=T;X[:,:,2]=t[:,None]*T+T*T/40
     return np.ascontiguousarray(X)
@@ -27,7 +27,7 @@ class Objective:
         self.pred=np.full_like(a['Y'],np.nan);self.eta=np.zeros(3)
     def __call__(self,x):
         a=self.a;n,j=a['Y'].shape;g=np.zeros(6)
-        value=lib.objective(n,j,a['ptr'],a['dt'],a['plays'],a['P'],a['D_exact'],a['Y'],a['age'],self.w,self.X,self.M,np.ascontiguousarray(x,dtype=float),1,g,self.pred,self.eta)
+        value=lib.objective(n,j,a['ptr'],a['dt'],a['plays'],a['P'],a['D'],a['Y'],a['age'],self.w,self.X,self.M,np.ascontiguousarray(x,dtype=float),1,g,self.pred,self.eta)
         self.pred+=self.X@self.eta
         return value,np.r_[g,0.]
 
@@ -38,7 +38,7 @@ def fitted(a,w,starts):
     o=Objective(a,w);v,g=o(m.vector(r));ok=w>0
     loss=float(np.average(np.nanmean((a['Y'][ok]-o.pred[ok])**2,axis=1),weights=w[ok]))
     pg=m.active_gradient(m.vector(r),g,fixed={6:0.})
-    boundary=m.boundary_check(o,m.vector(r),r['stationarity']['boundary_gameplays_per_day'],{6:0.}) if r['stationarity'] else None
+    boundary=None
     assert abs(v-loss)<1e-8 and (pg<1e-4 or boundary and boundary['passed'])
     r.update(model='age_baseline_drift9',outcome_parameter_count=9,baseline_reference_parameter_count=3,reference_coefficients=o.reference.tolist(),baseline_GI_coefficient_per15=float(o.eta[0]),drift_GI_per_year_age50=float(o.eta[1]),drift_GI_per_year_per20years=float(o.eta[2]),reference_refit=True,linear_coefficients=o.eta.tolist(),audit=dict(loss_error=abs(v-loss),gradient=pg,boundary=boundary))
     for age in [30,50,70,85]:r['derived'][f'drift_GI_per_year_age{age}']=float(o.eta[1]+o.eta[2]*(age-50)/20)

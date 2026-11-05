@@ -10,11 +10,11 @@ def synthetic():
     rng=np.random.default_rng(230031);n=20;Y=np.full((n,4),np.nan);P=Y.copy();D=Y.copy();ptr=np.zeros((n,4,2),dtype=np.int64);dt=[];plays=[]
     for i in range(n):
         for j in range(1+i%4):
-            ds=np.array([.7,1.,7.3]);ps=np.array([i%3,4+j,0.])
+            ds=np.array([0.,1.,8.]);ps=np.array([i%3,4+j,0.])
             ptr[i,j]=[len(dt),len(dt)+3];dt.extend(ds);plays.extend(ps)
             P[i,j]=ps.sum();D[i,j]=ds.sum();Y[i,j]=rng.normal(3,4)
     age=np.linspace(20,85,n)
-    return dict(Y=Y,P=P,D=D.copy(),D_exact=D,ptr=ptr,dt=np.array(dt),plays=np.array(plays),age=age,GI0=100-.4*(age-50)+rng.normal(0,10,n),battery=np.full(n,17,dtype=np.int64))
+    return dict(Y=Y,P=P,D=D,ptr=ptr,dt=np.array(dt),plays=np.array(plays),age=age,GI0=100-.4*(age-50)+rng.normal(0,10,n),battery=np.full(n,17,dtype=np.int64))
 
 class ModelTests(unittest.TestCase):
     def test_compiled_predictions_and_gradients(self):
@@ -44,7 +44,7 @@ class ModelTests(unittest.TestCase):
     def test_zero_gameplay_keeps_retest_learning(self):
         a=synthetic();a['plays'][:]=0;a['P'][np.isfinite(a['P'])]=0
         x=np.array([.006,.005,4,1.6,-.5,.0006,0.]);p=m.reference_predict(a,x)
-        np.testing.assert_allclose(p[:,0],1.6*np.exp(-.5*(a['age']-50)/20)*(1-.0006)**a['D_exact'][:,0],atol=1e-12)
+        np.testing.assert_allclose(p[:,0],1.6*np.exp(-.5*(a['age']-50)/20)*(1-.0006)**a['D'][:,0],atol=1e-12)
     def test_selected_comparisons_are_nested_and_no_outcome_leakage(self):
         import drift,slowing
         a=synthetic();w=np.linspace(.3,2,len(a['age']));x=np.array([.006,.005,4,1.6,-.5,.0006,0.])
@@ -60,4 +60,18 @@ class ModelTests(unittest.TestCase):
             for j in range(6):
                 h=slowing.SCALE[j]*1e-5;dx=np.eye(6)[j]*h;fd=(so(x[:6]+dx)[0]-so(x[:6]-dx)[0])/(2*h)
                 self.assertLess(abs((fd-gg[j])*slowing.SCALE[j]),1e-6)
+    def test_same_date_tests_and_game_order(self):
+        a=synthetic();a={k:(v[:1].copy() if k not in ['dt','plays'] else v) for k,v in a.items()}
+        a.update(Y=np.array([[0.,0.,np.nan,np.nan]]),P=np.array([[3.,4.,np.nan,np.nan]]),D=np.array([[0.,0.,np.nan,np.nan]]),ptr=np.array([[[0,1],[1,2],[0,0],[0,0]]],dtype=np.int64),dt=np.array([0.,0.]),plays=np.array([3.,4.]),age=np.array([50.]),GI0=np.array([110.]))
+        x=np.array([.006,.005,4,1.6,-.5,.0006,0.]);o=m.Objective(a,np.ones(1));o(x)
+        raw=o.pred-o.eta[0]*(a['GI0'][:,None]-100)/15
+        expected=np.array([4*(1-.994**3)+1.6,4*(1-.994**7)+3.2])
+        np.testing.assert_allclose(raw[0,:2],expected,atol=1e-12)
+    def test_maintenance_formula_matches_recurrence(self):
+        x=np.array([.006,.005,4,1.6,-.5,.0006,0.]);d=m.derived(x)
+        for fraction in [.7,.8,.9]:
+            dose=d[f'dose_{int(fraction*100)}_games_day'];g=0.;ell=1-(1-x[0])**dose
+            for day in range(10000):g=(g+ell*(x[2]-g))*(1-x[1])
+            self.assertAlmostEqual(g,fraction*x[2],places=10)
+
 if __name__=='__main__':unittest.main()

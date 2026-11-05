@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-OUT=Path(__import__('os').environ['CT_FIGURE_OUTPUT'])
+OUT=Path(__import__('os').environ.get('CT_FIGURE_OUTPUT',Path(__file__).resolve().parents[1]))
 TEAL='#087f8c'
 ORANGE='#ba5a22'
 PURPLE='#78569b'
@@ -21,3 +21,18 @@ def save(fig,name):
  for ext in ['png','svg']:
   fig.savefig(OUT/f'{name}.{ext}',dpi=300,facecolor='white')
  plt.close(fig)
+
+
+def analysis_root():
+ """Locate the standalone repository or its local manuscript working copy."""
+ for parent in Path(__file__).resolve().parents:
+  for candidate in (parent, parent/'review_v17/publication-pr'):
+   if (candidate/'reproduce.py').is_file() and (candidate/'paper/analysis').is_dir():
+    return candidate
+ raise FileNotFoundError('Cannot locate the analysis repository; use reproduce.py figures.')
+
+def figure_data():
+ return Path(__import__('os').environ.get('CT_FIGURE_DATA', analysis_root()/'paper/reference/figure_data'))
+
+def fit_data():
+ return Path(__import__('os').environ.get('CT_FIT_DATA', analysis_root()/'paper/reference'))

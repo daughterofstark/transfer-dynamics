@@ -1,0 +1,242 @@
+{
+  "primary": {
+    "rmse": 6.890729517268873,
+    "folds": [
+      {
+        "fold": 0,
+        "rmse": 6.905162318650237,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 1,
+        "rmse": 6.897373595336051,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 2,
+        "rmse": 6.891454406953352,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 3,
+        "rmse": 6.863081786048774,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 4,
+        "rmse": 6.896457262087923,
+        "heldout_outcome_perturbation_error": 0.0
+      }
+    ]
+  },
+  "saturating": {
+    "rmse": 6.890729518400278,
+    "folds": [
+      {
+        "fold": 0,
+        "rmse": 6.9051623170457415,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 1,
+        "rmse": 6.897373602417244,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 2,
+        "rmse": 6.8914544070162105,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 3,
+        "rmse": 6.863081786142005,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 4,
+        "rmse": 6.89645726213341,
+        "heldout_outcome_perturbation_error": 0.0
+      }
+    ]
+  },
+  "mean_change": {
+    "rmse": 7.0323795907392395,
+    "folds": [
+      {
+        "fold": 0,
+        "rmse": 7.051991688030445,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 1,
+        "rmse": 7.04893329672931,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 2,
+        "rmse": 7.030955526422499,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 3,
+        "rmse": 7.005708394986981,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 4,
+        "rmse": 7.0241474839541675,
+        "heldout_outcome_perturbation_error": 0.0
+      }
+    ]
+  },
+  "retest_only": {
+    "rmse": 6.972630551601918,
+    "folds": [
+      {
+        "fold": 0,
+        "rmse": 6.984322434528727,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 1,
+        "rmse": 6.983281843028734,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 2,
+        "rmse": 6.978762187165184,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 3,
+        "rmse": 6.943029488720737,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 4,
+        "rmse": 6.973679698322456,
+        "heldout_outcome_perturbation_error": 0.0
+      }
+    ]
+  },
+  "no_forgetting": {
+    "rmse": 6.9196135948213415,
+    "folds": [
+      {
+        "fold": 0,
+        "rmse": 6.935982505039728,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 1,
+        "rmse": 6.925985543566578,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 2,
+        "rmse": 6.9204914771363955,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 3,
+        "rmse": 6.89342299003708,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 4,
+        "rmse": 6.922059278912016,
+        "heldout_outcome_perturbation_error": 0.0
+      }
+    ]
+  },
+  "static_dose_response": {
+    "rmse": 6.916924694281484,
+    "folds": [
+      {
+        "fold": 0,
+        "rmse": 6.933456120600417,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 1,
+        "rmse": 6.923541109310623,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 2,
+        "rmse": 6.918279277167995,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 3,
+        "rmse": 6.891768201656016,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 4,
+        "rmse": 6.917456991535622,
+        "heldout_outcome_perturbation_error": 0.0
+      }
+    ]
+  },
+  "drift": {
+    "rmse": 6.888187532712947,
+    "folds": [
+      {
+        "fold": 0,
+        "rmse": 6.902451336570064,
+        "heldout_outcome_perturbation_error": 8.881784197001252e-16
+      },
+      {
+        "fold": 1,
+        "rmse": 6.894493064698776,
+        "heldout_outcome_perturbation_error": 1.7763568394002505e-15
+      },
+      {
+        "fold": 2,
+        "rmse": 6.889642249864203,
+        "heldout_outcome_perturbation_error": 1.7763568394002505e-15
+      },
+      {
+        "fold": 3,
+        "rmse": 6.859152111572967,
+        "heldout_outcome_perturbation_error": 1.7763568394002505e-15
+      },
+      {
+        "fold": 4,
+        "rmse": 6.8950787863376455,
+        "heldout_outcome_perturbation_error": 8.881784197001252e-16
+      }
+    ]
+  },
+  "slowing": {
+    "rmse": 6.890460779521435,
+    "folds": [
+      {
+        "fold": 0,
+        "rmse": 6.904756160873581,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 1,
+        "rmse": 6.897154443566829,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 2,
+        "rmse": 6.891512571946148,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 3,
+        "rmse": 6.863025525453418,
+        "heldout_outcome_perturbation_error": 0.0
+      },
+      {
+        "fold": 4,
+        "rmse": 6.895740483988352,
+        "heldout_outcome_perturbation_error": 0.0
+      }
+    ]
+  }
+}

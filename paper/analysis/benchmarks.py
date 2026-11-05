@@ -18,7 +18,7 @@ class Objective:
     def __init__(self,a,w,kind,baseline=False):
         self.a=a;self.kind=kind;self.names,self.scale,self.bounds,_=specification(kind)
         self.valid=np.isfinite(a['Y']);self.y=np.nan_to_num(a['Y']);self.w=w[:,None]*self.valid/self.valid.sum(1)[:,None];self.w/=w.sum()
-        self.age=(a['age']-50)/20;self.days=np.nan_to_num(a['D_exact']);self.cp=np.cumsum(np.nan_to_num(a['P']),axis=1)
+        self.age=(a['age']-50)/20;self.days=np.nan_to_num(a['D']);self.cp=np.cumsum(np.nan_to_num(a['P']),axis=1)
         self.baseline=baseline;self.b=(a['GI0']-100)/15;self.eta=0.
     def predict(self,x):
         aa=self.age;v=self.valid

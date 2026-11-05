@@ -15,7 +15,7 @@ This repository's runnable reproduction starts with the cleaned, scored input ar
 
 ## Scores and normalization
 
-Each complete battery has all required subtests, no gap between successive subtest results longer than 24 hours, and no interleaved testing sessions. Timing measures are oriented so higher is better. Times must be positive; trail-making times cannot exceed 900,000 ms. Other count scores must be nonnegative.
+Each complete battery has all required subtests, no gap between successive subtest results longer than 24 hours, and no interleaved testing sessions. Timing measures are oriented so higher is better. Times must be positive; trail-making times cannot exceed 15 minutes (900,000 ms in the source records). Other count scores must be nonnegative.
 
 Complex Span uses the greatest mixed letter–digit sequence length with correct recall **and arithmetic** on the same trial, with a floor of zero for valid logs without a successful trial. Malformed/incomplete logs and inconsistent sequence progression are excluded.
 
@@ -27,8 +27,8 @@ Census-weighted Jaffe-style normalization uses first-ever valid tests with <=25 
 
 ## Observed daily training
 
-Gameplays are assigned to consecutive intervals using recorded timestamps and the earliest subtest-result timestamp at each test boundary, then aggregated by calendar date. The daily segment counts reconcile to the cumulative gameplay-count differences at every boundary: 96,461,780 gameplays across 236,755 intervals. Exact partial-day lengths are retained; inactive spans can be compressed because zero-training decay composes exactly. The NPZ validator rechecks these totals, segment boundaries, prefix structure, age/battery/rate/score rules and file hashes before replay.
+Gameplays are assigned to consecutive intervals using recorded timestamps and the earliest subtest-result timestamp at each test boundary, then aggregated by calendar date. The daily segment counts reconcile to the cumulative gameplay-count differences at every boundary: 96,461,780 gameplays across 236,755 intervals. Each event stores an observed gameplay count followed by an integer number of calendar days until the next event. Inactive spans can be compressed because zero-training decay composes exactly. The NPZ validator rechecks these totals, segment boundaries, prefix structure, age/rate/score rules and file hashes before replay.
 
 ## Descriptive population
 
-The baseline-eligible comparison comprises 391,238 people. Returned-for-testing includes any later recorded NCPT test, even if the battery changes or the later test is not complete/valid. Selection labels in the private handoff preserve the mutually exclusive first-failure ordering; tables recount these labels. The model cohort is a subset of repeat testers, not an independent third group. Battery-level norming-reference counts are frozen aggregate provenance, not refitted from the model cohort.
+The baseline-eligible comparison comprises 391,238 people. Returned-for-testing includes any later recorded NCPT test, even if the battery changes or the later test is not complete/valid. The aggregate supplement input preserves the mutually exclusive first-failure counts used to reconstruct the selection table. The model cohort is a subset of repeat testers, not an independent third group. Battery-level norming-reference counts are frozen aggregate provenance, not refitted from the model cohort.

@@ -48,7 +48,7 @@ for i,t in enumerate(tests,1):axtest.text(t,-.45,f'T{i}',ha='center',va='top',fo
 gain=[0.]
 for p in daily:
  learn=1-(1-.035)**p
- gain.append(gain[-1]*(1-learn-.012)+learn)
+ gain.append((gain[-1]+learn*(1-gain[-1]))*(1-.012))
 axgain.plot(np.arange(end+1),gain,color=TEAL,lw=2)
 axgain.set_ylim(-.03,1.05)
 rt=[0.];rv=[0.];r=0.
