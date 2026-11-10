@@ -25,3 +25,11 @@ __pycache__/
 /legacy/v17/verify_report.md
 .env
 .env.*
+
+# Tabular data: never commit participant-level files.
+# Aggregate reference outputs are the only exception.
+*.csv
+*.tsv
+*.xlsx
+!paper/reference/**/*.csv
+/out/

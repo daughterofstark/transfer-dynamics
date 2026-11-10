@@ -1,6 +1,6 @@
 # Modeling the durability and maintenance of cognitive training gains in 172,731 adults
 
-Reproducible analysis for the current manuscript, prepared for **Communications Psychology**. The current workflow uses 172,731 participants, 409,486 NCPT battery completions and 96,461,780 intervening gameplays. The authoritative Markdown manuscript and supplement are in [`paper/manuscript`](paper/manuscript); their prose is not modified by analysis commands.
+Reproducible analysis for the current manuscript, prepared for **PLOS Digital Health**. The current workflow uses 172,731 participants, 409,486 NCPT battery completions and 96,461,780 intervening gameplays. The authoritative Markdown manuscript and supplement are in [`paper/manuscript`](paper/manuscript); their prose is not modified by analysis commands.
 
 The analysis uses observed daily game counts and calendar-day forgetting, separate training and retest decay, age-dependent retest input, an age-referenced baseline correction, and equal participant weighting. There are seven outcome coefficients (six nonlinear coefficients and one profiled baseline coefficient), plus three nuisance coefficients for the quadratic baseline-age reference. See [model specification](docs/model.md) and [data preparation](docs/data_preparation.md).
 
