@@ -1,0 +1,9 @@
+stage,excluded,remaining
+Baseline-eligible users in the comparison table,0,391238
+No subsequent recorded NCPT test,183320,207918
+Different battery at the second test,4324,203594
+Required subtests missing at the second test,18566,185028
+No valid second-test GI despite the required subtests being present,9244,175784
+First interval exceeded 20 gameplays per (calendar-day difference + 1),2835,172949
+Second-test GI or first-interval GI change outside the frozen four-SD bounds,218,172731
+Final model cohort,0,172731

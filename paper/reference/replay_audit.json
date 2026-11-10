@@ -1,0 +1,14 @@
+[
+  {
+    "model": "primary",
+    "full_sample_loss_error": 0.0
+  },
+  {
+    "model": "saturating",
+    "full_sample_loss_error": 0.0
+  },
+  {
+    "model": "drift",
+    "full_sample_loss_error": 0.0
+  }
+]

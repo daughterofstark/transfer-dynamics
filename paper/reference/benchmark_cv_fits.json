@@ -1,0 +1,502 @@
+[
+  {
+    "fold": 0,
+    "fit": {
+      "model": "mean_change",
+      "parameters": {
+        "mean": 3.6222747345571853,
+        "baseline_GI_coefficient_per15": -2.6169143445382477
+      },
+      "wmse": 49.38666639586873,
+      "reference_coefficients": [
+        103.13497950614345,
+        -10.597264058274003,
+        -2.40080175457092
+      ]
+    },
+    "model": "mean_change"
+  },
+  {
+    "fold": 1,
+    "fit": {
+      "model": "mean_change",
+      "parameters": {
+        "mean": 3.6204731115202633,
+        "baseline_GI_coefficient_per15": -2.595929101969591
+      },
+      "wmse": 49.39273541332264,
+      "reference_coefficients": [
+        103.0982794279676,
+        -10.625710210096589,
+        -2.3766986882194714
+      ]
+    },
+    "model": "mean_change"
+  },
+  {
+    "fold": 2,
+    "fit": {
+      "model": "mean_change",
+      "parameters": {
+        "mean": 3.597849882100825,
+        "baseline_GI_coefficient_per15": -2.6161992450148595
+      },
+      "wmse": 49.45934790717388,
+      "reference_coefficients": [
+        103.15278161205012,
+        -10.610923353546152,
+        -2.4219182431896114
+      ]
+    },
+    "model": "mean_change"
+  },
+  {
+    "fold": 3,
+    "fit": {
+      "model": "mean_change",
+      "parameters": {
+        "mean": 3.620263489138703,
+        "baseline_GI_coefficient_per15": -2.6161939867577293
+      },
+      "wmse": 49.54200024163602,
+      "reference_coefficients": [
+        103.11028462877198,
+        -10.640863722473279,
+        -2.381438799816551
+      ]
+    },
+    "model": "mean_change"
+  },
+  {
+    "fold": 4,
+    "fit": {
+      "model": "mean_change",
+      "parameters": {
+        "mean": 3.6113445984281367,
+        "baseline_GI_coefficient_per15": -2.5918016706917992
+      },
+      "wmse": 49.48293377715323,
+      "reference_coefficients": [
+        103.14095331935681,
+        -10.61233711627328,
+        -2.423010407522295
+      ]
+    },
+    "model": "mean_change"
+  },
+  {
+    "fold": 0,
+    "fit": {
+      "model": "no_forgetting",
+      "parameters": {
+        "learning_per_game": 0.0071983879938822635,
+        "training_max": 3.835787943868925,
+        "q50": 0.730108988678159,
+        "age_beta": -0.68968355100812
+      },
+      "wmse": 47.821523335158744,
+      "gradient": 1.8229844355637306e-08,
+      "bound_hits": [],
+      "start_losses": [
+        47.821523335158744,
+        47.821523335158744,
+        47.821523335158744
+      ],
+      "baseline_GI_coefficient_per15": -2.700697851082361,
+      "reference_coefficients": [
+        103.13497950614345,
+        -10.597264058274003,
+        -2.40080175457092
+      ]
+    },
+    "model": "no_forgetting"
+  },
+  {
+    "fold": 1,
+    "fit": {
+      "model": "no_forgetting",
+      "parameters": {
+        "learning_per_game": 0.0072819040279099145,
+        "training_max": 3.804635030577877,
+        "q50": 0.7406140016898224,
+        "age_beta": -0.6757774482809694
+      },
+      "wmse": 47.856671045800056,
+      "gradient": 3.64839053774318e-08,
+      "bound_hits": [],
+      "start_losses": [
+        47.85667104580039,
+        47.856671045800056,
+        47.856671045800056
+      ],
+      "baseline_GI_coefficient_per15": -2.6753725587462203,
+      "reference_coefficients": [
+        103.0982794279676,
+        -10.625710210096589,
+        -2.3766986882194714
+      ]
+    },
+    "model": "no_forgetting"
+  },
+  {
+    "fold": 2,
+    "fit": {
+      "model": "no_forgetting",
+      "parameters": {
+        "learning_per_game": 0.006988687989518896,
+        "training_max": 3.81397372399044,
+        "q50": 0.7423300442388838,
+        "age_beta": -0.6924031028779243
+      },
+      "wmse": 47.87493616861273,
+      "gradient": 2.5652324396011495e-08,
+      "bound_hits": [],
+      "start_losses": [
+        47.874936168612734,
+        47.874936168612734,
+        47.87493616861273
+      ],
+      "baseline_GI_coefficient_per15": -2.696849233223215,
+      "reference_coefficients": [
+        103.15278161205012,
+        -10.610923353546152,
+        -2.4219182431896114
+      ]
+    },
+    "model": "no_forgetting"
+  },
+  {
+    "fold": 3,
+    "fit": {
+      "model": "no_forgetting",
+      "parameters": {
+        "learning_per_game": 0.007202231062864798,
+        "training_max": 3.814241616841744,
+        "q50": 0.7389478593831512,
+        "age_beta": -0.6935446736301797
+      },
+      "wmse": 47.968589955386186,
+      "gradient": 4.306082778218236e-09,
+      "bound_hits": [],
+      "start_losses": [
+        47.968589955386186,
+        47.968589955386186,
+        47.96858995538619
+      ],
+      "baseline_GI_coefficient_per15": -2.703590040165823,
+      "reference_coefficients": [
+        103.11028462877198,
+        -10.640863722473279,
+        -2.381438799816551
+      ]
+    },
+    "model": "no_forgetting"
+  },
+  {
+    "fold": 4,
+    "fit": {
+      "model": "no_forgetting",
+      "parameters": {
+        "learning_per_game": 0.007075393348812099,
+        "training_max": 3.8283194738961264,
+        "q50": 0.7411455818133864,
+        "age_beta": -0.6855751205206639
+      },
+      "wmse": 47.869316486105106,
+      "gradient": 1.443177786997885e-08,
+      "bound_hits": [],
+      "start_losses": [
+        47.86931648610511,
+        47.869316486105106,
+        47.86931648610511
+      ],
+      "baseline_GI_coefficient_per15": -2.6735489782378674,
+      "reference_coefficients": [
+        103.14095331935681,
+        -10.61233711627328,
+        -2.423010407522295
+      ]
+    },
+    "model": "no_forgetting"
+  },
+  {
+    "fold": 0,
+    "fit": {
+      "model": "retest_only",
+      "parameters": {
+        "retest_forgetting": 0.0014345050411420535,
+        "q50": 3.9474321239825514,
+        "age_beta": -0.22252969853133595
+      },
+      "wmse": 48.573614621521074,
+      "gradient": 1.1889028179834505e-08,
+      "bound_hits": [],
+      "start_losses": [
+        48.573614621521074,
+        48.573614621521074,
+        48.573614621521074
+      ],
+      "baseline_GI_coefficient_per15": -2.648140974132841,
+      "reference_coefficients": [
+        103.13497950614345,
+        -10.597264058274003,
+        -2.40080175457092
+      ]
+    },
+    "model": "retest_only"
+  },
+  {
+    "fold": 1,
+    "fit": {
+      "model": "retest_only",
+      "parameters": {
+        "retest_forgetting": 0.0014426306692784615,
+        "q50": 3.94985419786767,
+        "age_beta": -0.2189917289496552
+      },
+      "wmse": 48.57852452119692,
+      "gradient": 4.510821577596858e-09,
+      "bound_hits": [],
+      "start_losses": [
+        48.578524521196925,
+        48.578524521196925,
+        48.57852452119692
+      ],
+      "baseline_GI_coefficient_per15": -2.626455084791941,
+      "reference_coefficients": [
+        103.0982794279676,
+        -10.625710210096589,
+        -2.3766986882194714
+      ]
+    },
+    "model": "retest_only"
+  },
+  {
+    "fold": 2,
+    "fit": {
+      "model": "retest_only",
+      "parameters": {
+        "retest_forgetting": 0.001441147792502235,
+        "q50": 3.928467867524607,
+        "age_beta": -0.22739147164097287
+      },
+      "wmse": 48.59356672539988,
+      "gradient": 1.2808673430231287e-09,
+      "bound_hits": [],
+      "start_losses": [
+        48.59356672539988,
+        48.59356672539988,
+        48.59356672539988
+      ],
+      "baseline_GI_coefficient_per15": -2.646188403160844,
+      "reference_coefficients": [
+        103.15278161205012,
+        -10.610923353546152,
+        -2.4219182431896114
+      ]
+    },
+    "model": "retest_only"
+  },
+  {
+    "fold": 3,
+    "fit": {
+      "model": "retest_only",
+      "parameters": {
+        "retest_forgetting": 0.001423255495345929,
+        "q50": 3.9347720992264397,
+        "age_beta": -0.22732533562398277
+      },
+      "wmse": 48.718559074717966,
+      "gradient": 8.006382243297416e-10,
+      "bound_hits": [],
+      "start_losses": [
+        48.718559074717966,
+        48.71855907471797,
+        48.718559074717966
+      ],
+      "baseline_GI_coefficient_per15": -2.647732549930284,
+      "reference_coefficients": [
+        103.11028462877198,
+        -10.640863722473279,
+        -2.381438799816551
+      ]
+    },
+    "model": "retest_only"
+  },
+  {
+    "fold": 4,
+    "fit": {
+      "model": "retest_only",
+      "parameters": {
+        "retest_forgetting": 0.0014332724522279792,
+        "q50": 3.9411443827445107,
+        "age_beta": -0.2229189565497432
+      },
+      "wmse": 48.61145258280731,
+      "gradient": 6.622813253857884e-09,
+      "bound_hits": [],
+      "start_losses": [
+        48.61145258280731,
+        48.61145258280732,
+        48.61145258280731
+      ],
+      "baseline_GI_coefficient_per15": -2.6202666865609427,
+      "reference_coefficients": [
+        103.14095331935681,
+        -10.61233711627328,
+        -2.423010407522295
+      ]
+    },
+    "model": "retest_only"
+  },
+  {
+    "fold": 0,
+    "fit": {
+      "model": "static_dose_response",
+      "parameters": {
+        "learning_per_game": 0.005416089287678347,
+        "training_max": 3.706320462306038,
+        "q_T2": 1.1716060528928243,
+        "q_T3": 1.421752838458064,
+        "q_T4": 2.418317791247886,
+        "q_T5": 3.164315515993029,
+        "age_beta": -0.5302500619135092
+      },
+      "wmse": 47.78223256692406,
+      "gradient": 2.565503860303903e-07,
+      "bound_hits": [],
+      "start_losses": [
+        47.78223256693044,
+        47.78223256692406,
+        47.782232566924364
+      ],
+      "baseline_GI_coefficient_per15": -2.692682149623692,
+      "reference_coefficients": [
+        103.13497950614345,
+        -10.597264058274003,
+        -2.40080175457092
+      ]
+    },
+    "model": "static_dose_response"
+  },
+  {
+    "fold": 1,
+    "fit": {
+      "model": "static_dose_response",
+      "parameters": {
+        "learning_per_game": 0.005489188106447007,
+        "training_max": 3.6728898308628057,
+        "q_T2": 1.177660954652399,
+        "q_T3": 1.4294491437448775,
+        "q_T4": 2.4906775133360886,
+        "q_T5": 3.279672571201996,
+        "age_beta": -0.5221134160173284
+      },
+      "wmse": 47.81717626702982,
+      "gradient": 9.716484182514936e-08,
+      "bound_hits": [],
+      "start_losses": [
+        47.81717626702982,
+        47.817176267029836,
+        47.81717626702982
+      ],
+      "baseline_GI_coefficient_per15": -2.6682823767815176,
+      "reference_coefficients": [
+        103.0982794279676,
+        -10.625710210096589,
+        -2.3766986882194714
+      ]
+    },
+    "model": "static_dose_response"
+  },
+  {
+    "fold": 2,
+    "fit": {
+      "model": "static_dose_response",
+      "parameters": {
+        "learning_per_game": 0.005270315900250274,
+        "training_max": 3.7030838374254005,
+        "q_T2": 1.1683277406346806,
+        "q_T3": 1.4239326472572986,
+        "q_T4": 2.4363599757394487,
+        "q_T5": 3.2444327236916015,
+        "age_beta": -0.5417400881547526
+      },
+      "wmse": 47.83481520894987,
+      "gradient": 8.334459305277438e-08,
+      "bound_hits": [],
+      "start_losses": [
+        47.83481520894989,
+        47.83481520895007,
+        47.83481520894987
+      ],
+      "baseline_GI_coefficient_per15": -2.689343605262262,
+      "reference_coefficients": [
+        103.15278161205012,
+        -10.610923353546152,
+        -2.4219182431896114
+      ]
+    },
+    "model": "static_dose_response"
+  },
+  {
+    "fold": 3,
+    "fit": {
+      "model": "static_dose_response",
+      "parameters": {
+        "learning_per_game": 0.005342311057510319,
+        "training_max": 3.69253633248371,
+        "q_T2": 1.1876895210880047,
+        "q_T3": 1.4344263253756313,
+        "q_T4": 2.457823566139888,
+        "q_T5": 3.163560082587832,
+        "age_beta": -0.5357761378538508
+      },
+      "wmse": 47.92672471111092,
+      "gradient": 7.755644633466747e-08,
+      "bound_hits": [],
+      "start_losses": [
+        47.92672471111092,
+        47.926724711111035,
+        47.92672471111092
+      ],
+      "baseline_GI_coefficient_per15": -2.6957822910658584,
+      "reference_coefficients": [
+        103.11028462877198,
+        -10.640863722473279,
+        -2.381438799816551
+      ]
+    },
+    "model": "static_dose_response"
+  },
+  {
+    "fold": 4,
+    "fit": {
+      "model": "static_dose_response",
+      "parameters": {
+        "learning_per_game": 0.005544594965222061,
+        "training_max": 3.72696043521074,
+        "q_T2": 1.1129631625633938,
+        "q_T3": 1.4203147040834923,
+        "q_T4": 2.4600682185490963,
+        "q_T5": 3.2056588885827617,
+        "age_beta": -0.5518572346950761
+      },
+      "wmse": 47.83781453569075,
+      "gradient": 1.392922442445307e-07,
+      "bound_hits": [],
+      "start_losses": [
+        47.83781453569077,
+        47.837814535690775,
+        47.83781453569075
+      ],
+      "baseline_GI_coefficient_per15": -2.6672082812115243,
+      "reference_coefficients": [
+        103.14095331935681,
+        -10.61233711627328,
+        -2.423010407522295
+      ]
+    },
+    "model": "static_dose_response"
+  }
+]

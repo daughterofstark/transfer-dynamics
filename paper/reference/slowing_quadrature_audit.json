@@ -1,0 +1,42 @@
+{
+  "nodes_fitted": 48,
+  "nodes_prediction": 128,
+  "max_prediction_difference_48_vs128": 1.3911627960716544e-08,
+  "selected_history_count": 8,
+  "tolerance_GI": 1e-05,
+  "tolerance_basis": "Quadrature omits rates below exp(-14); normalized tail mass is about 8.3e-7. Independent integration includes that tail; 1e-5 GI is below reporting precision.",
+  "adaptive_checks": [
+    {
+      "adaptive_error_bound": 4.935881606850938e-10,
+      "prediction_difference": 2.0060693053380874e-06
+    },
+    {
+      "adaptive_error_bound": 6.79191594900214e-12,
+      "prediction_difference": 6.046113698587874e-08
+    },
+    {
+      "adaptive_error_bound": 5.7641654676492615e-11,
+      "prediction_difference": 3.2499559241561116e-06
+    },
+    {
+      "adaptive_error_bound": 1.565257424890434e-09,
+      "prediction_difference": 3.2467703681149374e-06
+    },
+    {
+      "adaptive_error_bound": 2.099838444971613e-12,
+      "prediction_difference": 3.239808966326585e-06
+    },
+    {
+      "adaptive_error_bound": 1.295015994323806e-10,
+      "prediction_difference": 4.837070477492489e-07
+    },
+    {
+      "adaptive_error_bound": 1.6516058164416831e-12,
+      "prediction_difference": 3.2386869501799254e-06
+    },
+    {
+      "adaptive_error_bound": 2.0670236549516492e-09,
+      "prediction_difference": 3.2290937315160306e-06
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+[
+  {
+    "fold": 0,
+    "fit": {
+      "parameters": {
+        "learning_per_game": 0.006331981175068307,
+        "training_decay_scale": 0.007543256680087447,
+        "game_ceiling_GI": 4.146499967342208,
+        "test_increment_age50_GI": 1.4795612609559647,
+        "age_beta_per20": -0.4967518489921079,
+        "retest_forgetting_per_day": 0.0006512797958173253
+      },
+      "wmse": 47.42445076746299,
+      "gradient": 1.676576617519371e-07,
+      "stationarity": null,
+      "accepted": true,
+      "bound_hits": [],
+      "baseline_GI_coefficient_per15": -2.687268407969483,
+      "reference_coefficients": [
+        103.13497950614345,
+        -10.597264058274003,
+        -2.40080175457092
+      ],
+      "nodes": 24,
+      "elapsed_seconds": 9.478236999999353,
+      "starts": [
+        {
+          "wmse": 47.42445076746299,
+          "gradient": 1.676576617519371e-07,
+          "accepted": true,
+          "bound_hits": []
+        },
+        {
+          "wmse": 47.42445076746383,
+          "gradient": 1.4714645017221188e-06,
+          "accepted": true,
+          "bound_hits": []
+        }
+      ],
+      "model": "hyperbolic_training7",
+      "outcome_parameters": 7,
+      "reference_parameters": 3,
+      "reference_refit": true,
+      "derived": {
+        "isolated_input_half_life_days": 132.0681045619275,
+        "retest_half_life_days": 1063.9381785281917,
+        "age_ratio_per20": 0.6085039659496734,
+        "dose_70_games_day": 2.1126856077687655,
+        "dose_80_games_day": 4.011987483557838,
+        "dose_90_games_day": 10.120311431120234,
+        "dose_3GI_games_day": 2.4265440928083075
+      },
+      "loss_audit_error": 3.765876499528531e-13
+    }
+  },
+  {
+    "fold": 1,
+    "fit": {
+      "parameters": {
+        "learning_per_game": 0.006623222661691133,
+        "training_decay_scale": 0.008602678394671118,
+        "game_ceiling_GI": 4.130220304649916,
+        "test_increment_age50_GI": 1.499607588909266,
+        "age_beta_per20": -0.48555603767340916,
+        "retest_forgetting_per_day": 0.0006320513404978506
+      },
+      "wmse": 47.45101120782702,
+      "gradient": 1.5339814206863486e-08,
+      "stationarity": null,
+      "accepted": true,
+      "bound_hits": [],
+      "baseline_GI_coefficient_per15": -2.662273813063394,
+      "reference_coefficients": [
+        103.0982794279676,
+        -10.625710210096589,
+        -2.3766986882194714
+      ],
+      "nodes": 24,
+      "elapsed_seconds": 24.386653416997433,
+      "starts": [
+        {
+          "wmse": 47.451011207827996,
+          "gradient": 6.627875486077197e-07,
+          "accepted": true,
+          "bound_hits": []
+        },
+        {
+          "wmse": 47.45101120782702,
+          "gradient": 1.5339814206863486e-08,
+          "accepted": true,
+          "bound_hits": []
+        }
+      ],
+      "model": "hyperbolic_training7",
+      "outcome_parameters": 7,
+      "reference_parameters": 3,
+      "reference_refit": true,
+      "derived": {
+        "isolated_input_half_life_days": 115.74214695436666,
+        "retest_half_life_days": 1096.3161705015089,
+        "age_ratio_per20": 0.6153549410898144,
+        "dose_70_games_day": 2.3081125242711877,
+        "dose_80_games_day": 4.387363083926984,
+        "dose_90_games_day": 11.100266071386685,
+        "dose_3GI_games_day": 2.697502353478099
+      },
+      "loss_audit_error": 3.197442310920451e-13
+    }
+  },
+  {
+    "fold": 2,
+    "fit": {
+      "parameters": {
+        "learning_per_game": 0.005906269784303689,
+        "training_decay_scale": 0.007415082117612168,
+        "game_ceiling_GI": 4.139844539415595,
+        "test_increment_age50_GI": 1.5286619128759615,
+        "age_beta_per20": -0.496469756507159,
+        "retest_forgetting_per_day": 0.0007178071264139947
+      },
+      "wmse": 47.47070531484136,
+      "gradient": 1.0415721321596832e-07,
+      "stationarity": null,
+      "accepted": true,
+      "bound_hits": [],
+      "baseline_GI_coefficient_per15": -2.68351167669921,
+      "reference_coefficients": [
+        103.15278161205012,
+        -10.610923353546152,
+        -2.4219182431896114
+      ],
+      "nodes": 24,
+      "elapsed_seconds": 11.146839500001079,
+      "starts": [
+        {
+          "wmse": 47.47070531484136,
+          "gradient": 1.0415721321596832e-07,
+          "accepted": true,
+          "bound_hits": []
+        },
+        {
+          "wmse": 47.47070531484166,
+          "gradient": 2.130561534134844e-07,
+          "accepted": true,
+          "bound_hits": []
+        }
+      ],
+      "model": "hyperbolic_training7",
+      "outcome_parameters": 7,
+      "reference_parameters": 3,
+      "reference_refit": true,
+      "derived": {
+        "isolated_input_half_life_days": 134.3596529502053,
+        "retest_half_life_days": 965.2988279122524,
+        "age_ratio_per20": 0.6086756445590136,
+        "dose_70_games_day": 2.226371099081522,
+        "dose_80_games_day": 4.2273811474291305,
+        "dose_90_games_day": 10.659827095777942,
+        "dose_3GI_games_day": 2.5750385681125194
+      },
+      "loss_audit_error": 1.2079226507921703e-13
+    }
+  },
+  {
+    "fold": 3,
+    "fit": {
+      "parameters": {
+        "learning_per_game": 0.006349941735191559,
+        "training_decay_scale": 0.008169660949513907,
+        "game_ceiling_GI": 4.167444648565604,
+        "test_increment_age50_GI": 1.4901623258776722,
+        "age_beta_per20": -0.5019807921833213,
+        "retest_forgetting_per_day": 0.0006364824944245287
+      },
+      "wmse": 47.56803808888768,
+      "gradient": 2.62473577642122e-08,
+      "stationarity": null,
+      "accepted": true,
+      "bound_hits": [],
+      "baseline_GI_coefficient_per15": -2.691482318183712,
+      "reference_coefficients": [
+        103.11028462877198,
+        -10.640863722473279,
+        -2.381438799816551
+      ],
+      "nodes": 24,
+      "elapsed_seconds": 25.057826083997497,
+      "starts": [
+        {
+          "wmse": 47.56803808888809,
+          "gradient": 4.3773847415723745e-07,
+          "accepted": true,
+          "bound_hits": []
+        },
+        {
+          "wmse": 47.56803808888768,
+          "gradient": 2.62473577642122e-08,
+          "accepted": true,
+          "bound_hits": []
+        }
+      ],
+      "model": "hyperbolic_training7",
+      "outcome_parameters": 7,
+      "reference_parameters": 3,
+      "reference_refit": true,
+      "derived": {
+        "isolated_input_half_life_days": 121.90341690985113,
+        "retest_half_life_days": 1088.6812680617209,
+        "age_ratio_per20": 0.6053304376106352,
+        "dose_70_games_day": 2.284556293485628,
+        "dose_80_games_day": 4.340858835252784,
+        "dose_90_games_day": 10.969171920386549,
+        "dose_3GI_games_day": 2.5675730025882353
+      },
+      "loss_audit_error": 1.4921397450962104e-13
+    }
+  },
+  {
+    "fold": 4,
+    "fit": {
+      "parameters": {
+        "learning_per_game": 0.006377089950238144,
+        "training_decay_scale": 0.00838928803236476,
+        "game_ceiling_GI": 4.1897105082358,
+        "test_increment_age50_GI": 1.486632343121211,
+        "age_beta_per20": -0.49571183251050294,
+        "retest_forgetting_per_day": 0.000629834702382439
+      },
+      "wmse": 47.455280678256734,
+      "gradient": 6.061406867988474e-07,
+      "stationarity": null,
+      "accepted": true,
+      "bound_hits": [],
+      "baseline_GI_coefficient_per15": -2.659297930553846,
+      "reference_coefficients": [
+        103.14095331935681,
+        -10.61233711627328,
+        -2.423010407522295
+      ],
+      "nodes": 24,
+      "elapsed_seconds": 10.831086083002447,
+      "starts": [
+        {
+          "wmse": 47.455280678256734,
+          "gradient": 6.061406867988474e-07,
+          "accepted": true,
+          "bound_hits": []
+        },
+        {
+          "wmse": 47.45528067825765,
+          "gradient": 2.3640644297755605e-08,
+          "accepted": true,
+          "bound_hits": []
+        }
+      ],
+      "model": "hyperbolic_training7",
+      "outcome_parameters": 7,
+      "reference_parameters": 3,
+      "reference_refit": true,
+      "derived": {
+        "isolated_input_half_life_days": 118.69892443747419,
+        "retest_half_life_days": 1100.1757619002622,
+        "age_ratio_per20": 0.6091371493068739,
+        "dose_70_games_day": 2.3370031604707613,
+        "dose_80_games_day": 4.441408112593757,
+        "dose_90_games_day": 11.230216732578267,
+        "dose_3GI_games_day": 2.5673708407156686
+      },
+      "loss_audit_error": 6.110667527536862e-13
+    }
+  }
+]

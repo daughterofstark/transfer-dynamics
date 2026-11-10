@@ -1,0 +1,135 @@
+{
+  "source": "figure_data",
+  "bootstrap_draws": 500,
+  "new_model_fits": 0,
+  "initial_games": 400,
+  "initial_days": 90,
+  "maintenance_games_each": 840,
+  "maintenance_days": 270,
+  "steady_games_per_day": 3.111111111111111,
+  "booster_days_inclusive": [
+    [
+      167,
+      180
+    ],
+    [
+      257,
+      270
+    ],
+    [
+      347,
+      360
+    ]
+  ],
+  "booster_games_per_active_day": 20,
+  "booster_pause_days": 76,
+  "schedule_design": "Author-approved 14 days per 90-day cycle; boosters at the end of each cycle; matched total, not optimized.",
+  "segment_verification_max_abs_error": 2.220446049250313e-15,
+  "day90": {
+    "estimate": 3.189587266017855,
+    "CI": [
+      3.089921481330653,
+      3.2943507868317146
+    ]
+  },
+  "day360": {
+    "steady": {
+      "estimate": 3.1596878205624956,
+      "CI": [
+        3.0354336327398164,
+        3.281083731522921
+      ]
+    },
+    "booster": {
+      "estimate": 3.5898144249879778,
+      "CI": [
+        3.489338434148986,
+        3.7061624563808295
+      ]
+    },
+    "stop": {
+      "estimate": 0.8443785488265741,
+      "CI": [
+        0.6367341222639038,
+        1.0436639494766515
+      ]
+    }
+  },
+  "pre_booster": {
+    "166": {
+      "estimate": 2.1941390079341327,
+      "CI": [
+        1.988013979063933,
+        2.36479479628842
+      ]
+    },
+    "256": {
+      "estimate": 2.4397151066847287,
+      "CI": [
+        2.226170389921084,
+        2.619240321170616
+      ]
+    },
+    "346": {
+      "estimate": 2.4665300458871133,
+      "CI": [
+        2.249126367297419,
+        2.649955413098555
+      ]
+    }
+  },
+  "post_booster": {
+    "180": {
+      "estimate": 3.5465775909611894,
+      "CI": [
+        3.44588983186767,
+        3.6582207818271213
+      ]
+    },
+    "270": {
+      "estimate": 3.58555806954969,
+      "CI": [
+        3.48451093540665,
+        3.7013328441979145
+      ]
+    },
+    "360": {
+      "estimate": 3.5898144249879778,
+      "CI": [
+        3.489338434148986,
+        3.7061624563808295
+      ]
+    }
+  },
+  "mean_days91_360": {
+    "steady": {
+      "estimate": 3.164138418987344,
+      "CI": [
+        3.045086773119792,
+        3.2856747941697972
+      ]
+    },
+    "booster": {
+      "estimate": 2.9137546375625245,
+      "CI": [
+        2.765685052539456,
+        3.040424388758859
+      ]
+    },
+    "stop": {
+      "estimate": 1.7602412737601711,
+      "CI": [
+        1.551623265706078,
+        1.9407495243709485
+      ]
+    }
+  },
+  "mean_steady_minus_booster": {
+    "estimate": 0.25038378142481954,
+    "CI": [
+      0.22534276919827334,
+      0.28176147864232937
+    ]
+  },
+  "mean_definition": "Arithmetic mean of modeled end-of-day gains for days 91\u2013360, equally weighted days; paired bootstrap contrast."
+}

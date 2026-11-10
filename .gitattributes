@@ -1,0 +1,3 @@
+paper/manuscript/figures/*.svg linguist-generated=true
+paper/reference/* linguist-generated=true
+paper/specification/bootstrap_seeds.json linguist-generated=true

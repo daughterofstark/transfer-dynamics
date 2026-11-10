@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "groups": {
+    "T1 only": {
+      "n": 183320,
+      "mean_sd": {
+        "age_t1": {
+          "n": 183320,
+          "mean": 45.982255073096226,
+          "sd": 17.051402506503585
+        },
+        "grand_index": {
+          "n": 183320,
+          "mean": 101.70535108871384,
+          "sd": 14.460262634859802
+        }
+      },
+      "quantiles": {
+        "plays_before": {
+          "n": 183320,
+          "q25": 9.0,
+          "median": 14.0,
+          "q75": 18.0
+        },
+        "days_signup_to_t1": {
+          "n": 183320,
+          "q25": 2.7528819444444443,
+          "median": 7.726157407407408,
+          "q75": 127.13531539351851
+        }
+      },
+      "category_counts": {
+        "Female": 89216,
+        "Male": 75078,
+        "Gender not reported": 19026,
+        "High school or less": 21414,
+        "Some college or undergraduate degree": 98451,
+        "Professional or graduate education": 40261,
+        "Other education": 3245,
+        "Education not reported": 19949
+      },
+      "baseline_age_moments": {
+        "n": 183320,
+        "variables": [
+          "GI",
+          "t=(age_t1-50)/20",
+          "t_squared"
+        ],
+        "mean": [
+          101.70535108871529,
+          -0.20088724634518443,
+          0.7672275392755274
+        ],
+        "sample_covariance": [
+          [
+            209.0991954691225,
+            -6.967195673580993,
+            1.0331831681350865
+          ],
+          [
+            -6.967195673580993,
+            0.7268758185969908,
+            -0.23914128958665923
+          ],
+          [
+            1.0331831681350865,
+            -0.23914128958665923,
+            0.5485199468413952
+          ]
+        ]
+      }
+    },
+    "Returned for testing (any battery)": {
+      "n": 207918,
+      "mean_sd": {
+        "age_t1": {
+          "n": 207918,
+          "mean": 53.04265623947902,
+          "sd": 15.820471847322208
+        },
+        "grand_index": {
+          "n": 207918,
+          "mean": 99.55882625213866,
+          "sd": 14.25458528805325
+        }
+      },
+      "quantiles": {
+        "plays_before": {
+          "n": 207918,
+          "q25": 11.0,
+          "median": 15.0,
+          "q75": 18.0
+        },
+        "days_signup_to_t1": {
+          "n": 207918,
+          "q25": 3.051160300925926,
+          "median": 7.234560185185185,
+          "q75": 91.08321759259259
+        }
+      },
+      "category_counts": {
+        "Female": 114566,
+        "Male": 74494,
+        "Gender not reported": 18858,
+        "High school or less": 20906,
+        "Some college or undergraduate degree": 110027,
+        "Professional or graduate education": 53891,
+        "Other education": 3545,
+        "Education not reported": 19549
+      },
+      "baseline_age_moments": {
+        "n": 207918,
+        "variables": [
+          "GI",
+          "t=(age_t1-50)/20",
+          "t_squared"
+        ],
+        "mean": [
+          99.55882625213854,
+          0.15213281197394996,
+          0.6488597067112905
+        ],
+        "sample_covariance": [
+          [
+            203.19320173438342,
+            -6.645584555107693,
+            -0.940164853976067
+          ],
+          [
+            -6.645584555107693,
+            0.6257183236797849,
+            -0.016269446879962506
+          ],
+          [
+            -0.940164853976067,
+            -0.016269446879962506,
+            0.4525344976936216
+          ]
+        ]
+      }
+    },
+    "Included in model (subset of repeat testers)": {
+      "n": 172731,
+      "mean_sd": {
+        "age_t1": {
+          "n": 172731,
+          "mean": 52.853309481216456,
+          "sd": 15.72545255003139
+        },
+        "grand_index": {
+          "n": 172731,
+          "mean": 100.0796594300395,
+          "sd": 14.070262920879838
+        }
+      },
+      "quantiles": {
+        "plays_before": {
+          "n": 172731,
+          "q25": 11.0,
+          "median": 15.0,
+          "q75": 18.0
+        },
+        "days_signup_to_t1": {
+          "n": 172731,
+          "q25": 3.0391145833333333,
+          "median": 7.059722222222222,
+          "q75": 82.47897569444444
+        }
+      },
+      "category_counts": {
+        "Female": 94641,
+        "Male": 62343,
+        "Gender not reported": 15747,
+        "High school or less": 17123,
+        "Some college or undergraduate degree": 91340,
+        "Professional or graduate education": 45043,
+        "Other education": 2847,
+        "Education not reported": 16378
+      },
+      "baseline_age_moments": {
+        "n": 172731,
+        "variables": [
+          "GI",
+          "t=(age_t1-50)/20",
+          "t_squared"
+        ],
+        "mean": [
+          100.07965943004075,
+          0.14266547406082183,
+          0.6385745031291301
+        ],
+        "sample_covariance": [
+          [
+            197.97229866268634,
+            -6.498492687129935,
+            -0.7664209624007211
+          ],
+          [
+            -6.498492687129935,
+            0.6182246447582236,
+            -0.027269062768399716
+          ],
+          [
+            -0.7664209624007211,
+            -0.027269062768399716,
+            0.43984029763051613
+          ]
+        ]
+      }
+    }
+  },
+  "selection_counts": {
+    "baseline_eligible": 391238,
+    "returned": 207918,
+    "included": 172731,
+    "first_failure": {
+      "battery_change": 4324,
+      "subtest_composition": 18566,
+      "invalid_GI": 9244,
+      "gameplay_rate": 2835,
+      "four_SD": 218
+    },
+    "later_failure": {
+      "battery_change": {
+        "participants": 4481,
+        "omitted_visits": 6789
+      },
+      "subtest_composition": {
+        "participants": 8168,
+        "omitted_visits": 8274
+      },
+      "invalid_GI": {
+        "participants": 3024,
+        "omitted_visits": 4594
+      },
+      "gameplay_rate": {
+        "participants": 631,
+        "omitted_visits": 1098
+      },
+      "four_SD": {
+        "participants": 61,
+        "omitted_visits": 84
+      }
+    }
+  }
+}

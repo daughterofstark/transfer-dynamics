@@ -1,0 +1,247 @@
+{
+  "initial_gameplays": 400,
+  "initial_days": 90,
+  "followup_days": 360,
+  "maintenance_gameplays": 1120,
+  "bootstrap_fits": 500,
+  "new_fits": 0,
+  "schedule_definitions": {
+    "weekly": "Follow-up day 1 is Monday; three-day schedule is Monday/Wednesday/Friday",
+    "monthly": "23 days off, 7 days on; repeat 12 times",
+    "quarterly": "76 days off, 14 days on; repeat 4 times",
+    "semiannual": "135 days off, 45 days on; repeat 2 times"
+  },
+  "display": "Mean gameplays per active day; predictions use the actual integer counts",
+  "outcome": "Training-related GI gain relative to no training with identical age, baseline and test history",
+  "summary": "End-of-day means, endpoints and ranges over follow-up days 1\u2013360; endpoint is study day 450",
+  "endpoint_phase": "All boosters finish on follow-up day 360; weekly schedules finish on Wednesday",
+  "source_sha256": {
+    "constant7_point.json": "8ea104aba96f2d17094d6ffc0b9b82d09142fc5cdb4eb298d7840a51409e9588",
+    "constant7_bootstrap.json": "f0786feb2f0e57364a148ec69c0327173f5c08b521c29dcf8d321b6d4afa7bc8"
+  },
+  "independent_endpoint_error": 1.2878587085651816e-14,
+  "schedules": {
+    "daily": {
+      "label": "Daily",
+      "active_days": 360,
+      "games_per_active_day": 3.111111111111111,
+      "integer_games_per_active_day": [
+        3,
+        4
+      ],
+      "mean_gain": {
+        "estimate": 3.1630309455164403,
+        "CI95": [
+          3.0425572718608653,
+          3.284531229140356
+        ]
+      },
+      "endpoint_gain": {
+        "estimate": 3.1596531001252277,
+        "CI95": [
+          3.03537840973462,
+          3.281054014759168
+        ]
+      },
+      "minimum_gain": {
+        "estimate": 3.1575390449364473,
+        "CI95": [
+          3.032816846479035,
+          3.2705722785663554
+        ]
+      },
+      "maximum_gain": {
+        "estimate": 3.1883738125561973,
+        "CI95": [
+          3.0922497509672873,
+          3.300984587849611
+        ]
+      }
+    },
+    "weekdays": {
+      "label": "Weekdays only",
+      "active_days": 258,
+      "games_per_active_day": 4.341085271317829,
+      "integer_games_per_active_day": [
+        4,
+        5
+      ],
+      "mean_gain": {
+        "estimate": 3.1627059945688774,
+        "CI95": [
+          3.0421136347413293,
+          3.284196648156384
+        ]
+      },
+      "endpoint_gain": {
+        "estimate": 3.1608287514476436,
+        "CI95": [
+          3.03708817499142,
+          3.2822659801189094
+        ]
+      },
+      "minimum_gain": {
+        "estimate": 3.139455802289594,
+        "CI95": [
+          3.0110007191903043,
+          3.2611600266528957
+        ]
+      },
+      "maximum_gain": {
+        "estimate": 3.214901168714991,
+        "CI95": [
+          3.1170215787430284,
+          3.324970319053678
+        ]
+      }
+    },
+    "three_weekly": {
+      "label": "Three days per week",
+      "active_days": 155,
+      "games_per_active_day": 7.225806451612903,
+      "integer_games_per_active_day": [
+        7,
+        8
+      ],
+      "mean_gain": {
+        "estimate": 3.1620051712210753,
+        "CI95": [
+          3.0413616830726746,
+          3.283531667954447
+        ]
+      },
+      "endpoint_gain": {
+        "estimate": 3.166967029296102,
+        "CI95": [
+          3.0437958385615875,
+          3.2883925822225244
+        ]
+      },
+      "minimum_gain": {
+        "estimate": 3.1386779008352916,
+        "CI95": [
+          3.0101760373004245,
+          3.260629541058472
+        ]
+      },
+      "maximum_gain": {
+        "estimate": 3.215034074108796,
+        "CI95": [
+          3.1171747255865614,
+          3.325096746891269
+        ]
+      }
+    },
+    "monthly": {
+      "label": "Monthly boosters",
+      "active_days": 84,
+      "games_per_active_day": 13.333333333333334,
+      "integer_games_per_active_day": [
+        13,
+        14
+      ],
+      "mean_gain": {
+        "estimate": 3.127756189537114,
+        "CI95": [
+          3.0055944475540968,
+          3.25002762531711
+        ]
+      },
+      "endpoint_gain": {
+        "estimate": 3.3220469751868733,
+        "CI95": [
+          3.211678389241588,
+          3.4409173787803033
+        ]
+      },
+      "minimum_gain": {
+        "estimate": 2.848169491642563,
+        "CI95": [
+          2.7203054890605594,
+          2.969977441218858
+        ]
+      },
+      "maximum_gain": {
+        "estimate": 3.324060362294677,
+        "CI95": [
+          3.213836777229645,
+          3.442860346163999
+        ]
+      }
+    },
+    "quarterly": {
+      "label": "Quarterly boosters",
+      "active_days": 56,
+      "games_per_active_day": 20.0,
+      "integer_games_per_active_day": [
+        20,
+        20
+      ],
+      "mean_gain": {
+        "estimate": 2.9416815078650473,
+        "CI95": [
+          2.793181995246133,
+          3.0691423586291537
+        ]
+      },
+      "endpoint_gain": {
+        "estimate": 3.5902791848440136,
+        "CI95": [
+          3.489948901065521,
+          3.7066798310316886
+        ]
+      },
+      "minimum_gain": {
+        "estimate": 2.1941390079341327,
+        "CI95": [
+          1.988013979063933,
+          2.36479479628842
+        ]
+      },
+      "maximum_gain": {
+        "estimate": 3.5902791848440136,
+        "CI95": [
+          3.489948901065521,
+          3.7066798310316886
+        ]
+      }
+    },
+    "semiannual": {
+      "label": "Semiannual boosters",
+      "active_days": 90,
+      "games_per_active_day": 12.444444444444445,
+      "integer_games_per_active_day": [
+        12,
+        13
+      ],
+      "mean_gain": {
+        "estimate": 2.682292412257749,
+        "CI95": [
+          2.5121309806843213,
+          2.822701658487675
+        ]
+      },
+      "endpoint_gain": {
+        "estimate": 3.674887482709628,
+        "CI95": [
+          3.56880731872835,
+          3.7953244054492683
+        ]
+      },
+      "minimum_gain": {
+        "estimate": 1.6411030031767908,
+        "CI95": [
+          1.4086485946193592,
+          1.840803402076718
+        ]
+      },
+      "maximum_gain": {
+        "estimate": 3.674887482709628,
+        "CI95": [
+          3.56880731872835,
+          3.7953244054492683
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "model": "age_baseline_drift9",
+  "parameters": {
+    "learning_per_game": 0.0062202763563060605,
+    "training_forgetting_per_day": 0.003958739270668242,
+    "game_ceiling_GI": 3.9443874391762415,
+    "test_increment_age50_GI": 1.493103817843752,
+    "age_beta_per20": -0.42090835529318293,
+    "retest_forgetting_per_day": 1e-06,
+    "test_diminishing_fraction": 0.0
+  },
+  "derived": {
+    "training_half_life_days": 174.74610772656322,
+    "retest_half_life_days": 693146.8339862972,
+    "age_ratio_per20": 0.6564502588440856,
+    "dose_70_games_day": 1.4931864634150296,
+    "dose_80_games_day": 2.5683305832198653,
+    "dose_90_games_day": 5.837728574043824,
+    "GI_at_1_games_day": 2.406648623960959,
+    "GI_at_2_games_day": 2.9870998058517633,
+    "dose_3GI_games_day": 2.0363051094448417,
+    "drift_GI_per_year_age30": -0.3894927328947626,
+    "drift_GI_per_year_age50": -0.5138506365187395,
+    "drift_GI_per_year_age70": -0.6382085401427164,
+    "drift_GI_per_year_age85": -0.7314769678606992
+  },
+  "wmse": 47.44244684581521,
+  "success": true,
+  "max_scaled_projected_gradient": 9.290940890932932e-09,
+  "stationarity": null,
+  "bound_hits": [
+    "retest_forgetting_per_day_lower"
+  ],
+  "fixed_parameters": {
+    "test_diminishing_fraction": 0.0
+  },
+  "nit": 26,
+  "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+  "starts": [
+    {
+      "wmse": 47.44244684581541,
+      "success": true,
+      "gradient": 3.897138793685576e-08,
+      "derived": {
+        "training_half_life_days": 174.7461087139249,
+        "retest_half_life_days": 693146.8339862972,
+        "age_ratio_per20": 0.6564502795490482,
+        "dose_70_games_day": 1.4931863803059633,
+        "dose_80_games_day": 2.56833044022031,
+        "dose_90_games_day": 5.8377282486676,
+        "GI_at_1_games_day": 2.406648606585398,
+        "GI_at_2_games_day": 2.9870997597864624,
+        "dose_3GI_games_day": 2.036305243000292
+      }
+    },
+    {
+      "wmse": 47.44244684581521,
+      "success": true,
+      "gradient": 9.290940890932932e-09,
+      "derived": {
+        "training_half_life_days": 174.74610772656322,
+        "retest_half_life_days": 693146.8339862972,
+        "age_ratio_per20": 0.6564502588440856,
+        "dose_70_games_day": 1.4931864634150296,
+        "dose_80_games_day": 2.5683305832198653,
+        "dose_90_games_day": 5.837728574043824,
+        "GI_at_1_games_day": 2.406648623960959,
+        "GI_at_2_games_day": 2.9870998058517633,
+        "dose_3GI_games_day": 2.0363051094448417,
+        "drift_GI_per_year_age30": -0.3894927328947626,
+        "drift_GI_per_year_age50": -0.5138506365187395,
+        "drift_GI_per_year_age70": -0.6382085401427164,
+        "drift_GI_per_year_age85": -0.7314769678606992
+      }
+    },
+    {
+      "wmse": 47.44244684581544,
+      "success": true,
+      "gradient": 7.111954130929542e-07,
+      "derived": {
+        "training_half_life_days": 174.74631710468117,
+        "retest_half_life_days": 693146.8339862972,
+        "age_ratio_per20": 0.6564501929795532,
+        "dose_70_games_day": 1.493184187480003,
+        "dose_80_games_day": 2.568326658105086,
+        "dose_90_games_day": 5.837719579640411,
+        "GI_at_1_games_day": 2.4066496924122305,
+        "GI_at_2_games_day": 2.9871004641726753,
+        "dose_3GI_games_day": 2.0363032656235895
+      }
+    }
+  ],
+  "elapsed_seconds": 10.54794033300277,
+  "baseline_GI_coefficient_per15": -2.677728732863213,
+  "outcome_parameter_count": 9,
+  "baseline_reference_parameter_count": 3,
+  "reference_coefficients": [
+    103.12746099152996,
+    -10.61743341751799,
+    -2.4007541518785427
+  ],
+  "drift_GI_per_year_age50": -0.5138506365187395,
+  "drift_GI_per_year_per20years": -0.12435790362397695,
+  "reference_refit": true,
+  "linear_coefficients": [
+    -2.677728732863213,
+    -0.5138506365187395,
+    -0.12435790362397695
+  ],
+  "audit": {
+    "loss_error": 4.192202140984591e-13,
+    "gradient": 9.290940890932932e-09,
+    "boundary": null
+  }
+}

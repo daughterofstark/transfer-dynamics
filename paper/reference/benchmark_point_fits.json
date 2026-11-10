@@ -1,0 +1,86 @@
+{
+  "mean_change": {
+    "model": "mean_change",
+    "parameters": {
+      "mean": 3.6144358920217106,
+      "baseline_GI_coefficient_per15": -2.60739341369201
+    },
+    "wmse": 49.45291961022729,
+    "reference_coefficients": [
+      103.12746099152996,
+      -10.61743341751799,
+      -2.4007541518785427
+    ]
+  },
+  "retest_only": {
+    "model": "retest_only",
+    "parameters": {
+      "retest_forgetting": 0.001434926156484396,
+      "q50": 3.940309693999049,
+      "age_beta": -0.2238364575111447
+    },
+    "wmse": 48.61539206383438,
+    "gradient": 5.106688459127762e-09,
+    "bound_hits": [],
+    "start_losses": [
+      48.615392063834385,
+      48.615392063834385,
+      48.61539206383438
+    ],
+    "baseline_GI_coefficient_per15": -2.6377450558970787,
+    "reference_coefficients": [
+      103.12746099152996,
+      -10.61743341751799,
+      -2.4007541518785427
+    ]
+  },
+  "no_forgetting": {
+    "model": "no_forgetting",
+    "parameters": {
+      "learning_per_game": 0.007148447528411166,
+      "training_max": 3.8192871326409357,
+      "q50": 0.7386595920237227,
+      "age_beta": -0.6874041838434665
+    },
+    "wmse": 47.87851011699624,
+    "gradient": 7.0016122390983634e-09,
+    "bound_hits": [],
+    "start_losses": [
+      47.87851011699624,
+      47.87851011699624,
+      47.87851011699624
+    ],
+    "baseline_GI_coefficient_per15": -2.6900008964764943,
+    "reference_coefficients": [
+      103.12746099152996,
+      -10.61743341751799,
+      -2.4007541518785427
+    ]
+  },
+  "static_dose_response": {
+    "model": "static_dose_response",
+    "parameters": {
+      "learning_per_game": 0.0054127536581457586,
+      "training_max": 3.700292278280136,
+      "q_T2": 1.1634188016774243,
+      "q_T3": 1.4259475264433035,
+      "q_T4": 2.452472755005782,
+      "q_T5": 3.2120923985899514,
+      "age_beta": -0.5363726036431739
+    },
+    "wmse": 47.84018008201326,
+    "gradient": 3.571321894728927e-08,
+    "bound_hits": [],
+    "start_losses": [
+      47.84018008201329,
+      47.840180082013305,
+      47.84018008201326
+    ],
+    "baseline_GI_coefficient_per15": -2.682654202667703,
+    "reference_coefficients": [
+      103.12746099152996,
+      -10.61743341751799,
+      -2.4007541518785427
+    ]
+  }
+}
